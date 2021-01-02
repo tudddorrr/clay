@@ -7,9 +7,7 @@
   "scripts": {
     "dev": "nodemon tests/index.ts",
     "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'tests/**/*.ts'",
-    "prebuild": "rm -rf -f dist/",
-    "build": "ncc build ./lib/index.ts -o dist/",
-    "prepare": "yarn test && yarn build"
+    "prepare": "yarn test && tsc"
   },
   "keywords": [
     "koa",
@@ -24,7 +22,6 @@
     "@types/koa-bodyparser": "^4.3.0",
     "@types/mocha": "^8.2.0",
     "@types/node": "^14.14.16",
-    "@vercel/ncc": "^0.26.1",
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
     "koa": "^2.13.0",
@@ -41,7 +38,7 @@
     "dist"
   ],
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/sekaru/koa-api-services.git"
+    "type": "git",
+    "url": "https://github.com/sekaru/koa-api-services.git"
   }
 }

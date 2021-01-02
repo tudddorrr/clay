@@ -169,11 +169,6 @@
   resolved "https://registry.yarnpkg.com/@ungap/promise-all-settled/-/promise-all-settled-1.1.2.tgz#aa58042711d6e3275dd37dc597e5d31e8c290a44"
   integrity sha512-sL/cEvJWAnClXw0wHk85/2L0G6Sj8UB0Ctc1TEMbKSsmpRosqhwj9gWgFRZSrBr2f9tiXISwNhCPmlfqUqyb9Q==
 
-"@vercel/ncc@^0.26.1":
-  version "0.26.1"
-  resolved "https://registry.yarnpkg.com/@vercel/ncc/-/ncc-0.26.1.tgz#457f13c8f207f5e74d19944b6797f4708c02359f"
-  integrity sha512-iVhYAL/rpHgjO88GkDHNVNrp7WTfMFBbeWXNgwaDPMv5rDI4hNOAM0u+Zhtbs42XBQE6EccNaY6UDb/tm1+dhg==
-
 abbrev@1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/abbrev/-/abbrev-1.1.1.tgz#f8f2c887ad10bf67f634f005b6987fed3179aac8"
