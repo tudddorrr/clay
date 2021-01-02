@@ -14,6 +14,25 @@ export const routes: ServiceRoute[] = [
     method: 'GET',
     path: '/albums',
     handler: 'getMany'
+  },
+  {
+    method: 'POST',
+    path: '/albums/:id/reviews',
+    handler: () => async (req: ServiceRequest): Promise<ServiceResponse> => {
+      return {
+        status: 200,
+        body: {
+          review: req.body
+        }
+      }
+    }
+  },
+  {
+    method: 'PUT',
+    path: '/albums/:id/reviews/:reviewId',
+    handler: (service: AlbumService) => async (req: ServiceRequest): Promise<ServiceResponse> => {
+      return await service.editReview(req)
+    }
   }
 ]
 
@@ -113,6 +132,15 @@ export default class AlbumService implements Service<Album> {
       status: 200,
       body: {
         albums: this.albums.slice(0, Number(count))
+      }
+    }
+  }
+
+  async editReview(req?: ServiceRequest): Promise<ServiceResponse> {
+    return {
+      status: 200,
+      body: {
+        updatedAt: Date.now()
       }
     }
   }

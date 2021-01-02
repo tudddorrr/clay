@@ -42,7 +42,7 @@ export interface HookParams {
 export interface ServiceRoute {
   method: string
   path?: string
-  handler?: string
+  handler?: string | Function
 }
 
 export interface ServiceOpts {
@@ -91,6 +91,17 @@ const buildDefaultRoutes = (basePath: string, service: Service<any>): ServiceRou
   return routes
 }
 
+const getRouteHandler = (service: Service<any>, route: ServiceRoute): Function => {
+  if (typeof route.handler === 'string') {
+    return service[route.handler]
+  } else if (typeof route.handler === 'function') {
+    const handlerFunc = <Function>route.handler
+    return handlerFunc(service)
+  } else {
+    return service[route.method.toLowerCase()]
+  }
+}
+
 export function service(name: string, service: Service<any>, opts: ServiceOpts = {}) {
   const basePath = opts.basePath ?? ''
   const routes = opts.routes?.map((route) => ({
@@ -101,13 +112,11 @@ export function service(name: string, service: Service<any>, opts: ServiceOpts =
   return async (ctx, next) => {
     attachService(ctx, name, service)
 
-    const route = routes.find((route) => {
-      return route.method === ctx.method && pathToRegexp(route.path).test(ctx.path)
-    })
+    const route = routes.find((r) => r.method === ctx.method && pathToRegexp(r.path).test(ctx.path))
+    if (!route) return next()
 
-    const handler = service[route?.handler] ?? service[route?.method.toLowerCase()]
-
-    if (!route || !handler) return next()
+    const handler = getRouteHandler(service, route)
+    if (!handler) return next()
 
     const data: ServiceRequest = {
       ctx,

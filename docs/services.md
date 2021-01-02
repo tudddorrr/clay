@@ -24,7 +24,7 @@ app.use(service('users', new UserService(), {
 A route (`ServiceRoute`) is comprised of:
 - `method`: a HTTP method (e.g. PUT)
 - `path`: The path of the endpoint (e.g. /users)
-- `handler` (optional): The name of the function to call when the endpoint is called. If not defined, this will default to the HTTP method in lowercase (i.e. GET requests will called `get()`)
+- `handler` (optional): The name of or a function to call when the endpoint is called. If not defined, this will default to the HTTP method in lowercase (i.e. GET requests will called `get()`)
 
 ```
 const routes: ServiceRoute[] = [
@@ -41,6 +41,25 @@ const routes: ServiceRoute[] = [
     method: 'GET',
     path: '/albums',
     handler: 'getMany'
+  },
+  {
+    method: 'POST',
+    path: '/albums/:id/reviews',
+    handler: () => async (req: ServiceRequest): Promise<ServiceResponse> => {
+      return {
+        status: 200,
+        body: {
+          review: req.body
+        }
+      }
+    }
+  },
+  {
+    method: 'PUT',
+    path: '/albums/:id/reviews/:reviewId',
+    handler: (service: AlbumService) => async (req: ServiceRequest): Promise<ServiceResponse> => {
+      return await service.editReview(req)
+    }
   }
 ]
 ```
