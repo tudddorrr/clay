@@ -1,5 +1,5 @@
 {
-  "name": "koa-api-services",
+  "name": "koa-rest-services",
   "version": "0.0.1",
   "description": "",
   "main": "dist/index.js",
@@ -39,6 +39,6 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/sekaru/koa-api-services.git"
+    "url": "https://github.com/sekaru/koa-rest-services.git"
   }
 }

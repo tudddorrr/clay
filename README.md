@@ -1,11 +1,11 @@
 # Koa API Services
-REST Microservices without the hassle: quick to configure, minimal boilerplate and super convenient. Have a look at the [docs](https://github.com/sekaru/koa-api-services/tree/main/docs) and [tests](https://github.com/sekaru/koa-api-services/tree/main/test) for examples.
+REST Microservices without the hassle: quick to configure, minimal boilerplate and super convenient. Have a look at the [docs](https://github.com/sekaru/koa-rest-services/tree/main/docs) and [tests](https://github.com/sekaru/koa-rest-services/tree/main/test) for examples.
 
 ## Installation
 ```
-yarn add koa-api-services
+yarn add koa-rest-services
 // OR
-npm i koa-api-services --save
+npm i koa-rest-services --save
 ```
 
 ## Lightweight route configuration
