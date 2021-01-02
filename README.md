@@ -1,4 +1,4 @@
-# Koa API Services
+# Koa REST Services
 REST Microservices without the hassle: quick to configure, minimal boilerplate and super convenient. Have a look at the [docs](https://github.com/sekaru/koa-rest-services/tree/main/docs) and [tests](https://github.com/sekaru/koa-rest-services/tree/main/test) for examples.
 
 ## Installation
