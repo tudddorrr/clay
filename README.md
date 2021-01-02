@@ -3,9 +3,9 @@ REST Microservices without the hassle: quick to configure, minimal boilerplate a
 
 ## Installation
 ```
-yarn add koa-services
+yarn add koa-api-services
 // OR
-npm i koa-services --save
+npm i koa-api-services --save
 ```
 
 ## Lightweight route configuration
