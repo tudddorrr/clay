@@ -42,6 +42,6 @@
   ],
   "repository": {
     "type" : "git",
-    "url" : "https://github.com/sekaru/koa-services.git"
+    "url" : "https://github.com/sekaru/koa-api-services.git"
   }
 }
