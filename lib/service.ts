@@ -60,6 +60,11 @@ export function service(name: string, service: Service, opts: ServiceOpts = {}) 
     ...route,
     path: basePath + route.path
   })) ?? buildDefaultRoutes(basePath, service)
+  const debug = opts.debug
+
+  if (debug) {
+    console.log(routes)
+  }
   
   return async (ctx, next) => {
     attachService(ctx, name, service)
