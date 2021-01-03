@@ -18,7 +18,7 @@ interface Comment {
   text: string
 }
 
-export default class CommentService implements Service<Comment> {
+export default class CommentService implements Service {
   comments: Comment[] = []
 
   notifyEveryone(title: string): void {

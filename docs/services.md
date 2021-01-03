@@ -19,6 +19,17 @@ app.use(service('users', new UserService(), {
 }))
 ```
 
+## Structure
+A service is any class that implements the `Service` interface. The `Service` interface comes with functions for each HTTP method (e.g. `get()` and `put()`).
+
+```
+export default class UsersService implements Service {
+  async get(req?: ServiceRequest): Promise<ServiceResponse> { ... }
+
+  async put(req?: ServiceRequest): Promise<ServiceResponse> { ... }
+}
+```
+
 ## Routes
 
 A route (`ServiceRoute`) is comprised of:

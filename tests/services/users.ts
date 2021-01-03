@@ -6,7 +6,7 @@ interface User {
   createdAt?: Date
 }
 
-export default class UserService implements Service<User> {
+export default class UserService implements Service {
   users: User[] = []
 
   validate(hook: HookParams): void {

@@ -48,7 +48,7 @@ interface Album {
   personnel?: Personnel[]
 }
 
-export default class AlbumService implements Service<Album> {
+export default class AlbumService implements Service {
   albums: Album[] = [
     {
       id: 0,

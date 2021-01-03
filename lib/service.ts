@@ -2,7 +2,7 @@ import { pathToRegexp } from 'path-to-regexp'
 import { Context } from 'koa'
 import { Service, ServiceRoute, ServiceOpts, ServiceRequest, ServiceResponse } from './declarations'
 
-const attachService = (ctx: Context, name: string, service: Service<any>): void => {
+const attachService = (ctx: Context, name: string, service: Service): void => {
   if (ctx.services?.[name] === undefined) {
     ctx.services = {
       ...ctx.services,
@@ -21,7 +21,7 @@ const buildParams = (ctx: Context, path: string): any => {
   }, {})
 }
 
-const buildDefaultRoutes = (basePath: string, service: Service<any>): ServiceRoute[] => {
+const buildDefaultRoutes = (basePath: string, service: Service): ServiceRoute[] => {
   const routes: ServiceRoute[] = []
   const methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
   const noIdRequiredMethods = ['GET', 'POST']
@@ -43,7 +43,7 @@ const buildDefaultRoutes = (basePath: string, service: Service<any>): ServiceRou
   return routes
 }
 
-const getRouteHandler = (service: Service<any>, route: ServiceRoute): Function => {
+const getRouteHandler = (service: Service, route: ServiceRoute): Function => {
   if (typeof route.handler === 'string') {
     return service[route.handler]
   } else if (typeof route.handler === 'function') {
@@ -54,7 +54,7 @@ const getRouteHandler = (service: Service<any>, route: ServiceRoute): Function =
   }
 }
 
-export function service(name: string, service: Service<any>, opts: ServiceOpts = {}) {
+export function service(name: string, service: Service, opts: ServiceOpts = {}) {
   const basePath = opts.basePath ?? ''
   const routes = opts.routes?.map((route) => ({
     ...route,

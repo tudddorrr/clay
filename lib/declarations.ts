@@ -16,7 +16,7 @@ export interface ServiceResponse {
   }
 }
 
-export interface Service<T> {
+export interface Service {
   [key: string]: any
 
   // todo HEAD, OPTIONS
