@@ -9,8 +9,5 @@
     "experimentalDecorators": true,
     "declaration": true
   },
-  "lib": ["ESNext"],
-  "files": [
-    "lib/index.ts"
-  ]
+  "lib": ["ESNext"]
 }

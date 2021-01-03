@@ -7,7 +7,9 @@
   "scripts": {
     "dev": "nodemon tests/index.ts",
     "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'tests/**/*.ts'",
-    "prepare": "yarn test && tsc"
+    "prebuild": "rm -rf -f dist",
+    "build": "tsc -p tsconfig.build.json",
+    "prepare": "yarn test && yarn build"
   },
   "keywords": [
     "koa",

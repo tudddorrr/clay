@@ -25,5 +25,5 @@ app.use(service('meta', new MetaService(), {
   basePath: '/meta'
 }))
 
-const server = app.listen(3000, () => console.log('Listening...'))
+const server = app.listen(3003, () => console.log('Listening...'))
 export default server
