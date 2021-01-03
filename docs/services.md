@@ -99,5 +99,5 @@ Requests (`ServiceRequest`) come with a number of convenient properties:
 
 ## Accessing other services
 
-You can access services from the app's state using: `ctx.state.services.{serviceName}`
+You can access services from the app's context using: `ctx.services[serviceName]`
 

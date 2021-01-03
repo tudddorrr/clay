@@ -5,7 +5,7 @@ export default class MetaService implements Service<any> {
     return {
       status: 200,
       body: {
-        services: req.ctx.state.services
+        services: req.ctx.services
       }
     }
   }

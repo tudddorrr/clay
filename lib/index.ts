@@ -51,9 +51,9 @@ export interface ServiceOpts {
 }
 
 const attachService = (ctx: Context, name: string, service: Service<any>): void => {
-  if (ctx.state.services?.[name] === undefined) {
-    ctx.state.services = {
-      ...ctx.state.services,
+  if (ctx.services?.[name] === undefined) {
+    ctx.services = {
+      ...ctx.services,
       [name]: service
     }
   }
