@@ -58,7 +58,7 @@ export function service(name: string, service: Service, opts: ServiceOpts = {}) 
   const basePath = opts.basePath ?? ''
   const routes = opts.routes?.map((route) => ({
     ...route,
-    path: basePath + route.path
+    path: basePath + (route.path ?? '')
   })) ?? buildDefaultRoutes(basePath, service)
   const debug = opts.debug
 
