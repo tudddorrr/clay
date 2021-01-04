@@ -1,5 +1,4 @@
-import { Service, ServiceRequest, HookParams, ServiceResponse, Before, After } from '../../lib'
-
+import { Service, ServiceRequest, HookParams, ServiceResponse, Before, After, Validate } from '../../lib'
 interface User {
   id: number
   name: string
@@ -8,11 +7,6 @@ interface User {
 
 export default class UserService implements Service {
   users: User[] = []
-
-  validate(hook: HookParams): void {
-    const [req] = hook.args
-    if (!req.body.name) req.ctx.throw(400, 'Needs a name')
-  }
 
   metadata(hook: HookParams): ServiceResponse {
     const res: ServiceResponse = hook.result
@@ -50,7 +44,11 @@ export default class UserService implements Service {
     }
   }
 
-  @Before('validate')
+  @Validate({
+    body: {
+      name: 'Needs a name'
+    }
+  })
   @Before((hook: HookParams): void => {
     let [req] = hook.args
     req.body.createdAt = new Date()

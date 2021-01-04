@@ -49,3 +49,8 @@ export interface ServiceOpts {
   routes?: ServiceRoute[]
   debug?: boolean
 }
+
+export interface ValidationSchema {
+  query?: { [key: string]: string | Function }
+  body?: { [key: string]: string | Function }
+}

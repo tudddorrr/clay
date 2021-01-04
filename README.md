@@ -65,21 +65,18 @@ When a request is made, the specified handler function will be invoked.
 
 ## Hooks
 
-Hooks let you run functions before or after your endpoint handlers. Hooks can modify the data coming in to a handler or the data being returned from the endpoint. For example:
+Hooks let you run functions before or after your endpoint handlers. They can check and modify the data going in/out of your handlers. For example:
 
 ### Validating requests:
 
 ```
 // UserService.ts
 
-validate(hook: HookParams): void {
-  // throw an error if data is missing
-  if (!hook.req.body.name) {
-    ctx.throw(400, 'User needs a name')
+@Validate({
+  body: {
+    name: 'User needs a name'
   }
-}
-
-@Before('validate')
+})
 async post(req: ServiceRequest): Promise<User> {
   user = createUser(req.body)
 

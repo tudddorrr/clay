@@ -1,8 +1,17 @@
 # Hooks
 
-Out of the box, you get an @Before and @After hook that run before/after the decorated function.
+Out of the box, you get an `@Before` and `@After` hook that run before/after the decorated function. You also get an `@Validate` that can check a request's body and query parameters.
 
 To enable decorators you'll need to add `"experimentalDecorators": true` into your `tsconfig.json`.
+
+## Decorators
+```
+@Before(string | Function)
+
+@After(string | Function)
+
+@Validate(ValidationSchema)
+```
 
 ## Calling functions
 
@@ -58,4 +67,32 @@ async get(req: ServiceRequest): Promise<ServiceResponse> {
 }
 
 // status returned is 204
+```
+
+## Validating requests
+You can validate keys in a request's `body` or `query`. If you return a string and the key doesn't exist, the string will be used as an error message for a 400 response.
+
+You can also provide a function. If the function returns a string, a 400 with that error message will be returned, otherwise the decorated function will be executed.
+
+```
+@Validate({
+  query: {
+    count: 'Please provide how many users you want to return'
+  }
+})
+async get(req: ServiceRequest): Promise<ServiceResponse> { ... }
+
+...
+
+@Validate({
+  body: {
+    username: 'Please provide a username',
+    age: async (val: number, req: ServiceRequest) => {
+      if (val < 13) {
+        return 'User needs to be at least 13 years old to register'
+      }
+    }
+  }
+})
+async post(req: ServiceRequest): Promise<ServiceResponse> { ... }
 ```

@@ -126,13 +126,24 @@ describe('Hooks', () => {
     server.close()
   })
 
-  it('should handle the @Before validation hook on POST', (done: Function) => {    
+  it('should handle an @Validate schema with a missing body key', (done: Function) => {    
     chai
       .request(server)
       .post('/users')
       .end((err, res) => {
         expect(res).to.have.status(400)
         expect(res.text).to.equal('Needs a name')
+        done()
+      })
+  })
+
+  it('should handle an @Validate schema with a missing query param', (done: Function) => {    
+    chai
+      .request(server)
+      .get('/albums')
+      .end((err, res) => {
+        expect(res).to.have.status(400)
+        expect(res.text).to.equal('Count not specified')
         done()
       })
   })

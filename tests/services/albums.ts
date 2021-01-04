@@ -1,4 +1,4 @@
-import { Service, ServiceRequest, ServiceResponse, ServiceRoute } from '../../lib'
+import { Service, ServiceRequest, ServiceResponse, ServiceRoute, Validate } from '../../lib'
 
 export const routes: ServiceRoute[] = [
   {
@@ -125,6 +125,11 @@ export default class AlbumService implements Service {
     }
   }
 
+  @Validate({
+    query: {
+      count: 'Count not specified'
+    }
+  })
   async getMany(req?: ServiceRequest): Promise<ServiceResponse> {
     const { count } = req.query
 
