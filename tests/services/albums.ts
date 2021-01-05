@@ -1,6 +1,16 @@
-import { Service, ServiceRequest, ServiceResponse, ServiceRoute, Validate } from '../../lib'
+import { EntityResource, Resource, Service, ServiceRequest, ServiceResponse, ServiceRoute, Validate } from '../../lib'
 
 export const routes: ServiceRoute[] = [
+  {
+    method: 'GET',
+    path: '/albums/titles',
+    handler: 'getAlbumTitles'
+  },
+  {
+    method: 'GET',
+    path: '/albums/title',
+    handler: 'getAlbumTitle'
+  },
   {
     method: 'GET',
     path: '/albums/:id'
@@ -48,6 +58,17 @@ interface Album {
   personnel?: Personnel[]
 }
 
+class AlbumResource extends EntityResource<Album> {
+  id: number
+  title: string
+
+  constructor(entity: Album) {
+    super(entity)
+    this.id = entity.id
+    this.title = entity.title
+  }
+}
+
 export default class AlbumService implements Service {
   albums: Album[] = [
     {
@@ -57,7 +78,7 @@ export default class AlbumService implements Service {
     },
     {
       id: 1,
-      title: 'McCarntey II',
+      title: 'McCartney II',
       artist: 'Paul McCartney'
     },
     {
@@ -146,6 +167,32 @@ export default class AlbumService implements Service {
       status: 200,
       body: {
         updatedAt: Date.now()
+      }
+    }
+  }
+
+  @Resource(AlbumResource, 'albums')
+  async getAlbumTitles(req?: ServiceRequest): Promise<ServiceResponse> {
+    return {
+      status: 200,
+      body: {
+        albums: this.albums
+      }
+    }
+  }
+
+  @Validate({
+    query: {
+      id: 'Please specify an album id'
+    }
+  })
+  @Resource(AlbumResource, 'album')
+  async getAlbumTitle(req?: ServiceRequest): Promise<ServiceResponse> {
+    const { id } = req.query
+    return {
+      status: 200,
+      body: {
+        album: this.albums.find((album) => album.id === Number(id))
       }
     }
   }

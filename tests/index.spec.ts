@@ -44,7 +44,7 @@ describe('Request parsing', () => {
       .get('/albums/1')
       .end((err, res) => {
         expect(res).to.have.status(200)
-        expect(res.body).to.have.property('album').with.property('title', 'McCarntey II')
+        expect(res.body).to.have.property('album').with.property('title', 'McCartney II')
         done()
       })
   })
@@ -180,6 +180,35 @@ describe('Hooks', () => {
       .end((err, res) => {
         expect(res).to.have.status(200)
         expect(res.body).to.not.have.property('metadata')
+        done()
+      })
+  })
+
+  it('should return an EntityResource[] if @Resource specified on an array', (done: Function) => {    
+    chai
+      .request(server)
+      .get('/albums/titles')
+      .end((err, res) => {
+        expect(res).to.have.status(200)
+        expect(res.body.albums).to.have.deep.members([
+          { id: 0, title: 'McCartney I' },
+          { id: 1, title: 'McCartney II' },
+          { id: 2, title: 'McCartney III' }
+        ])
+        done()
+      })
+  })
+
+  it('should return an EntityResource if @Resource specified on an object', (done: Function) => {    
+    chai
+      .request(server)
+      .get('/albums/title?id=1')
+      .end((err, res) => {
+        expect(res).to.have.status(200)
+        expect(res.body.album).to.eql({
+          id: 1,
+          title: 'McCartney II'
+        })
         done()
       })
   })

@@ -54,3 +54,11 @@ export interface ValidationSchema {
   query?: { [key: string]: string | Function }
   body?: { [key: string]: string | Function }
 }
+
+export class EntityResource<T> {
+  constructor(entity: T) { }
+}
+
+export interface EntityResourceInstance<T> {
+  new (entity: T): EntityResource<T>;
+}

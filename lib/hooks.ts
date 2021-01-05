@@ -1,4 +1,4 @@
-import { HookParams, ServiceRequest, ValidationSchema } from './declarations'
+import { EntityResourceInstance, HookParams, ServiceRequest, ValidationSchema } from './declarations'
 
 export const Before = (func: string | Function) => (tar: Object, _: string, descriptor: PropertyDescriptor) => {
   const base = descriptor.value
@@ -63,6 +63,28 @@ export const Validate = (schema: ValidationSchema) => (tar: Object, _: string, d
 
     const result = await base.apply(this, args)
     return result
+  }
+
+  return descriptor
+}
+
+export const Resource = (EntityResource: EntityResourceInstance<any>, bodyKey: string) => (tar: Object, _: string, descriptor: PropertyDescriptor) => {
+  const base = descriptor.value
+
+  descriptor.value = async function (...args) {
+    let result = await base.apply(this, args)
+    const val = result.body[bodyKey]
+    const transformedResource = Array.isArray(val)
+      ? val.map((resource) => new EntityResource(resource))
+      : new EntityResource(val)
+
+    return {
+      ...result,
+      body: {
+        ...result.body,
+        [bodyKey]: transformedResource
+      }
+    }
   }
 
   return descriptor
