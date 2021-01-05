@@ -1,19 +1,12 @@
 # Hooks
 
-Out of the box, you get an `@Before` and `@After` hook that run before/after the decorated function. You also get an `@Validate` that can check a request's body and query parameters.
+Hooks run before/after functions in your services.
 
 To enable decorators you'll need to add `"experimentalDecorators": true` into your `tsconfig.json`.
 
-## Decorators
-```
-@Before(string | Function)
+## @Before and @After
 
-@After(string | Function)
-
-@Validate(ValidationSchema)
-```
-
-## Calling functions
+These hooks run before/after the decorated function is executed.
 
 You can invoke functions either by passing a function or a string with the name of the function to call:
 
@@ -29,14 +22,14 @@ async get(req: ServiceRequest) { ... }
 async get(req: ServiceRequest) { ... }
 ```
 
-## HookParams
+### HookParams
 
 Hooks are called with a `HookParams` object containing:
 - `args`: an array of arguments passed to the original function (i.e. `req: ServiceRequest`)
 - `result`: passed to the `@After` hook containing the return value of the function
 - `caller`: `this` context of the class (useful for calling another method in the class)
 
-## Modifying requests
+### Modifying requests
 
 You can modify the value of request bodies using the `@Before` hook:
 
@@ -48,7 +41,7 @@ You can modify the value of request bodies using the `@Before` hook:
 async post(req: ServiceRequest) { ... }
 ```
 
-## Modifying responses
+### Modifying responses
 
 You can modify the response object by returning a value in the `@After` hook:
 
@@ -69,8 +62,8 @@ async get(req: ServiceRequest): Promise<ServiceResponse> {
 // status returned is 204
 ```
 
-## Validating requests
-You can validate keys in a request's `body` or `query`. If you return a string and the key doesn't exist, the string will be used as an error message for a 400 response.
+## @Validate
+@Validate runs before your function. You can validate keys in a request's `body` or `query`. If you return a string and the key doesn't exist, the string will be used as an error message for a 400 response.
 
 You can also provide a function. If the function returns a string, a 400 with that error message will be returned, otherwise the decorated function will be executed.
 
@@ -95,4 +88,48 @@ async get(req: ServiceRequest): Promise<ServiceResponse> { ... }
   }
 })
 async post(req: ServiceRequest): Promise<ServiceResponse> { ... }
+```
+
+## @Resource
+@Resource runs after your function. It can "resourceify" objects and arrays in your response. Typically you'd do this to avoid sensitive data from your database being exposed or to add in extra useful keys.
+
+@Resource takes a class that extends the built-in `EntityResource` class and the name of the key in the response body to transform:
+
+```
+// transform body.albums
+@Resource(AlbumResource, 'albums')
+async getAlbumTitles(req?: ServiceRequest): Promise<ServiceResponse> {
+  return {
+    status: 200,
+    body: {
+      albums: this.albums
+    }
+  }
+}
+
+// transform body.album
+@Resource(AlbumResource, 'album')
+async getAlbumTitle(req?: ServiceRequest): Promise<ServiceResponse> {
+  return {
+    status: 200,
+    body: {
+      album: this.albums.find((album) => album.id === req.query.id)
+    }
+  }
+}
+```
+
+In the example above, you could have an `AlbumResource` that looks like this:
+
+```
+class AlbumResource extends EntityResource<Album> {
+  id: number
+  title: string
+
+  constructor(entity: Album) {
+    super(entity)
+    this.id = entity.id
+    this.title = entity.title
+  }
+}
 ```
