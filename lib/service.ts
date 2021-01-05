@@ -54,6 +54,13 @@ const getRouteHandler = (service: Service, route: ServiceRoute): Function => {
   }
 }
 
+const buildDebugRoute = (route: ServiceRoute) => {
+  const handler = route.handler
+  ? typeof route.handler === 'function' ? '[Function]' : `${route.handler}()`
+  : `${route.method.toLowerCase()}()`
+  return `${route.method} ${route.path} => ${handler}`
+}
+
 export function service(name: string, service: Service, opts: ServiceOpts = {}) {
   const basePath = opts.basePath ?? ''
   const routes = opts.routes?.map((route) => ({
@@ -63,7 +70,8 @@ export function service(name: string, service: Service, opts: ServiceOpts = {}) 
   const debug = opts.debug
 
   if (debug) {
-    console.log(routes)
+    console.log(`Available ${name} service routes:`)
+    console.log(routes.map(buildDebugRoute))
   }
   
   return async (ctx, next) => {
@@ -71,6 +79,7 @@ export function service(name: string, service: Service, opts: ServiceOpts = {}) 
 
     const route = routes.find((r) => r.method === ctx.method && pathToRegexp(r.path).test(ctx.path))
     if (!route) return next()
+    if (debug) console.log(`Using route`, [buildDebugRoute(route)])
 
     const handler = getRouteHandler(service, route)
     if (!handler) return next()
