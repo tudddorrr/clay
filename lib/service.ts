@@ -78,11 +78,17 @@ export function service(name: string, service: Service, opts: ServiceOpts = {}) 
     attachService(ctx, name, service)
 
     const route = routes.find((r) => r.method === ctx.method && pathToRegexp(r.path).test(ctx.path))
-    if (!route) return next()
+    if (!route) {
+      if (debug) console.log(`Route for ${ctx.method} ${ctx.path} not found`)
+      return next()
+    }
     if (debug) console.log(`Using route`, [buildDebugRoute(route)])
 
     const handler = getRouteHandler(service, route)
-    if (!handler) return next()
+    if (!handler) {
+      if (debug) console.log('Warning: route handler not found')
+      return next()
+    }
 
     const data: ServiceRequest = {
       ctx,
