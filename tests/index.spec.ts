@@ -212,6 +212,16 @@ describe('Hooks', () => {
         done()
       })
   })
+
+  it('should not crash if @Resource specified on missing key', (done: Function) => {    
+    chai
+      .request(server)
+      .get('/albums/title?id=5')
+      .end((err, res) => {
+        expect(res).to.have.status(204)
+        done()
+      })
+  })
 })
 
 describe('Handler functions', () => {

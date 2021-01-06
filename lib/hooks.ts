@@ -73,7 +73,9 @@ export const Resource = (EntityResource: EntityResourceInstance<any>, bodyKey: s
 
   descriptor.value = async function (...args) {
     let result = await base.apply(this, args)
-    const val = result.body[bodyKey]
+    const val = result.body?.[bodyKey]
+    if (!val) return result
+
     const transformedResource = Array.isArray(val)
       ? val.map((resource) => new EntityResource(resource))
       : new EntityResource(val)

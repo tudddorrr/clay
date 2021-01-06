@@ -189,10 +189,16 @@ export default class AlbumService implements Service {
   @Resource(AlbumResource, 'album')
   async getAlbumTitle(req?: ServiceRequest): Promise<ServiceResponse> {
     const { id } = req.query
+    const album = this.albums.find((album) => album.id === Number(id))
+
+    if (!album) {
+      return { status: 204 }
+    }
+
     return {
       status: 200,
       body: {
-        album: this.albums.find((album) => album.id === Number(id))
+        album
       }
     }
   }
