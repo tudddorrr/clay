@@ -218,7 +218,7 @@ describe('Hooks', () => {
       .request(server)
       .get('/albums/title?id=5')
       .end((err, res) => {
-        expect(res).to.have.status(204)
+        expect(res).to.have.status(404)
         done()
       })
   })

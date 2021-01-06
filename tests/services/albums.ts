@@ -107,12 +107,7 @@ export default class AlbumService implements Service {
     const album = this.albums.find((a) => a.id === Number(id))
 
     if (!album) {
-      return {
-        status: 204,
-        body: {
-          album: null
-        }
-      }
+      req.ctx.throw(404, 'Album not found')
     }
 
     return {
@@ -129,12 +124,7 @@ export default class AlbumService implements Service {
     const personnel = album?.personnel?.find((p) => p.id === Number(personnelId))
 
     if (!album || !personnel) {
-      return {
-        status: 204,
-        body: {
-          album: null
-        }
-      }
+      req.ctx.throw(404, 'Album/personnel not found')
     }
 
     return {
@@ -192,7 +182,7 @@ export default class AlbumService implements Service {
     const album = this.albums.find((album) => album.id === Number(id))
 
     if (!album) {
-      return { status: 204 }
+      req.ctx.throw(404, 'Album not found')
     }
 
     return {
