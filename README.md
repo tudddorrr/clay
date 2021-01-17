@@ -1,5 +1,11 @@
 Build Koa REST microservices without the hassle: quick to configure, minimal boilerplate and super convenient. Have a look at the [docs](https://github.com/sekaru/koa-rest-services/tree/main/docs) and [tests](https://github.com/sekaru/koa-rest-services/tree/main/tests) for examples.
 
+## Features
+* Expose API routes with minimal config
+* Run functions before and after handling requests
+* Validate requests and provide custom error messages when keys are missing/invalid
+* Transform entities before sending them to prevent exposing sensitive data
+
 ## Installation
 ```
 yarn add koa-rest-services
