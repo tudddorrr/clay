@@ -148,6 +148,17 @@ describe('Hooks', () => {
       })
   })
 
+  it('should handle an @Validate schema provided with an array of keys', (done: Function) => {    
+    chai
+      .request(server)
+      .get('/albums/title')
+      .end((err, res) => {
+        expect(res).to.have.status(400)
+        expect(res.text).to.equal('Missing query key: id')
+        done()
+      })
+  })
+
   it('should handle the @Before timestamps hook on POST', (done: Function) => {    
     chai
       .request(server)

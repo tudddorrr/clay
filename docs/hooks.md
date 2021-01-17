@@ -90,6 +90,17 @@ async get(req: ServiceRequest): Promise<ServiceResponse> { ... }
 async post(req: ServiceRequest): Promise<ServiceResponse> { ... }
 ```
 
+For more simple use cases, you can also provide the body and query keys an array:
+
+```
+@Validate({
+  body: ['username', 'age']
+})
+async post(req: ServiceRequest): Promise<ServiceResponse> { ... }
+```
+
+If any of the keys are missing, the response will simply be: `Missing [body or query] key: [key name]`. In the case above, if there's no `username` provided, your response will be: `Missing body key: username`.
+
 ## @Resource
 @Resource runs after your function. It can "resourceify" objects and arrays in your response. Typically you'd do this to avoid sensitive data from your database being exposed or to add in extra useful keys.
 

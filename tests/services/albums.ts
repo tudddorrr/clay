@@ -172,9 +172,7 @@ export default class AlbumService implements Service {
   }
 
   @Validate({
-    query: {
-      id: 'Please specify an album id'
-    }
+    query: ['id']
   })
   @Resource(AlbumResource, 'album')
   async getAlbumTitle(req?: ServiceRequest): Promise<ServiceResponse> {

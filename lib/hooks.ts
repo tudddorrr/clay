@@ -41,13 +41,22 @@ export const After = (func: string | Function) => (tar: Object, _: string, descr
 }
 
 const checkValidationSchemaParam = async (req: ServiceRequest, schema: ValidationSchema, schemaParam: string): Promise<void> => {
-  for (let key of Object.keys(schema[schemaParam])) {
-    const val = req[schemaParam]?.[key]
-    if (typeof schema[schemaParam][key] === 'string') {
-      if (!val) req.ctx.throw(400, schema[schemaParam][key])
-    } else if (typeof schema[schemaParam][key] === 'function') {
-      const validatorMessage = await (<Function>schema[schemaParam][key])(val, req)
-      if (validatorMessage) req.ctx.throw(400, validatorMessage)
+  if (Array.isArray(schema[schemaParam])) {
+    // e.g. { body: ['name', 'email'] }
+    for (let key of schema[schemaParam]) {
+      const val = req[schemaParam]?.[key]
+      if (!val) req.ctx.throw(400, `Missing ${schemaParam} key: ${key}`)
+    }
+  } else {
+    // e.g. { body: { name: 'Please provide a name' }}
+    for (let key of Object.keys(schema[schemaParam])) {
+      const val = req[schemaParam]?.[key]
+      if (typeof schema[schemaParam][key] === 'string') {
+        if (!val) req.ctx.throw(400, schema[schemaParam][key])
+      } else if (typeof schema[schemaParam][key] === 'function') {
+        const validatorMessage = await (<Function>schema[schemaParam][key])(val, req)
+        if (validatorMessage) req.ctx.throw(400, validatorMessage)
+      }
     }
   }
 }
