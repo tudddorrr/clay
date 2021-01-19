@@ -45,7 +45,7 @@ export default class CommentService implements Service {
     }
   }
 
-  @After((hook: HookParams): void | ServiceResponse => {
+  @After(async (hook: HookParams): Promise<void> => {
     // this shouldn't modify the response returned
     const [req] = hook.args
     req.body.metadata = {

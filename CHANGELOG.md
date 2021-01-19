@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.0.10 (19th Jan 2021)
+* Handle @After and @Before hooks if they're async functions
+
 ## 0.0.9 (17th Jan 2021)
 
 * (Tests) Fix questionable usage of 204

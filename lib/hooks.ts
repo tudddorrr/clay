@@ -7,9 +7,9 @@ export const Before = (func: string | Function) => (tar: Object, _: string, desc
     const hook: HookParams = { args, caller: this }
 
     if (typeof func === 'string') {
-      tar[func]?.(hook)
+      await tar[func]?.(hook)
     } else if (typeof func === 'function') {
-      func(hook)
+      await func(hook)
     }
 
     const result = await base.apply(this, args)
@@ -28,9 +28,9 @@ export const After = (func: string | Function) => (tar: Object, _: string, descr
     const hook: HookParams = { args, result, caller: this }
 
     if (typeof func === 'string') {
-      hookResult = tar[func]?.(hook)
+      hookResult = await tar[func]?.(hook)
     } else if (typeof func === 'function') {
-      hookResult = func(hook)
+      hookResult = await func(hook)
     }
 
     if (hookResult) result = hookResult
