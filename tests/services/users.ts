@@ -50,7 +50,7 @@ export default class UserService implements Service {
     }
   })
   @Before((hook: HookParams): void => {
-    let [req] = hook.args
+    const req: ServiceRequest = hook.req
     req.body.createdAt = new Date()
   })
   async post(req?: ServiceRequest): Promise<ServiceResponse> {

@@ -4,7 +4,7 @@ export const Before = (func: string | Function) => (tar: Object, _: string, desc
   const base = descriptor.value
 
   descriptor.value = async function (...args) {
-    const hook: HookParams = { args, caller: this }
+    const hook: HookParams = { req: args[0], caller: this }
 
     if (typeof func === 'string') {
       await tar[func]?.(hook)
@@ -25,7 +25,7 @@ export const After = (func: string | Function) => (tar: Object, _: string, descr
   descriptor.value = async function (...args) {
     let result = await base.apply(this, args)
     let hookResult = null
-    const hook: HookParams = { args, result, caller: this }
+    const hook: HookParams = { req: args[0], result, caller: this }
 
     if (typeof func === 'string') {
       hookResult = await tar[func]?.(hook)

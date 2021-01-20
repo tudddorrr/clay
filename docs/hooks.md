@@ -25,7 +25,7 @@ async get(req: ServiceRequest) { ... }
 ### HookParams
 
 Hooks are called with a `HookParams` object containing:
-- `args`: an array of arguments passed to the original function (i.e. `req: ServiceRequest`)
+- `req`: the `ServiceRequest` passed to the handler
 - `result`: passed to the `@After` hook containing the return value of the function
 - `caller`: `this` context of the class (useful for calling another method in the class)
 
@@ -35,7 +35,7 @@ You can modify the value of request bodies using the `@Before` hook:
 
 ```
 @Before((hook: HookParams): void => {
-  const [req] = hook.args
+  const req: ServiceRequest = hook.req
   req.body.receivedAt = Date.now()
 })
 async post(req: ServiceRequest) { ... }

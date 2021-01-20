@@ -26,7 +26,7 @@ export default class CommentService implements Service {
   }
 
   @After((hook: HookParams): void => {
-    const [req] = hook.args
+    const req: ServiceRequest = hook.req
     hook.caller.notifyEveryone(req.body.title)
   })
   async post(req?: ServiceRequest): Promise<ServiceResponse> {
@@ -47,7 +47,7 @@ export default class CommentService implements Service {
 
   @After(async (hook: HookParams): Promise<void> => {
     // this shouldn't modify the response returned
-    const [req] = hook.args
+    const req: ServiceRequest = hook.req
     req.body.metadata = {
       timestamp: Date.now()
     }

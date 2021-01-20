@@ -33,7 +33,7 @@ export interface Service {
 }
 
 export interface HookParams {
-  args: Array<any>
+  req: ServiceRequest
   result?: ServiceResponse
   caller: any
 }
