@@ -80,14 +80,14 @@ export function service(name: string, service: Service, opts: ServiceOpts = {}) 
     const route = routes.find((r) => r.method === ctx.method && pathToRegexp(r.path).test(ctx.path))
     if (!route) {
       if (debug) console.log(`Route for ${ctx.method} ${ctx.path} not found`)
-      return next()
+      return await next()
     }
     if (debug) console.log(`Using route`, [buildDebugRoute(route)])
 
     const handler = getRouteHandler(service, route)
     if (!handler) {
       if (debug) console.log('Warning: route handler not found')
-      return next()
+      return await next()
     }
 
     const data: ServiceRequest = {
