@@ -4,7 +4,7 @@ export interface ServiceRequest {
   ctx: Context
   headers: { [key: string]: any }
   path: { [key: string]: string }
-  query?: { [key: string]: any }
+  query?: { [key: string]: string }
   params?: { [key: string]: string }
   body?: { [key: string]: any }
 }
