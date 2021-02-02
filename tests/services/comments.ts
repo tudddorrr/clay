@@ -1,4 +1,5 @@
-import { Service, ServiceRequest, HookParams, ServiceResponse, ServiceRoute, After } from '../../lib'
+import { Service, ServiceRequest, HookParams, ServiceResponse, ServiceRoute } from '../../lib'
+import After from '../../lib/hooks/after'
 
 export const routes: ServiceRoute[] = [
   {
@@ -29,7 +30,7 @@ export default class CommentService implements Service {
     const req: ServiceRequest = hook.req
     hook.caller.notifyEveryone(req.body.title)
   })
-  async post(req?: ServiceRequest): Promise<ServiceResponse> {
+  async post(req: ServiceRequest): Promise<ServiceResponse> {
     const len = this.comments.push({
       ...req.body,
       id: this.comments.length + 1,
@@ -52,7 +53,7 @@ export default class CommentService implements Service {
       timestamp: Date.now()
     }
   })
-  async getMany(req?: ServiceRequest): Promise<ServiceResponse> {
+  async getMany(req: ServiceRequest): Promise<ServiceResponse> {
     return {
       status: 200,
       body: {

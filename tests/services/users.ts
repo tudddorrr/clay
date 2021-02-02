@@ -1,5 +1,7 @@
-import { Service, ServiceRequest, HookParams, ServiceResponse, Before, After, Validate } from '../../lib'
-
+import { Service, ServiceRequest, HookParams, ServiceResponse } from '../../lib'
+import Before from '../../lib/hooks/before'
+import After from '../../lib/hooks/after'
+import Validate from '../../lib/hooks/validate'
 interface User {
   id: number
   name: string
@@ -23,7 +25,7 @@ export default class UserService implements Service {
   }
 
   @After('metadata')
-  async get(req?: ServiceRequest): Promise<ServiceResponse> {
+  async get(req: ServiceRequest): Promise<ServiceResponse> {
     const { id } = req.params
 
     // handle /users/:id
@@ -54,7 +56,7 @@ export default class UserService implements Service {
     const req: ServiceRequest = hook.req
     req.body.createdAt = new Date()
   })
-  async post(req?: ServiceRequest): Promise<ServiceResponse> {
+  async post(req: ServiceRequest): Promise<ServiceResponse> {
     const len = this.users.push({
       ...req.body,
       id: this.users.length + 1,

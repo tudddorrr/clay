@@ -1,4 +1,6 @@
-import { EntityResource, Resource, Service, ServiceRequest, ServiceResponse, ServiceRoute, Validate } from '../../lib'
+import { EntityResource, Service, ServiceRequest, ServiceResponse, ServiceRoute } from '../../lib'
+import Resource from '../../lib/hooks/resource'
+import Validate from '../../lib/hooks/validate'
 
 export const routes: ServiceRoute[] = [
   {
@@ -102,7 +104,7 @@ export default class AlbumService implements Service {
     }
   ]
 
-  async get(req?: ServiceRequest): Promise<ServiceResponse> {
+  async get(req: ServiceRequest): Promise<ServiceResponse> {
     const { id } = req.params
     const album = this.albums.find((a) => a.id === Number(id))
 
@@ -118,7 +120,7 @@ export default class AlbumService implements Service {
     }
   }
 
-  async getPersonnel(req?: ServiceRequest): Promise<ServiceResponse> {
+  async getPersonnel(req: ServiceRequest): Promise<ServiceResponse> {
     const { id, personnelId } = req.params
     const album = this.albums.find((a) => a.id === Number(id))
     const personnel = album?.personnel?.find((p) => p.id === Number(personnelId))
@@ -141,7 +143,7 @@ export default class AlbumService implements Service {
       count: 'Count not specified'
     }
   })
-  async getMany(req?: ServiceRequest): Promise<ServiceResponse> {
+  async getMany(req: ServiceRequest): Promise<ServiceResponse> {
     const { count } = req.query
 
     return {
@@ -152,7 +154,7 @@ export default class AlbumService implements Service {
     }
   }
 
-  async editReview(req?: ServiceRequest): Promise<ServiceResponse> {
+  async editReview(req: ServiceRequest): Promise<ServiceResponse> {
     return {
       status: 200,
       body: {
@@ -162,7 +164,7 @@ export default class AlbumService implements Service {
   }
 
   @Resource(AlbumResource, 'albums')
-  async getAlbumTitles(req?: ServiceRequest): Promise<ServiceResponse> {
+  async getAlbumTitles(req: ServiceRequest): Promise<ServiceResponse> {
     return {
       status: 200,
       body: {
@@ -175,7 +177,7 @@ export default class AlbumService implements Service {
     query: ['id']
   })
   @Resource(AlbumResource, 'album')
-  async getAlbumTitle(req?: ServiceRequest): Promise<ServiceResponse> {
+  async getAlbumTitle(req: ServiceRequest): Promise<ServiceResponse> {
     const { id } = req.query
     const album = this.albums.find((album) => album.id === Number(id))
 
