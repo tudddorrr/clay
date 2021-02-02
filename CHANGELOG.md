@@ -1,7 +1,8 @@
 # Changelog
 
-## Unreleased
+## 0.2.0 (2nd Feb 2021)
 * Set type of query params to `string` instead of `any`
+* Added `@HasPermission` hook for checking requests against policy classes 
 
 ## 0.1.0 (20th Jan 2021)
 * (Breaking) `HookParams` now exposes the `req: ServiceRequest` of the handler instead of the `args`

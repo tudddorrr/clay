@@ -109,7 +109,7 @@ If any of the keys are missing, the response will simply be: `Missing [body or q
 ```
 // transform body.albums
 @Resource(AlbumResource, 'albums')
-async getAlbumTitles(req?: ServiceRequest): Promise<ServiceResponse> {
+async getAlbumTitles(req: ServiceRequest): Promise<ServiceResponse> {
   return {
     status: 200,
     body: {
@@ -120,7 +120,7 @@ async getAlbumTitles(req?: ServiceRequest): Promise<ServiceResponse> {
 
 // transform body.album
 @Resource(AlbumResource, 'album')
-async getAlbumTitle(req?: ServiceRequest): Promise<ServiceResponse> {
+async getAlbumTitle(req: ServiceRequest): Promise<ServiceResponse> {
   return {
     status: 200,
     body: {
@@ -144,3 +144,28 @@ class AlbumResource extends EntityResource<Album> {
   }
 }
 ```
+
+## @HasPermission
+@HasPermission runs before your function to check if the endpoint can be called:
+
+```
+class SecretsServicePolicy extends ServicePolicy {
+  async get(req: ServiceRequest): Promise<boolean> {
+    return this.ctx.user.hasScope('get')
+  }
+
+  async post(req: ServiceRequest): Promise<boolean> {
+    return this.ctx.user.hasScope('post')
+  }
+}
+
+class SecretsService implements Service {
+  @HasPermission(SecretsServicePolicy, 'get')
+  async get(req: ServiceRequest): Promise<ServiceResponse> { ... }
+
+  @HasPermission(SecretsServicePolicy, 'post')
+  async post(req: ServiceRequest): Promise<ServiceResponse> { ... }
+}
+```
+
+Policy classes should extend the `ServicePolicy` class which simply sets the Koa context (`ctx`) as a member variable. Beyond that, the implementation is totally up to you - you could check the `ctx.state` (if you're using `koa-jwt`) or even the request to make sure the required permissions are met.

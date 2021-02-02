@@ -1,0 +1,29 @@
+import { HasPermission, HookParams, Service, ServicePolicy, ServiceRequest, ServiceResponse } from '../../lib'
+import Before from '../../lib/hooks/before'
+
+class SecretsServicePolicy extends ServicePolicy {
+  async get(req: ServiceRequest): Promise<boolean> {
+    return req.query.scope === 'get'
+  }
+
+  async post(req: ServiceRequest): Promise<boolean> {
+    return this.ctx.state.key === 'abc123'
+  }
+}
+
+export default class SecretsService implements Service {
+  @HasPermission(SecretsServicePolicy, 'get')
+  async get(req: ServiceRequest): Promise<ServiceResponse> {
+    return {
+      status: 204
+    }
+  }
+
+  @Before((hook: HookParams) => hook.req.ctx.state.key = hook.req.body.key)
+  @HasPermission(SecretsServicePolicy, 'post')
+  async post(req: ServiceRequest): Promise<ServiceResponse> {
+    return {
+      status: 204
+    }
+  }
+}

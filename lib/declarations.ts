@@ -62,3 +62,11 @@ export class EntityResource<T> {
 export interface EntityResourceInstance<T> {
   new (entity: T): EntityResource<T>;
 }
+
+export class ServicePolicy {
+  ctx: Context
+
+  constructor(ctx: Context) {
+    this.ctx = ctx;
+  }
+}

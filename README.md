@@ -1,10 +1,15 @@
-Build Koa REST microservices without the hassle: quick to configure, minimal boilerplate and super convenient. Have a look at the [docs](https://github.com/sekaru/koa-rest-services/tree/main/docs) and [tests](https://github.com/sekaru/koa-rest-services/tree/main/tests) for examples.
+Build Koa REST microservices without the hassle: quick to configure, minimal boilerplate and super convenient.
 
 ## Features
 * Expose API routes with minimal config
 * Run functions before and after handling requests
 * Validate requests and provide custom error messages when keys are missing/invalid
 * Transform entities before sending them to prevent exposing sensitive data
+
+## Examples
+Docs: [docs](https://github.com/sekaru/koa-rest-services/tree/main/docs)
+
+Tests: [tests](https://github.com/sekaru/koa-rest-services/tree/main/tests)
 
 ## Installation
 ```
@@ -70,7 +75,7 @@ When a request is made, the specified handler function will be invoked.
 
 ## Hooks
 
-Hooks let you run functions before or after your endpoint handlers. They can check and modify the data going in/out of your handlers. For example:
+Hooks let you run functions before or after your endpoint handlers. They can modify requests/responses, validate requests and check user permissions. For example:
 
 ### Validating requests:
 
@@ -100,13 +105,7 @@ async post(req: ServiceRequest): Promise<User> {
 timestamp(hook: HookParams): ServiceResponse {
   // modifies the response to add a timestamp key
   const res = hook.result
-  return {
-    ...res,
-    body: {
-      ...res.body,
-      timestamp: new Date()
-    }
-  }
+  return lodash.set('res.body.timestamp', new Date())
 }
 
 @After('timestamp')

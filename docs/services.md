@@ -25,9 +25,9 @@ A service is any class that implements the `Service` interface. The `Service` in
 
 ```
 export default class UsersService implements Service {
-  async get(req?: ServiceRequest): Promise<ServiceResponse> { ... }
+  async get(req: ServiceRequest): Promise<ServiceResponse> { ... }
 
-  async put(req?: ServiceRequest): Promise<ServiceResponse> { ... }
+  async put(req: ServiceRequest): Promise<ServiceResponse> { ... }
 }
 ```
 
