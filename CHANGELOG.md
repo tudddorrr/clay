@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.2.1 (2nd Feb 2021)
+* Fixed exports for hook functions
+
 ## 0.2.0 (2nd Feb 2021)
 * Set type of query params to `string` instead of `any`
 * Added `@HasPermission` hook for checking requests against policy classes 

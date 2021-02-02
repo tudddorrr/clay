@@ -1,7 +1,5 @@
-import { Service, ServiceRequest, HookParams, ServiceResponse } from '../../lib'
-import Before from '../../lib/hooks/before'
-import After from '../../lib/hooks/after'
-import Validate from '../../lib/hooks/validate'
+import { Service, ServiceRequest, HookParams, ServiceResponse, Before, After, Validate } from '../../lib'
+
 interface User {
   id: number
   name: string

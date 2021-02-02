@@ -1,6 +1,6 @@
 import { HookParams } from '../declarations'
 
-const Before = (func: string | Function) => (tar: Object, _: string, descriptor: PropertyDescriptor) => {
+export const Before = (func: string | Function) => (tar: Object, _: string, descriptor: PropertyDescriptor) => {
   const base = descriptor.value
 
   descriptor.value = async function (...args) {

@@ -21,7 +21,7 @@ const checkValidationSchemaParam = async (req: ServiceRequest, schema: Validatio
   }
 }
 
-const Validate = (schema: ValidationSchema) => (tar: Object, _: string, descriptor: PropertyDescriptor) => {
+export const Validate = (schema: ValidationSchema) => (tar: Object, _: string, descriptor: PropertyDescriptor) => {
   const base = descriptor.value
 
   descriptor.value = async function (...args) {

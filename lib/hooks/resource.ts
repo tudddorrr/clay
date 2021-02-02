@@ -1,6 +1,6 @@
 import { EntityResourceInstance } from '../declarations'
 
-const Resource = (EntityResource: EntityResourceInstance<any>, bodyKey: string) => (tar: Object, _: string, descriptor: PropertyDescriptor) => {
+export const Resource = (EntityResource: EntityResourceInstance<any>, bodyKey: string) => (tar: Object, _: string, descriptor: PropertyDescriptor) => {
   const base = descriptor.value
 
   descriptor.value = async function (...args) {
