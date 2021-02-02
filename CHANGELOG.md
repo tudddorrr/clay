@@ -1,5 +1,8 @@
 # Changelog
 
+## Unreleased
+* Set type of query params to `string` instead of `any`
+
 ## 0.1.0 (20th Jan 2021)
 * (Breaking) `HookParams` now exposes the `req: ServiceRequest` of the handler instead of the `args`
 
