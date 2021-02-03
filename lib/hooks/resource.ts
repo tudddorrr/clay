@@ -9,8 +9,8 @@ export const Resource = (EntityResource: EntityResourceInstance<any>, bodyKey: s
     if (!val) return result
 
     const transformedResource = Array.isArray(val)
-      ? val.map((resource) => new EntityResource(resource))
-      : new EntityResource(val)
+      ? await Promise.all(val.map(async (entity) => await (new EntityResource(entity)).transform()))
+      : await (new EntityResource(val)).transform()
 
     return {
       ...result,

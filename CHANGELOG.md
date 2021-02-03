@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.3.0 (3rd Feb 2021)
+* (Breaking) Resources now need to implement an `async transform()` function to transform entities rather than doing it in the constructor
+
 ## 0.2.1 (2nd Feb 2021)
 * Fixed exports for hook functions
 

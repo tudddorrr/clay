@@ -56,17 +56,23 @@ export interface ValidationSchema {
 }
 
 export class EntityResource<T> {
-  constructor(entity: T) { }
+  entity: T
+
+  constructor(entity: T) {
+    this.entity = entity
+  }
+
+  async transform(): Promise<any> { }
 }
 
 export interface EntityResourceInstance<T> {
-  new (entity: T): EntityResource<T>;
+  new (entity: T): EntityResource<T>
 }
 
 export class ServicePolicy {
   ctx: Context
 
   constructor(ctx: Context) {
-    this.ctx = ctx;
+    this.ctx = ctx
   }
 }

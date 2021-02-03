@@ -134,13 +134,16 @@ In the example above, you could have an `AlbumResource` that looks like this:
 
 ```
 class AlbumResource extends EntityResource<Album> {
-  id: number
-  title: string
-
   constructor(entity: Album) {
     super(entity)
-    this.id = entity.id
-    this.title = entity.title
+  }
+
+  async transform(): Promise<any> {
+    // EntityResource has the original entity as a member variable
+    return {
+      id: this.entity.id,
+      title: this.entity.title
+    }
   }
 }
 ```

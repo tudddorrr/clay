@@ -59,13 +59,11 @@ interface Album {
 }
 
 class AlbumResource extends EntityResource<Album> {
-  id: number
-  title: string
-
-  constructor(entity: Album) {
-    super(entity)
-    this.id = entity.id
-    this.title = entity.title
+  async transform(): Promise<any> {
+    return {
+      id: this.entity.id,
+      title: this.entity.title
+    }
   }
 }
 
