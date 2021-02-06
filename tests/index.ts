@@ -15,7 +15,8 @@ app.use(service('users', new UserService(), {
 }))
 
 app.use(service('comments', new CommentService(), {
-  routes: commentRoutes
+  routes: commentRoutes,
+  basePath: '/comments'
 }))
 
 app.use(service('albums', new AlbumService(), {

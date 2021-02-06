@@ -119,6 +119,26 @@ describe('Defined routes', () => {
         done()
       })
   })
+
+  it('should use the correct default path for the method if no path is specified', (done: Function) => {
+    chai
+      .request(server)
+      .delete('/comments/123')
+      .end((err, res) => {
+        expect(res).to.not.have.status(404)
+        done()
+      })
+  })
+
+  it('should not handle an undefined route method', (done: Function) => {
+    chai
+      .request(server)
+      .patch('/comments/123')
+      .end((err, res) => {
+        expect(res).to.have.status(404)
+        done()
+      })
+  })
 })
 
 describe('Hooks', () => {

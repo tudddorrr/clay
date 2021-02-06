@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.1 (6th Feb 2021)
+* Use correct path when falling back to default route for method
+* Don't handle methods if the defined routes don't include them
+
 ## 0.3.0 (3rd Feb 2021)
 * (Breaking) Resources now need to implement an `async transform()` function to transform entities rather than doing it in the constructor
 

@@ -2,13 +2,14 @@ import { Service, ServiceRequest, HookParams, ServiceResponse, ServiceRoute, Aft
 
 export const routes: ServiceRoute[] = [
   {
-    method: 'POST',
-    path: '/comments'
+    method: 'POST'
   },
   {
     method: 'GET',
-    path: '/comments',
     handler: 'getMany'
+  },
+  {
+    method: 'DELETE'
   }
 ]
 
@@ -58,6 +59,12 @@ export default class CommentService implements Service {
       body: {
         comments: this.comments
       }
+    }
+  }
+
+  async delete(req: ServiceRequest): Promise<ServiceResponse> {
+    return {
+      status: 204
     }
   }
 }

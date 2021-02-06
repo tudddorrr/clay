@@ -21,7 +21,7 @@ const buildParams = (ctx: Context, path: string): any => {
   }, {})
 }
 
-const buildDefaultRoutes = (basePath: string, service: Service): ServiceRoute[] => {
+const buildDefaultRoutes = (service: Service): ServiceRoute[] => {
   const routes: ServiceRoute[] = []
   const methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
   const noIdRequiredMethods = ['GET', 'POST']
@@ -30,17 +30,26 @@ const buildDefaultRoutes = (basePath: string, service: Service): ServiceRoute[] 
     if (service[method.toLowerCase()]) {
       routes.push({
         method,
-        path: `${basePath}${noIdRequiredMethods.includes(method) ? '' : '/:id'}`
+        path: `${noIdRequiredMethods.includes(method) ? '' : '/:id'}`
       })
     }
   })
   
   routes.push({
     method: 'GET',
-    path: `${basePath}/:id`
+    path: `/:id`
   })
 
   return routes
+}
+
+const getDefaultPathForMethod = (service: Service, method: string): string => {
+  const defaultRoutes: ServiceRoute[] = buildDefaultRoutes(service)
+  if (method === 'GET') {
+    return ''
+  } else {
+    return defaultRoutes.find((route) => route.method === method)?.path ?? ''
+  }
 }
 
 const getRouteHandler = (service: Service, route: ServiceRoute): Function => {
@@ -61,14 +70,36 @@ const buildDebugRoute = (route: ServiceRoute) => {
   return `${route.method} ${route.path} => ${handler}`
 }
 
+const hasDefinedRoute = (routes: ServiceRoute[], method: string): boolean => {
+  return Boolean(routes?.find((route) => route.method === method))
+}
+
 export function service(name: string, service: Service, opts: ServiceOpts = {}) {
   const basePath = opts.basePath ?? ''
-  const routes = opts.routes?.map((route) => ({
-    ...route,
-    path: basePath + (route.path ?? '')
-  })) ?? buildDefaultRoutes(basePath, service)
-  const debug = opts.debug
 
+  let routes: ServiceRoute[] = buildDefaultRoutes(service).filter((route) => {
+    return !hasDefinedRoute(opts.routes, route.method)
+  })
+
+  const definedRoutes: ServiceRoute[] = opts.routes?.map((route: ServiceRoute) => {
+    return {
+      ...route,
+      path: route.path ?? getDefaultPathForMethod(service, route.method) ?? ''
+    }
+  })
+  
+  if (definedRoutes) {
+    const definedMethods = definedRoutes.map((route) => route.method)
+    routes.filter((route) => !definedMethods.includes(route.method))
+    routes = routes.concat(definedRoutes)
+  }
+
+  routes = routes.map((route: ServiceRoute) => ({
+    ...route,
+    path: basePath + route.path
+  }))
+
+  const debug = opts.debug
   if (debug) {
     console.log(`Available ${name} service routes:`)
     console.log(routes.map(buildDebugRoute))
