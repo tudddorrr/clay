@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.0 (21st March 2021)
+* Bump to 1.0.0 (the project feels feature-complete now)
+* Can check headers with the `@Validate` hook
+
 ## 0.3.1 (6th Feb 2021)
 * Use correct path when falling back to default route for method
 * Don't handle methods if the defined routes don't include them
