@@ -53,6 +53,7 @@ export interface ServiceOpts {
 export interface ValidationSchema {
   query?: { [key: string]: string | Function } | string[]
   body?: { [key: string]: string | Function } | string[]
+  headers?: { [key: string]: string | Function } | string[]
 }
 
 export class EntityResource<T> {

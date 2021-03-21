@@ -29,6 +29,7 @@ export const Validate = (schema: ValidationSchema) => (tar: Object, _: string, d
 
     if (schema.query) await checkValidationSchemaParam(req, schema, 'query')
     if (schema.body) await checkValidationSchemaParam(req, schema, 'body')
+    if (schema.headers) await checkValidationSchemaParam(req, schema, 'headers')
 
     const result = await base.apply(this, args)
     return result
