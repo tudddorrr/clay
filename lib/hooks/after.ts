@@ -20,5 +20,3 @@ export const After = (func: string | Function) => (tar: Object, _: string, descr
 
   return descriptor
 }
-
-export default After

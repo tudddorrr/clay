@@ -23,5 +23,3 @@ export const Resource = (EntityResource: EntityResourceInstance<any>, bodyKey: s
 
   return descriptor
 }
-
-export default Resource

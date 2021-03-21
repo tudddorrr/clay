@@ -19,5 +19,3 @@ export const HasPermission = (PolicyType: new (ctx: Context) => ServicePolicy, m
 
   return descriptor
 }
-
-export default HasPermission

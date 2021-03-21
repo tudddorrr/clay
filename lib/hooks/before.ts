@@ -18,5 +18,3 @@ export const Before = (func: string | Function) => (tar: Object, _: string, desc
 
   return descriptor
 }
-
-export default Before

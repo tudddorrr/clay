@@ -37,5 +37,3 @@ export const Validate = (schema: ValidationSchema) => (tar: Object, _: string, d
 
   return descriptor
 }
-
-export default Validate
