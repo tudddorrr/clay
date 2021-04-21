@@ -1,4 +1,4 @@
-import { Service, ServiceRequest, HookParams, ServiceResponse, ServiceRoute, After } from '../../lib'
+import { Service, ServiceRequest, HookParams, ServiceResponse, ServiceRoute, After } from '../../../lib'
 
 export const routes: ServiceRoute[] = [
   {

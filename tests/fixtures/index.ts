@@ -1,5 +1,5 @@
 import Koa from 'koa'
-import { service } from '../lib'
+import { service } from '../../lib'
 import bodyParser from 'koa-bodyparser'
 import UserService from './services/users'
 import CommentService, { routes as commentRoutes } from './services/comments'

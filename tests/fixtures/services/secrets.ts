@@ -1,4 +1,4 @@
-import { HasPermission, HookParams, Service, ServicePolicy, ServiceRequest, ServiceResponse, Before } from '../../lib'
+import { HasPermission, HookParams, Service, ServicePolicy, ServiceRequest, ServiceResponse, Before } from '../../../lib'
 
 class SecretsServicePolicy extends ServicePolicy {
   async get(req: ServiceRequest): Promise<boolean> {

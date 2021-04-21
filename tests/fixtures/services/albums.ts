@@ -1,4 +1,4 @@
-import { EntityResource, Service, ServiceRequest, ServiceResponse, ServiceRoute, Resource, Validate } from '../../lib'
+import { EntityResource, Service, ServiceRequest, ServiceResponse, ServiceRoute, Resource, Validate } from '../../../lib'
 
 export const routes: ServiceRoute[] = [
   {

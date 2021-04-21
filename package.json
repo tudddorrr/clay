@@ -5,8 +5,8 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "dev": "nodemon tests/index.ts",
-    "test": "mocha -r ts-node/register 'tests/**/*.ts'",
+    "dev": "nodemon tests/fixtures/index.ts",
+    "test": "mocha -r ts-node/register 'tests/**/*.spec.ts'",
     "prebuild": "rm -rf -f dist",
     "build": "tsc -p tsconfig.build.json",
     "prepare": "yarn test && yarn build"
