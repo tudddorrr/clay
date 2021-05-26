@@ -36,7 +36,7 @@ export default class UsersService implements Service {
 A route (`ServiceRoute`) is comprised of:
 - `method`: a HTTP method (e.g. PUT)
 - `path`: The path of the endpoint (e.g. /users)
-- `handler` (optional): The name of or a function to call when the endpoint is called. If not defined, this will default to the HTTP method in lowercase (i.e. GET requests will called `get()`)
+- `handler` (optional): The name of or a function to call when the endpoint is called. If not defined, this will default to the HTTP method in lowercase (i.e. GET requests will call `get()`)
 
 ```
 const routes: ServiceRoute[] = [
