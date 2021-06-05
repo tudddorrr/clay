@@ -2,8 +2,8 @@ import Koa from 'koa'
 import { service } from '../../lib'
 import bodyParser from 'koa-bodyparser'
 import UserService from './services/users'
-import CommentService, { routes as commentRoutes } from './services/comments'
-import AlbumService, { routes as albumRoutes } from './services/albums'
+import CommentService from './services/comments'
+import AlbumService from './services/albums'
 import MetaService from './services/meta'
 import SecretsService from './services/secrets'
 
@@ -15,13 +15,10 @@ app.use(service('users', new UserService(), {
 }))
 
 app.use(service('comments', new CommentService(), {
-  routes: commentRoutes,
   prefix: '/comments'
 }))
 
-app.use(service('albums', new AlbumService(), {
-  routes: albumRoutes
-}))
+app.use(service('albums', new AlbumService()))
 
 app.use(service('meta', new MetaService(), {
   prefix: '/meta'

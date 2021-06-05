@@ -18,6 +18,7 @@ export interface ServiceResponse {
 
 export interface Service {
   [key: string]: any
+  routes?: ServiceRoute[]
 
   get? (req?: ServiceRequest): Promise<ServiceResponse>
 
@@ -44,7 +45,6 @@ export interface ServiceRoute {
 
 export interface ServiceOpts {
   prefix?: string
-  routes?: ServiceRoute[]
   debug?: boolean
 }
 

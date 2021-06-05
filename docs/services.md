@@ -10,7 +10,6 @@ app.use(service('users', new UserService()))
 
 You can also define a few options:
 - `prefix`: The starting path for all routes in this service. E.g. if set to `/users`, your UserService GET endpoint will be `GET /users/:id`. This will be added to the start of any routes you define
-- `routes`: An array of routes and their mappings (see below)
 - `debug`: Prints useful information like all the routes available to a service
 
 ```
@@ -38,22 +37,33 @@ A route (`ServiceRoute`) is comprised of:
 - `path`: The path of the endpoint (e.g. /users)
 - `handler` (optional): The name of or a function to call when the endpoint is called. If not defined, this will default to the HTTP method in lowercase (i.e. GET requests will call `get()`)
 
+Routes exist as a member variable of your Service class named `routes`:
+
 ```
-const routes: ServiceRoute[] = [
-  {
-    method: 'GET',
-    path: '/albums/:id'
-  },
-  {
-    method: 'GET',
-    path: '/albums/:id/personnel/:personnelId',
-    handler: 'getPersonnel'
-  },
-  {
-    method: 'GET',
-    path: '/albums',
-    handler: 'getMany'
-  },
+class AlbumsService implements Service {
+  routes: ServiceRoute[] = [
+    {
+      method: 'GET',
+      path: '/albums/:id/personnel/:personnelId',
+      handler: 'getPersonnel'
+    },
+    {
+      method: 'GET',
+      path: '/albums/:id'
+    },
+    {
+      method: 'GET',
+      path: '/albums'
+    }
+  ]
+}
+```
+
+### Anonymous function handlers
+
+You can define your route handlers as either function names or anonymous functions. The service class will automatically be passed in:
+```
+routes = [
   {
     method: 'POST',
     path: '/albums/:id/reviews',

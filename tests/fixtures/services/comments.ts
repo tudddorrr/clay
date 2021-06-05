@@ -1,18 +1,5 @@
 import { Service, ServiceRequest, HookParams, ServiceResponse, ServiceRoute, After } from '../../../lib'
 
-export const routes: ServiceRoute[] = [
-  {
-    method: 'POST'
-  },
-  {
-    method: 'GET',
-    handler: 'getMany'
-  },
-  {
-    method: 'DELETE'
-  }
-]
-
 interface Comment {
   id: number
   title: string
@@ -21,6 +8,19 @@ interface Comment {
 
 export default class CommentService implements Service {
   comments: Comment[] = []
+
+  routes: ServiceRoute[] = [
+    {
+      method: 'POST'
+    },
+    {
+      method: 'GET',
+      handler: 'getMany'
+    },
+    {
+      method: 'DELETE'
+    }
+  ]
 
   notifyEveryone(title: string): void {
     // send emails out...

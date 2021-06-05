@@ -1,51 +1,5 @@
 import { Service, ServiceRequest, ServiceResponse, ServiceRoute, Validate } from '../../../lib'
 
-export const routes: ServiceRoute[] = [
-  {
-    method: 'GET',
-    path: '/albums/titles',
-    handler: 'getAlbumTitles'
-  },
-  {
-    method: 'GET',
-    path: '/albums/title',
-    handler: 'getAlbumTitle'
-  },
-  {
-    method: 'GET',
-    path: '/albums/:id'
-  },
-  {
-    method: 'GET',
-    path: '/albums/:id/personnel/:personnelId',
-    handler: 'getPersonnel'
-  },
-  {
-    method: 'GET',
-    path: '/albums',
-    handler: 'getMany'
-  },
-  {
-    method: 'POST',
-    path: '/albums/:id/reviews',
-    handler: () => async (req: ServiceRequest): Promise<ServiceResponse> => {
-      return {
-        status: 200,
-        body: {
-          review: req.body
-        }
-      }
-    }
-  },
-  {
-    method: 'PUT',
-    path: '/albums/:id/reviews/:reviewId',
-    handler: (service: AlbumService) => async (req: ServiceRequest): Promise<ServiceResponse> => {
-      return await service.editReview(req)
-    }
-  }
-]
-
 interface Personnel {
   id: number,
   name: string
@@ -59,6 +13,52 @@ interface Album {
 }
 
 export default class AlbumService implements Service {
+  routes: ServiceRoute[] = [
+    {
+      method: 'GET',
+      path: '/albums/titles',
+      handler: 'getAlbumTitles'
+    },
+    {
+      method: 'GET',
+      path: '/albums/title',
+      handler: 'getAlbumTitle'
+    },
+    {
+      method: 'GET',
+      path: '/albums/:id'
+    },
+    {
+      method: 'GET',
+      path: '/albums/:id/personnel/:personnelId',
+      handler: 'getPersonnel'
+    },
+    {
+      method: 'GET',
+      path: '/albums',
+      handler: 'getMany'
+    },
+    {
+      method: 'POST',
+      path: '/albums/:id/reviews',
+      handler: () => async (req: ServiceRequest): Promise<ServiceResponse> => {
+        return {
+          status: 200,
+          body: {
+            review: req.body
+          }
+        }
+      }
+    },
+    {
+      method: 'PUT',
+      path: '/albums/:id/reviews/:reviewId',
+      handler: (service: AlbumService) => async (req: ServiceRequest): Promise<ServiceResponse> => {
+        return await service.editReview(req)
+      }
+    }
+  ]
+
   albums: Album[] = [
     {
       id: 0,

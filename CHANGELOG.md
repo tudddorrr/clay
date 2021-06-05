@@ -3,6 +3,7 @@
 ## 2.0.0 (Unreleased)
 * Removed the @Resource hook. The behaviour was a bit iffy and the same functionality can mostly be achieved using `toJSON()`
 * Renamed the `basePath` service config option to `prefix`
+* Routes are now defined within the `routes` member variable of service classes
 
 ## 1.0.0 (21st March 2021)
 * Bump to 1.0.0 (the project feels feature-complete now)

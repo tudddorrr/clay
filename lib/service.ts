@@ -78,10 +78,10 @@ export function service(name: string, service: Service, opts: ServiceOpts = {}) 
   const prefix = opts.prefix ?? ''
 
   let routes: ServiceRoute[] = buildDefaultRoutes(service).filter((route) => {
-    return !hasDefinedRoute(opts.routes, route.method)
+    return !hasDefinedRoute(service.routes, route.method)
   })
 
-  const definedRoutes: ServiceRoute[] = opts.routes?.map((route: ServiceRoute) => {
+  const definedRoutes: ServiceRoute[] = service.routes?.map((route: ServiceRoute) => {
     return {
       ...route,
       path: route.path ?? getDefaultPathForMethod(service, route.method) ?? ''
