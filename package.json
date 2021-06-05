@@ -13,7 +13,8 @@
   },
   "keywords": [
     "koa",
-    "microservice",
+    "http",
+    "service",
     "middleware",
     "router"
   ],

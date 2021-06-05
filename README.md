@@ -1,4 +1,4 @@
-Build Koa REST microservices without the hassle: quick to configure, minimal boilerplate and super convenient.
+Build Koa REST services without the hassle: quick to configure, minimal boilerplate and super convenient.
 
 ## Features
 * Expose API routes with minimal config
