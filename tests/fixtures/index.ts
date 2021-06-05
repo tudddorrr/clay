@@ -11,12 +11,12 @@ const app = new Koa()
 app.use(bodyParser())
 
 app.use(service('users', new UserService(), {
-  basePath: '/users'
+  prefix: '/users'
 }))
 
 app.use(service('comments', new CommentService(), {
   routes: commentRoutes,
-  basePath: '/comments'
+  prefix: '/comments'
 }))
 
 app.use(service('albums', new AlbumService(), {
@@ -24,11 +24,11 @@ app.use(service('albums', new AlbumService(), {
 }))
 
 app.use(service('meta', new MetaService(), {
-  basePath: '/meta'
+  prefix: '/meta'
 }))
 
 app.use(service('secrets', new SecretsService(), {
-  basePath: '/secrets'
+  prefix: '/secrets'
 }))
 
 const server = app.listen(3003, () => console.log('Listening...'))

@@ -75,7 +75,7 @@ const hasDefinedRoute = (routes: ServiceRoute[], method: string): boolean => {
 }
 
 export function service(name: string, service: Service, opts: ServiceOpts = {}) {
-  const basePath = opts.basePath ?? ''
+  const prefix = opts.prefix ?? ''
 
   let routes: ServiceRoute[] = buildDefaultRoutes(service).filter((route) => {
     return !hasDefinedRoute(opts.routes, route.method)
@@ -96,7 +96,7 @@ export function service(name: string, service: Service, opts: ServiceOpts = {}) 
 
   routes = routes.map((route: ServiceRoute) => ({
     ...route,
-    path: basePath + route.path
+    path: prefix + route.path
   }))
 
   const debug = opts.debug

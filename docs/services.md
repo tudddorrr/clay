@@ -9,13 +9,13 @@ app.use(service('users', new UserService()))
 ```
 
 You can also define a few options:
-- `basePath`: The starting path for all routes in this service. E.g. if set to `/users`, your UserService GET endpoint will be `GET /users/:id`. This will be added to the start of any routes you define
+- `prefix`: The starting path for all routes in this service. E.g. if set to `/users`, your UserService GET endpoint will be `GET /users/:id`. This will be added to the start of any routes you define
 - `routes`: An array of routes and their mappings (see below)
 - `debug`: Prints useful information like all the routes available to a service
 
 ```
 app.use(service('users', new UserService(), {
-  basePath: '/users',
+  prefix: '/users',
   routes: [ ... ]
 }))
 ```

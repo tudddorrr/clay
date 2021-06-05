@@ -43,7 +43,7 @@ export interface ServiceRoute {
 }
 
 export interface ServiceOpts {
-  basePath?: string
+  prefix?: string
   routes?: ServiceRoute[]
   debug?: boolean
 }

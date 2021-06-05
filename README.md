@@ -26,7 +26,7 @@ npm i koa-rest-services --save
 const app = new Koa()
 
 app.use(service('users', new UserService(), {
-  basePath: '/users'
+  prefix: '/users'
 }))
 
 app.listen(3000, () => console.log('Listening...'))
