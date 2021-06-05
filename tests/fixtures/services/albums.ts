@@ -1,4 +1,4 @@
-import { EntityResource, Service, ServiceRequest, ServiceResponse, ServiceRoute, Resource, Validate } from '../../../lib'
+import { Service, ServiceRequest, ServiceResponse, ServiceRoute, Validate } from '../../../lib'
 
 export const routes: ServiceRoute[] = [
   {
@@ -56,15 +56,6 @@ interface Album {
   title: string
   artist: string
   personnel?: Personnel[]
-}
-
-class AlbumResource extends EntityResource<Album> {
-  async transform(): Promise<any> {
-    return {
-      id: this.entity.id,
-      title: this.entity.title
-    }
-  }
 }
 
 export default class AlbumService implements Service {
@@ -159,7 +150,6 @@ export default class AlbumService implements Service {
     }
   }
 
-  @Resource(AlbumResource, 'albums')
   async getAlbumTitles(req: ServiceRequest): Promise<ServiceResponse> {
     return {
       status: 200,
@@ -172,7 +162,6 @@ export default class AlbumService implements Service {
   @Validate({
     query: ['id']
   })
-  @Resource(AlbumResource, 'album')
   async getAlbumTitle(req: ServiceRequest): Promise<ServiceResponse> {
     const { id } = req.query
     const album = this.albums.find((album) => album.id === Number(id))

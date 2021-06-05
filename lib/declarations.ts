@@ -19,8 +19,6 @@ export interface ServiceResponse {
 export interface Service {
   [key: string]: any
 
-  // todo HEAD, OPTIONS
-
   get? (req?: ServiceRequest): Promise<ServiceResponse>
 
   post? (req?: ServiceRequest): Promise<ServiceResponse>
@@ -54,20 +52,6 @@ export interface ValidationSchema {
   query?: { [key: string]: string | Function } | string[]
   body?: { [key: string]: string | Function } | string[]
   headers?: { [key: string]: string | Function } | string[]
-}
-
-export class EntityResource<T> {
-  entity: T
-
-  constructor(entity: T) {
-    this.entity = entity
-  }
-
-  async transform(): Promise<any> { }
-}
-
-export interface EntityResourceInstance<T> {
-  new (entity: T): EntityResource<T>
 }
 
 export class ServicePolicy {

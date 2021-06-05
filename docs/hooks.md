@@ -101,53 +101,6 @@ async post(req: ServiceRequest): Promise<ServiceResponse> { ... }
 
 If any of the keys are missing, the response will simply be: `Missing [body or query] key: [key name]`. In the case above, if there's no `username` provided, your response will be: `Missing body key: username`.
 
-## @Resource
-@Resource runs after your function. It can "resourceify" objects and arrays in your response. Typically you'd do this to avoid sensitive data from your database being exposed or to add in extra useful keys.
-
-@Resource takes a class that extends the built-in `EntityResource` class and the name of the key in the response body to transform:
-
-```
-// transform body.albums
-@Resource(AlbumResource, 'albums')
-async getAlbumTitles(req: ServiceRequest): Promise<ServiceResponse> {
-  return {
-    status: 200,
-    body: {
-      albums: this.albums
-    }
-  }
-}
-
-// transform body.album
-@Resource(AlbumResource, 'album')
-async getAlbumTitle(req: ServiceRequest): Promise<ServiceResponse> {
-  return {
-    status: 200,
-    body: {
-      album: this.albums.find((album) => album.id === req.query.id)
-    }
-  }
-}
-```
-
-In the example above, you could have an `AlbumResource` that looks like this:
-
-```
-class AlbumResource extends EntityResource<Album> {
-  constructor(entity: Album) {
-    super(entity)
-  }
-
-  async transform(): Promise<any> {
-    // EntityResource has the original entity as a member variable
-    return {
-      id: this.entity.id,
-      title: this.entity.title
-    }
-  }
-}
-```
-
 ## @HasPermission
 @HasPermission runs before your function to check if the endpoint can be called:
 
