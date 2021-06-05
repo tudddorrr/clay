@@ -23,13 +23,24 @@ describe('Defined routes', () => {
       })
   })
   
-  it('should handle a defined GET route', (done: Function) => {
+  it('should handle a defined index GET route', (done: Function) => {
     chai
       .request(server)
       .get('/comments')
       .end((err, res) => {
         expect(res).to.have.status(200)
         expect(res.body).to.have.property('comments')
+        done()
+      })
+  })
+
+  it('should handle a defined single GET route', (done: Function) => {
+    chai
+      .request(server)
+      .get('/comments/1')
+      .end((err, res) => {
+        expect(res).to.have.status(200)
+        expect(res.body).to.have.property('comment')
         done()
       })
   })

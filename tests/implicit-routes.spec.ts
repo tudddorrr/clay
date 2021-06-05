@@ -22,7 +22,18 @@ describe('Implicit routes', () => {
       })
   })
 
-  it('should handle an implicit GET route', (done: Function) => {
+  it('should handle an implicit index GET route', (done: Function) => {
+    chai
+      .request(server)
+      .get('/users/1')
+      .end((err, res) => {
+        expect(res).to.have.status(200)
+        expect(res.body).to.have.property('user')
+        done()
+      })
+  })
+
+  it('should handle an implicit single GET route', (done: Function) => {
     chai
       .request(server)
       .get('/users')

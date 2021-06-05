@@ -20,6 +20,8 @@ export interface Service {
   [key: string]: any
   routes?: ServiceRoute[]
 
+  index? (req?: ServiceRequest): Promise<ServiceResponse>
+
   get? (req?: ServiceRequest): Promise<ServiceResponse>
 
   post? (req?: ServiceRequest): Promise<ServiceResponse>

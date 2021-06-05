@@ -107,7 +107,7 @@ PATCH /:id
 DELETE /:id
 ```
 
-For GET requests, the same `get()` will be called for both endpoints.
+For GET requests, `index()` is called for `GET /` and `get()` is called for `GET /:id`.
 
 ## Requests
 

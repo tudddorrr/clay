@@ -15,6 +15,11 @@ export default class CommentService implements Service {
     },
     {
       method: 'GET',
+      path: '/:id',
+      handler: 'getOne'
+    },
+    {
+      method: 'GET',
       handler: 'getMany'
     },
     {
@@ -58,6 +63,15 @@ export default class CommentService implements Service {
       status: 200,
       body: {
         comments: this.comments
+      }
+    }
+  }
+
+  async getOne(req: ServiceRequest): Promise<ServiceResponse> {
+    return {
+      status: 200,
+      body: {
+        comment: this.comments[0]
       }
     }
   }

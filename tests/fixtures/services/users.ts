@@ -27,15 +27,16 @@ export default class UserService implements Service {
     const { id } = req.params
 
     // handle /users/:id
-    if (id) {
-      return {
-        status: 200,
-        body: {
-          user: this.users.find((u) => u.id === Number(id))
-        }
+    return {
+      status: 200,
+      body: {
+        user: this.users.find((u) => u.id === Number(id))
       }
     }
+  }
 
+  @After('metadata')
+  async index(req: ServiceRequest): Promise<ServiceResponse> {
     // handle /users
     return {
       status: 200,

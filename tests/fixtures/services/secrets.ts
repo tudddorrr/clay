@@ -1,7 +1,7 @@
 import { HasPermission, HookParams, Service, ServicePolicy, ServiceRequest, ServiceResponse, Before } from '../../../lib'
 
 class SecretsServicePolicy extends ServicePolicy {
-  async get(req: ServiceRequest): Promise<boolean> {
+  async index(req: ServiceRequest): Promise<boolean> {
     return req.query.scope === 'get'
   }
 
@@ -11,8 +11,8 @@ class SecretsServicePolicy extends ServicePolicy {
 }
 
 export default class SecretsService implements Service {
-  @HasPermission(SecretsServicePolicy, 'get')
-  async get(req: ServiceRequest): Promise<ServiceResponse> {
+  @HasPermission(SecretsServicePolicy, 'index')
+  async index(req: ServiceRequest): Promise<ServiceResponse> {
     return {
       status: 204
     }

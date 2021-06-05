@@ -24,20 +24,20 @@ const buildParams = (ctx: Context, path: string): any => {
 const buildDefaultRoutes = (service: Service): ServiceRoute[] => {
   const routes: ServiceRoute[] = []
   const methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
-  const noIdRequiredMethods = ['GET', 'POST']
 
   methods.forEach((method) => {
     if (service[method.toLowerCase()]) {
       routes.push({
         method,
-        path: `${noIdRequiredMethods.includes(method) ? '' : '/:id'}`
+        path: `${method === 'POST' ? '' : '/:id'}`
       })
     }
   })
   
   routes.push({
     method: 'GET',
-    path: `/:id`
+    path: '',
+    handler: 'index'
   })
 
   return routes
