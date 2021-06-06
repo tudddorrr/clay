@@ -40,7 +40,7 @@ A route (`ServiceRoute`) is comprised of:
 Routes exist as a member variable of your Service class named `routes`:
 
 ```
-class AlbumsService implements Service {
+class AlbumService implements Service {
   routes: ServiceRoute[] = [
     {
       method: 'GET',

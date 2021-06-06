@@ -49,14 +49,10 @@ async patch(req: ServiceRequest) {
 By default you'll get a method for each HTTP method (GET/POST/PUT/PATCH/DELETE). You can also define your own routes:
 
 ```
-// app.ts
+// AlbumService.ts
 
-app.use(service('albums', new AlbumService(), {
-  routes: [
-    {
-      method: 'GET',
-      path: '/albums/:id'
-    },
+class AlbumService implements Service {
+  routes: ServiceRoute[] = [
     {
       method: 'GET',
       path: '/albums/:id/personnel/:personnelId',
@@ -65,10 +61,18 @@ app.use(service('albums', new AlbumService(), {
     {
       method: 'GET',
       path: '/albums',
-      handler: 'getMany'
+      handler: 'getAll'
     }
   ]
-}))
+
+  async getPersonnel(req: ServiceRequest) {
+    ...
+  }
+
+  async getAll(req: ServiceRequest) {
+    ...
+  }
+}
 ```
 
 When a request is made, the specified handler function will be invoked.
