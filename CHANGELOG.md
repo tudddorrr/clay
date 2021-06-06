@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.0.0 (Unreleased)
+## 2.0.0 (6th June 2021)
 Every change in 2.0.0 is breaking
 
 * Removed the `@Resource` hook. The behaviour was iffy and the same functionality can (mostly) be achieved using `toJSON()`
