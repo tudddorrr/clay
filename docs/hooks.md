@@ -125,3 +125,13 @@ class SecretsService implements Service {
 ```
 
 Policy classes should extend the `ServicePolicy` class which simply sets the Koa context (`ctx`) as a member variable. Beyond that, the implementation is totally up to you - you could check the `ctx.state` (if you're using `koa-jwt`) or even the request to make sure the required permissions are met.
+
+### Custom denials
+
+To override the default error code and message, return a `ServicePolicyDenial`. This will pass any data you specify and the optional status code (defaulting to 401) to Koa's throw function.
+
+```
+async put(req: ServiceRequest): Promise<boolean | ServicePolicyDenial> {
+  return new ServicePolicyDenial({ message: 'Method not implemented yet. Come back later' }, 405)
+}
+```

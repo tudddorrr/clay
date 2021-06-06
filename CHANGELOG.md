@@ -7,6 +7,7 @@ Every change in 2.0.0 is breaking
 * Renamed the `basePath` service config option to `prefix`
 * Routes are now defined within the `routes` member variable of service classes
 * The `index()` function of service classes is now called for `GET /` instead of `get()` (which now only gets called for `GET/:id`)
+* Added the `ServicePolicyDenial` class for returning custom data and status codes with `@HasPermission`
 
 ## 1.0.0 (21st March 2021)
 * Bump to 1.0.0 (the project feels feature-complete now)

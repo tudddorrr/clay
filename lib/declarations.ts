@@ -63,3 +63,13 @@ export class ServicePolicy {
     this.ctx = ctx
   }
 }
+
+export class ServicePolicyDenial {
+  data: { [key: string]: any }
+  status: number
+
+  constructor(data: { [key: string]: any }, status: number = 401) {
+    this.data = data
+    this.status = status
+  }
+}

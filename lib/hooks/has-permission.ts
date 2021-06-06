@@ -1,5 +1,5 @@
 import { Context } from 'koa'
-import { ServicePolicy, ServiceRequest } from '../declarations'
+import { ServicePolicy, ServicePolicyDenial, ServiceRequest } from '../declarations'
 
 export const HasPermission = (PolicyType: new (ctx: Context) => ServicePolicy, method: string) => (tar: Object, _: string, descriptor: PropertyDescriptor) => {
   const base = descriptor.value
@@ -8,8 +8,14 @@ export const HasPermission = (PolicyType: new (ctx: Context) => ServicePolicy, m
     const req: ServiceRequest = args[0]
     const policy = new PolicyType(req.ctx)
     const hookResult = await policy[method](...args)
+
     if (!hookResult) {
       (<ServiceRequest>args[0]).ctx.throw(403)
+      return
+    } else if (hookResult instanceof ServicePolicyDenial) {
+      const denial: ServicePolicyDenial = hookResult as ServicePolicyDenial
+      
+      (<ServiceRequest>args[0]).ctx.throw(denial.status, denial.data)
       return
     }
 

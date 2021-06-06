@@ -40,4 +40,15 @@ describe('@HasPermission hook', () => {
         done()
       })
   })
+
+  it('should merge in data from ServicePolicyDenials and use the correct status code', (done: Function) => {    
+    chai
+      .request(server)
+      .put('/secrets/1')
+      .end((err, res) => {
+        expect(res).to.have.status(405)
+        expect(res.text).to.equal('Method not implemented yet. Come back later')
+        done()
+      })
+  })
 })
