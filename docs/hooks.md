@@ -128,7 +128,7 @@ Policy classes should extend the `ServicePolicy` class which simply sets the Koa
 
 ### Custom denials
 
-To override the default error code and message, return a `ServicePolicyDenial`. This will pass any data you specify and the optional status code (defaulting to 401) to Koa's throw function.
+To override the default error code and message, return a `ServicePolicyDenial`. This will pass any data you specify and the optional status code (defaulting to 403) to Koa's throw function.
 
 ```
 async put(req: ServiceRequest): Promise<boolean | ServicePolicyDenial> {

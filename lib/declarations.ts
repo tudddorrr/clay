@@ -68,7 +68,7 @@ export class ServicePolicyDenial {
   data: { [key: string]: any }
   status: number
 
-  constructor(data: { [key: string]: any }, status: number = 401) {
+  constructor(data: { [key: string]: any }, status: number = 403) {
     this.data = data
     this.status = status
   }

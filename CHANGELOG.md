@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.0.2 (6th June 2021)
+* `ServicePolicyDenial`'s status code defaults to 403 instead of 401
+
 ## 2.0.0 (6th June 2021)
 Every change in 2.0.0 is breaking
 
