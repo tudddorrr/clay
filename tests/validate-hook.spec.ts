@@ -68,7 +68,7 @@ describe('@Validate hook', () => {
   it('should handle an @Validate schema provided with a function', (done: Function) => {    
     chai
       .request(server)
-      .get('/search?search=text&endDate=null')
+      .get('/search?search=text&startDate=213123&endDate=null')
       .end((err, res) => {
         expect(res).to.have.status(400)
         expect(res.text).to.equal('Bad end date')
@@ -79,7 +79,7 @@ describe('@Validate hook', () => {
   it('should handle an @Validate schema provided with all the validatable types', (done: Function) => {    
     chai
       .request(server)
-      .get(`/search?search=text&endDate=3123123123&startDate=${new Date().getTime()}`)
+      .get(`/search?search=text&startDate=${new Date().getTime()}&endDate=3123123123`)
       .end((err, res) => {
         expect(res).to.have.status(204)
         done()
