@@ -42,4 +42,47 @@ describe('@Validate hook', () => {
         done()
       })
   })
+
+  it('should handle an @Validate schema provided with a boolean', (done: Function) => {    
+    chai
+      .request(server)
+      .get('/search')
+      .end((err, res) => {
+        expect(res).to.have.status(400)
+        expect(res.text).to.equal('Missing query key: search')
+        done()
+      })
+  })
+
+  it('should handle an @Validate schema provided with a string', (done: Function) => {    
+    chai
+      .request(server)
+      .get('/search?search=text')
+      .end((err, res) => {
+        expect(res).to.have.status(400)
+        expect(res.text).to.equal('Bad start date')
+        done()
+      })
+  })
+
+  it('should handle an @Validate schema provided with a function', (done: Function) => {    
+    chai
+      .request(server)
+      .get('/search?search=text&endDate=null')
+      .end((err, res) => {
+        expect(res).to.have.status(400)
+        expect(res.text).to.equal('Bad end date')
+        done()
+      })
+  })
+
+  it('should handle an @Validate schema provided with all the validatable types', (done: Function) => {    
+    chai
+      .request(server)
+      .get(`/search?search=text&endDate=3123123123&startDate=${new Date().getTime()}`)
+      .end((err, res) => {
+        expect(res).to.have.status(204)
+        done()
+      })
+  })
 })

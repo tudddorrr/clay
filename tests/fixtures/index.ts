@@ -6,6 +6,7 @@ import CommentService from './services/comments'
 import AlbumService from './services/albums'
 import MetaService from './services/meta'
 import SecretsService from './services/secrets'
+import SearchService from './services/search'
 
 const app = new Koa()
 app.use(bodyParser())
@@ -26,6 +27,10 @@ app.use(service('meta', new MetaService(), {
 
 app.use(service('secrets', new SecretsService(), {
   prefix: '/secrets'
+}))
+
+app.use(service('search', new SearchService(), {
+  prefix: '/search'
 }))
 
 const server = app.listen(3003, () => console.log('Listening...'))

@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.1.0 (21st June 2021)
+* Validation schemas for `@Validate` can now take in booleans to specify whether the key is required
+
 ## 2.0.2 (6th June 2021)
 * `ServicePolicyDenial`'s status code defaults to 403 instead of 401
 

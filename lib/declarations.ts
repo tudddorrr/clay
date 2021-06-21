@@ -50,10 +50,12 @@ export interface ServiceOpts {
   debug?: boolean
 }
 
+export type Validatable = string | Function | boolean
+
 export interface ValidationSchema {
-  query?: { [key: string]: string | Function } | string[]
-  body?: { [key: string]: string | Function } | string[]
-  headers?: { [key: string]: string | Function } | string[]
+  query?: { [key: string]: Validatable } | string[]
+  body?: { [key: string]: Validatable } | string[]
+  headers?: { [key: string]: Validatable } | string[]
 }
 
 export class ServicePolicy {

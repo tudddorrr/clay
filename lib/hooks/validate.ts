@@ -8,7 +8,7 @@ const checkValidationSchemaParam = async (req: ServiceRequest, schema: Validatio
       if (!val) req.ctx.throw(400, `Missing ${schemaParam} key: ${key}`)
     }
   } else {
-    // e.g. { body: { name: 'Please provide a name' }}
+    // e.g. { body: { name: 'Please provide a name', email: () => { ... }, age: true } }
     for (let key of Object.keys(schema[schemaParam])) {
       const val = req[schemaParam]?.[key]
       if (typeof schema[schemaParam][key] === 'string') {
@@ -16,6 +16,8 @@ const checkValidationSchemaParam = async (req: ServiceRequest, schema: Validatio
       } else if (typeof schema[schemaParam][key] === 'function') {
         const validatorMessage = await (<Function>schema[schemaParam][key])(val, req)
         if (validatorMessage) req.ctx.throw(400, validatorMessage)
+      } else if (typeof schema[schemaParam][key] === 'boolean') {
+        if (schema[schemaParam][key] && !val) req.ctx.throw(400, `Missing ${schemaParam} key: ${key}`)
       }
     }
   }

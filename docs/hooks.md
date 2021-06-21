@@ -65,12 +65,25 @@ async get(req: ServiceRequest): Promise<ServiceResponse> {
 ## @Validate
 @Validate runs before your function. You can validate keys in a request's `body` or `query`. If you return a string and the key doesn't exist, the string will be used as an error message for a 400 response.
 
+You can return true/false to specify if the key is required and if the value is true and the key is missing, the default error message will be used.
+
 You can also provide a function. If the function returns a string, a 400 with that error message will be returned, otherwise the decorated function will be executed.
 
 ```
 @Validate({
   query: {
     count: 'Please provide how many users you want to return'
+  }
+})
+async get(req: ServiceRequest): Promise<ServiceResponse> { ... }
+
+...
+
+@Validate({
+  query: {
+    count: true, // if missing returns 'Missing query key: count'
+    search: false, // if missing nothing happens
+    page: true // if missing returns 'Missing query key: page'
   }
 })
 async get(req: ServiceRequest): Promise<ServiceResponse> { ... }
