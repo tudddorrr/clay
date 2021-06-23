@@ -65,7 +65,7 @@ describe('@Validate hook', () => {
       })
   })
 
-  it('should handle an @Validate schema provided with a function', (done: Function) => {    
+  it('should handle an @Validate schema provided with a function that throws an error', (done: Function) => {    
     chai
       .request(server)
       .get('/search?search=text&startDate=213123&endDate=null')
@@ -76,10 +76,21 @@ describe('@Validate hook', () => {
       })
   })
 
+  it('should handle an @Validate schema provided with a function that returns a boolean', (done: Function) => {    
+    chai
+      .request(server)
+      .get('/search?search=text&startDate=213123&endDate=3123123123&itemsPerPage=abc123')
+      .end((err, res) => {
+        expect(res).to.have.status(400)
+        expect(res.text).to.equal('Missing query key: itemsPerPage')
+        done()
+      })
+  })
+
   it('should handle an @Validate schema provided with all the validatable types', (done: Function) => {    
     chai
       .request(server)
-      .get(`/search?search=text&startDate=${new Date().getTime()}&endDate=3123123123`)
+      .get(`/search?search=text&startDate=213123&endDate=3123123123&itemsPerPage=30`)
       .end((err, res) => {
         expect(res).to.have.status(204)
         done()

@@ -5,8 +5,12 @@ export default class SearchService implements Service {
     query: {
       search: true,
       startDate: 'Bad start date',
-      endDate: (val: any) => isNaN(val) ? 'Bad end date' : null,
-      page: false
+      endDate: (val: string) => {
+        if (isNaN(Number(val))) throw new Error('Bad end date')
+        return Boolean(val)
+      },
+      page: false,
+      itemsPerPage: (val: any) => !isNaN(val)
     }
   })
   async index(req: ServiceRequest): Promise<ServiceResponse> {

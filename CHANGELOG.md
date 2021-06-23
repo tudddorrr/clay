@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.0.0 (23rd June 2021)
+* Reworked the way `@Validate` works:
+- Keys that return a function must now return a boolean (false => fail, true => pass)
+- Keys that return a function must now throw an error to override the default message (see the docs)
+
 ## 2.1.0 (21st June 2021)
 * Validation schemas for `@Validate` can now take in booleans to specify whether the key is required
 

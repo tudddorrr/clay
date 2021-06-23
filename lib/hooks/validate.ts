@@ -1,5 +1,9 @@
 import { ServiceRequest, ValidationSchema } from '../declarations'
 
+const reject = (req: ServiceRequest, message?: string): void => {
+  req.ctx.throw(400, message)
+}
+
 const checkValidationSchemaParam = async (req: ServiceRequest, schema: ValidationSchema, schemaParam: string): Promise<void> => {
   if (Array.isArray(schema[schemaParam])) {
     // e.g. { body: ['name', 'email'] }
@@ -11,13 +15,18 @@ const checkValidationSchemaParam = async (req: ServiceRequest, schema: Validatio
     // e.g. { body: { name: 'Please provide a name', email: () => { ... }, age: true } }
     for (let key of Object.keys(schema[schemaParam])) {
       const val = req[schemaParam]?.[key]
+
       if (typeof schema[schemaParam][key] === 'string') {
         if (!val) req.ctx.throw(400, schema[schemaParam][key])
       } else if (typeof schema[schemaParam][key] === 'function') {
-        const validatorMessage = await (<Function>schema[schemaParam][key])(val, req)
-        if (validatorMessage) req.ctx.throw(400, validatorMessage)
+        try {
+          const result = await (<Function>schema[schemaParam][key])(val, req)
+          if (!result) reject(req, `Missing ${schemaParam} key: ${key}`)
+        } catch (err) {
+          reject(req, err.message ?? `Missing ${schemaParam} key: ${key}`)
+        }
       } else if (typeof schema[schemaParam][key] === 'boolean') {
-        if (schema[schemaParam][key] && !val) req.ctx.throw(400, `Missing ${schemaParam} key: ${key}`)
+        if (schema[schemaParam][key] && !val) reject(req, `Missing ${schemaParam} key: ${key}`)
       }
     }
   }

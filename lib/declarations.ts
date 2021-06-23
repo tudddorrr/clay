@@ -50,7 +50,8 @@ export interface ServiceOpts {
   debug?: boolean
 }
 
-export type Validatable = string | Function | boolean
+export type ValidationFunc = (val: string, req: ServiceRequest) => Promise<boolean>
+export type Validatable = string | ValidationFunc | boolean
 
 export interface ValidationSchema {
   query?: { [key: string]: Validatable } | string[]

@@ -63,11 +63,10 @@ async get(req: ServiceRequest): Promise<ServiceResponse> {
 ```
 
 ## @Validate
-@Validate runs before your function. You can validate keys in a request's `body` or `query`. If you return a string and the key doesn't exist, the string will be used as an error message for a 400 response.
-
-You can return true/false to specify if the key is required and if the value is true and the key is missing, the default error message will be used.
-
-You can also provide a function. If the function returns a string, a 400 with that error message will be returned, otherwise the decorated function will be executed.
+@Validate runs before your function. You can validate keys in a request's `body` or `query`. There are three separate ways to define the validation for keys in a schema.
+1. Strings: if the value of a key is a string and the key is missing, the validation will fail and the error message will be that value.
+2. Functions: if the function resolves to falsy, the validation will fail. If you throw an error within the function, the error's message will be used.
+3. Booleans: if the value is true and the key is missing, the validation will fail.
 
 ```
 @Validate({
@@ -80,27 +79,26 @@ async get(req: ServiceRequest): Promise<ServiceResponse> { ... }
 ...
 
 @Validate({
-  query: {
-    count: true, // if missing returns 'Missing query key: count'
-    search: false, // if missing nothing happens
-    page: true // if missing returns 'Missing query key: page'
-  }
-})
-async get(req: ServiceRequest): Promise<ServiceResponse> { ... }
-
-...
-
-@Validate({
   body: {
     username: 'Please provide a username',
     age: async (val: number, req: ServiceRequest) => {
-      if (val < 13) {
-        return 'User needs to be at least 13 years old to register'
-      }
+      if (val < 13) throw new Error('User needs to be at least 13 years old to register')
+      return true
     }
   }
 })
 async post(req: ServiceRequest): Promise<ServiceResponse> { ... }
+
+...
+
+@Validate({
+  query: {
+    count: true, // if missing, returns 'Missing query key: count'
+    search: false, // if missing nothing happens
+    page: true // if missing, returns 'Missing query key: page'
+  }
+})
+async get(req: ServiceRequest): Promise<ServiceResponse> { ... }
 ```
 
 For more simple use cases, you can also provide the body and query keys an array:
