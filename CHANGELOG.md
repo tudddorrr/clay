@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.0.1 (24th June 2021)
+* Fix typing on `val` parameter of validation functions
+
 ## 3.0.0 (23rd June 2021)
 * Reworked the way `@Validate` works:
 - Keys that return a function must now return a boolean (false => fail, true => pass)

@@ -50,7 +50,7 @@ export interface ServiceOpts {
   debug?: boolean
 }
 
-export type ValidationFunc = (val: string, req: ServiceRequest) => Promise<boolean>
+export type ValidationFunc = (val: unknown, req: ServiceRequest) => Promise<boolean>
 export type Validatable = string | ValidationFunc | boolean
 
 export interface ValidationSchema {
