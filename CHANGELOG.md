@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 3.1.0 (18th July 2021)
 * Add @Routes decorator for declaring routes
 
 ## 3.0.1 (24th June 2021)
