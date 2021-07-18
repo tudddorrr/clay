@@ -1,5 +1,4 @@
-import { Service, ServiceRequest, ServiceResponse, Validate } from '../../../lib'
-import { Routes } from '../../../lib/hooks/routes'
+import { Service, ServiceRequest, ServiceResponse, Validate, Routes } from '../../../lib'
 
 interface Personnel {
   id: number,

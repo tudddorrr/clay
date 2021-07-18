@@ -1,5 +1,4 @@
-import { Service, ServiceRequest, HookParams, ServiceResponse, After } from '../../../lib'
-import { Routes } from '../../../lib/hooks/routes'
+import { Service, ServiceRequest, HookParams, ServiceResponse, After, Routes } from '../../../lib'
 
 interface Comment {
   id: number

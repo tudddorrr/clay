@@ -1,15 +1,14 @@
 # Changelog
 
-## 3.1.0 (18th July 2021)
-* Add @Routes decorator for declaring routes
+## 3.1.1 (18th July 2021)
+* (3.1.0) Add @Routes decorator for declaring routes
+* (3.1.1) Fix missing export for new decorator
 
-## 3.0.1 (24th June 2021)
-* Fix typing on `val` parameter of validation functions
-
-## 3.0.0 (23rd June 2021)
-* Reworked the way `@Validate` works:
-- Keys that return a function must now return a boolean (false => fail, true => pass)
-- Keys that return a function must now throw an error to override the default message (see the docs)
+## 3.0.x (23rd June 2021)
+* (3.0.0) Reworked the way `@Validate` works:
+* (3.0.0) Keys that return a function must now return a boolean (false => fail, true => pass)
+* (3.0.0) Keys that return a function must now throw an error to override the default message (see the docs)
+* (3.0.1) Fix typing on `val` parameter of validation functions
 
 ## 2.1.0 (21st June 2021)
 * Validation schemas for `@Validate` can now take in booleans to specify whether the key is required
