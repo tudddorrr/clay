@@ -1,5 +1,8 @@
 # Changelog
 
+## Unreleased
+* Add @Routes decorator for declaring routes
+
 ## 3.0.1 (24th June 2021)
 * Fix typing on `val` parameter of validation functions
 

@@ -14,8 +14,7 @@ You can also define a few options:
 
 ```
 app.use(service('users', new UserService(), {
-  prefix: '/users',
-  routes: [ ... ]
+  prefix: '/users'
 }))
 ```
 
@@ -37,25 +36,29 @@ A route (`ServiceRoute`) is comprised of:
 - `path`: The path of the endpoint (e.g. /users)
 - `handler` (optional): The name of or a function to call when the endpoint is called. If not defined, this will default to the HTTP method in lowercase (i.e. GET requests will call `get()`)
 
-Routes exist as a member variable of your Service class named `routes`:
+Routes can be declared using the `@Routes` decorator on your class which takes in a `ServiceRoute[]`. They also exist as a member variable of your Service class named `routes`:
 
 ```
+@Routes([
+  {
+    method: 'GET',
+    path: '/albums/:id/personnel/:personnelId',
+    handler: 'getPersonnel'
+  },
+  {
+    method: 'GET',
+    path: '/albums/:id'
+  },
+  {
+    method: 'GET',
+    path: '/albums'
+  }
+])
 class AlbumService implements Service {
-  routes: ServiceRoute[] = [
-    {
-      method: 'GET',
-      path: '/albums/:id/personnel/:personnelId',
-      handler: 'getPersonnel'
-    },
-    {
-      method: 'GET',
-      path: '/albums/:id'
-    },
-    {
-      method: 'GET',
-      path: '/albums'
-    }
-  ]
+  ...
+  constructor() {
+    console.log(this.routes)
+  }
 }
 ```
 
@@ -63,7 +66,7 @@ class AlbumService implements Service {
 
 You can define your route handlers as either function names or anonymous functions. The service class will automatically be passed in:
 ```
-routes = [
+@Routes([
   {
     method: 'POST',
     path: '/albums/:id/reviews',
@@ -83,7 +86,7 @@ routes = [
       return await service.editReview(req)
     }
   }
-]
+])
 ```
 
 ## Implicit routes

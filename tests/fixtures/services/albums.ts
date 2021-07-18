@@ -1,4 +1,5 @@
-import { Service, ServiceRequest, ServiceResponse, ServiceRoute, Validate } from '../../../lib'
+import { Service, ServiceRequest, ServiceResponse, Validate } from '../../../lib'
+import { Routes } from '../../../lib/hooks/routes'
 
 interface Personnel {
   id: number,
@@ -12,53 +13,52 @@ interface Album {
   personnel?: Personnel[]
 }
 
-export default class AlbumService implements Service {
-  routes: ServiceRoute[] = [
-    {
-      method: 'GET',
-      path: '/albums/titles',
-      handler: 'getAlbumTitles'
-    },
-    {
-      method: 'GET',
-      path: '/albums/title',
-      handler: 'getAlbumTitle'
-    },
-    {
-      method: 'GET',
-      path: '/albums/:id'
-    },
-    {
-      method: 'GET',
-      path: '/albums/:id/personnel/:personnelId',
-      handler: 'getPersonnel'
-    },
-    {
-      method: 'GET',
-      path: '/albums',
-      handler: 'getMany'
-    },
-    {
-      method: 'POST',
-      path: '/albums/:id/reviews',
-      handler: () => async (req: ServiceRequest): Promise<ServiceResponse> => {
-        return {
-          status: 200,
-          body: {
-            review: req.body
-          }
+@Routes([
+  {
+    method: 'GET',
+    path: '/albums/titles',
+    handler: 'getAlbumTitles'
+  },
+  {
+    method: 'GET',
+    path: '/albums/title',
+    handler: 'getAlbumTitle'
+  },
+  {
+    method: 'GET',
+    path: '/albums/:id'
+  },
+  {
+    method: 'GET',
+    path: '/albums/:id/personnel/:personnelId',
+    handler: 'getPersonnel'
+  },
+  {
+    method: 'GET',
+    path: '/albums',
+    handler: 'getMany'
+  },
+  {
+    method: 'POST',
+    path: '/albums/:id/reviews',
+    handler: () => async (req: ServiceRequest): Promise<ServiceResponse> => {
+      return {
+        status: 200,
+        body: {
+          review: req.body
         }
       }
-    },
-    {
-      method: 'PUT',
-      path: '/albums/:id/reviews/:reviewId',
-      handler: (service: AlbumService) => async (req: ServiceRequest): Promise<ServiceResponse> => {
-        return await service.editReview(req)
-      }
     }
-  ]
-
+  },
+  {
+    method: 'PUT',
+    path: '/albums/:id/reviews/:reviewId',
+    handler: (service: AlbumService) => async (req: ServiceRequest): Promise<ServiceResponse> => {
+      return await service.editReview(req)
+    }
+  }
+])
+export default class AlbumService implements Service {
   albums: Album[] = [
     {
       id: 0,

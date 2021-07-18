@@ -1,4 +1,5 @@
-import { Service, ServiceRequest, HookParams, ServiceResponse, ServiceRoute, After } from '../../../lib'
+import { Service, ServiceRequest, HookParams, ServiceResponse, After } from '../../../lib'
+import { Routes } from '../../../lib/hooks/routes'
 
 interface Comment {
   id: number
@@ -6,26 +7,25 @@ interface Comment {
   text: string
 }
 
+@Routes([
+  {
+    method: 'POST'
+  },
+  {
+    method: 'GET',
+    path: '/:id',
+    handler: 'getOne'
+  },
+  {
+    method: 'GET',
+    handler: 'getMany'
+  },
+  {
+    method: 'DELETE'
+  }
+])
 export default class CommentService implements Service {
   comments: Comment[] = []
-
-  routes: ServiceRoute[] = [
-    {
-      method: 'POST'
-    },
-    {
-      method: 'GET',
-      path: '/:id',
-      handler: 'getOne'
-    },
-    {
-      method: 'GET',
-      handler: 'getMany'
-    },
-    {
-      method: 'DELETE'
-    }
-  ]
 
   notifyEveryone(title: string): void {
     // send emails out...
