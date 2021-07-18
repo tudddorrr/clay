@@ -75,8 +75,6 @@ const hasDefinedRoute = (routes: ServiceRoute[], method: string): boolean => {
 }
 
 export function service(name: string, service: Service, opts: ServiceOpts = {}) {
-  const prefix = opts.prefix ?? ''
-
   let routes: ServiceRoute[] = buildDefaultRoutes(service).filter((route) => {
     return !hasDefinedRoute(service.routes, route.method)
   })
@@ -94,6 +92,7 @@ export function service(name: string, service: Service, opts: ServiceOpts = {}) 
     routes = routes.concat(definedRoutes)
   }
 
+  const prefix = opts.prefix ?? ''
   routes = routes.map((route: ServiceRoute) => ({
     ...route,
     path: prefix + route.path
@@ -110,9 +109,10 @@ export function service(name: string, service: Service, opts: ServiceOpts = {}) 
 
     const route = routes.find((r) => r.method === ctx.method && pathToRegexp(r.path).test(ctx.path))
     if (!route) {
-      if (debug) console.log(`Route for ${ctx.method} ${ctx.path} not found`)
+      if (debug) console.warn(`Route for ${ctx.method} ${ctx.path} not found`)
       return await next()
     }
+
     if (debug) console.log(`Using route`, [buildDebugRoute(route)])
 
     const handler = getRouteHandler(service, route)
@@ -130,9 +130,7 @@ export function service(name: string, service: Service, opts: ServiceOpts = {}) 
       body: ctx.request.body
     }
 
-    let res: ServiceResponse = null
-    res = await handler.apply(service, [data])
-
+    const res: ServiceResponse = await handler.apply(service, [data])
     ctx.status = res.status
     ctx.body = res.body
 
