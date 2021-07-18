@@ -7,9 +7,9 @@ Build Koa REST services without the hassle: quick to configure, minimal boilerpl
 * Transform entities before sending them to prevent exposing sensitive data
 
 ## Examples
-Docs: [docs](https://github.com/sekaru/koa-rest-services/tree/main/docs)
+Docs: [docs](https://github.com/tudddorrr/koa-rest-services/tree/main/docs)
 
-Tests: [tests](https://github.com/sekaru/koa-rest-services/tree/main/tests)
+Tests: [tests](https://github.com/tudddorrr/koa-rest-services/tree/main/tests)
 
 ## Installation
 ```
@@ -50,21 +50,19 @@ By default you'll get a method for each HTTP method (GET/POST/PUT/PATCH/DELETE).
 
 ```
 // AlbumService.ts
-
+@Routes([
+  {
+    method: 'GET',
+    path: '/albums/:id/personnel/:personnelId',
+    handler: 'getPersonnel'
+  },
+  {
+    method: 'GET',
+    path: '/albums',
+    handler: 'getAll'
+  }
+])
 class AlbumService implements Service {
-  routes: ServiceRoute[] = [
-    {
-      method: 'GET',
-      path: '/albums/:id/personnel/:personnelId',
-      handler: 'getPersonnel'
-    },
-    {
-      method: 'GET',
-      path: '/albums',
-      handler: 'getAll'
-    }
-  ]
-
   async getPersonnel(req: ServiceRequest) {
     ...
   }
