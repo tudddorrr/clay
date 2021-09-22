@@ -16,7 +16,18 @@ describe('Service registration', () => {
     .get('/meta')
     .end((err, res) => {
       expect(res).to.have.status(200)
-      expect(res.body).to.have.property('services').with.keys(['users', 'comments', 'albums', 'meta'])
+      expect(res.body).to.have.property('services').with.keys(['users', 'comments', 'albums', 'meta', 'search', 'secrets', 'api'])
+      done()
+    })
+  })
+
+  it('should correctly namespace services', (done: Function) => {
+    chai
+    .request(server)
+    .get('/meta')
+    .end((err, res) => {
+      expect(res).to.have.status(200)
+      expect(res.body.services).to.have.property('api').with.keys(['users', 'comments'])
       done()
     })
   })

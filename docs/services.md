@@ -5,21 +5,22 @@ Services are classes that handle requests related to a single entity, e.g. Users
 To register a service, define it as a middleware:
 
 ```
-app.use(service('users', new UserService()))
+app.use(service('/users', new UserService()))
 ```
 
-You can also define a few options:
-- `prefix`: The starting path for all routes in this service. E.g. if set to `/users`, your UserService GET endpoint will be `GET /users/:id`. This will be added to the start of any routes you define
+The first parameter is the base path to your service (always starting with a /) and the second is a class that implements the `Service` interface.
+
+You can also define extra options:
 - `debug`: Prints useful information like all the routes available to a service
 
 ```
-app.use(service('users', new UserService(), {
-  prefix: '/users'
+app.use(service('/users', new UserService(), {
+  debug: false
 }))
 ```
 
 ## Structure
-A service is any class that implements the `Service` interface. The `Service` interface comes with functions for each HTTP method (e.g. `get()` and `put()`).
+A service is any class that implements the `Service` interface. The interface comes with functions for each HTTP method (e.g. `get()` and `put()`).
 
 ```
 export default class UsersService implements Service {
@@ -33,7 +34,7 @@ export default class UsersService implements Service {
 
 A route (`ServiceRoute`) is comprised of:
 - `method`: a HTTP method (e.g. PUT)
-- `path`: The path of the endpoint (e.g. /users)
+- `path`: The path of the endpoint (optional, e.g. /:id)
 - `handler` (optional): The name of or a function to call when the endpoint is called. If not defined, this will default to the HTTP method in lowercase (i.e. GET requests will call `get()`)
 
 Routes can be declared using the `@Routes` decorator on your class which takes in a `ServiceRoute[]`. They also exist as a member variable of your Service class named `routes`:
@@ -42,16 +43,16 @@ Routes can be declared using the `@Routes` decorator on your class which takes i
 @Routes([
   {
     method: 'GET',
-    path: '/albums/:id/personnel/:personnelId',
+    path: '/:id/personnel/:personnelId',
     handler: 'getPersonnel'
   },
   {
     method: 'GET',
-    path: '/albums/:id'
+    path: '/:id'
   },
   {
     method: 'GET',
-    path: '/albums'
+    path: '' // can be omitted
   }
 ])
 class AlbumService implements Service {
@@ -69,7 +70,7 @@ You can define your route handlers as either function names or anonymous functio
 @Routes([
   {
     method: 'POST',
-    path: '/albums/:id/reviews',
+    path: '/:id/reviews',
     handler: () => async (req: ServiceRequest): Promise<ServiceResponse> => {
       return {
         status: 200,
@@ -81,7 +82,7 @@ You can define your route handlers as either function names or anonymous functio
   },
   {
     method: 'PUT',
-    path: '/albums/:id/reviews/:reviewId',
+    path: '/:id/reviews/:reviewId',
     handler: (service: AlbumService) => async (req: ServiceRequest): Promise<ServiceResponse> => {
       return await service.editReview(req)
     }
@@ -124,5 +125,9 @@ Requests (`ServiceRequest`) come with a number of convenient properties:
 
 ## Accessing other services
 
-You can access services from the app's context using: `ctx.services[serviceName]`
+You can access services from the app's context using: `ctx.services[serviceName]`. Services are registered using `lodash.set`, for example:
+
+- `app.use(service('/users', new UserService()))`, can be accessed via `ctx.services.users`
+- `app.use(service('/api/users', new UserService()))`, can be accessed via `ctx.services.api.users`
+- `app.use(service('/v1/api/users', new UserService()))`, can be accessed via `ctx.services.v1.api.users`
 

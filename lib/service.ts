@@ -1,14 +1,11 @@
 import { pathToRegexp } from 'path-to-regexp'
 import { Context } from 'koa'
 import { Service, ServiceRoute, ServiceOpts, ServiceRequest, ServiceResponse } from './declarations'
+import set from 'lodash.set'
 
-const attachService = (ctx: Context, name: string, service: Service): void => {
-  if (ctx.services?.[name] === undefined) {
-    ctx.services = {
-      ...ctx.services,
-      [name]: service
-    }
-  }
+const attachService = (ctx: Context, path: string, service: Service): void => {
+  const standardisedPath = path.substring(1, path.length).replace(/\//g, '.')
+  set(ctx, 'services.' + standardisedPath, service)
 }
 
 const buildParams = (ctx: Context, path: string): any => {
@@ -74,7 +71,7 @@ const hasDefinedRoute = (routes: ServiceRoute[], method: string): boolean => {
   return Boolean(routes?.find((route) => route.method === method))
 }
 
-export function service(name: string, service: Service, opts: ServiceOpts = {}) {
+export function service(path: string, service: Service, opts: ServiceOpts = {}) {
   let routes: ServiceRoute[] = buildDefaultRoutes(service).filter((route) => {
     return !hasDefinedRoute(service.routes, route.method)
   })
@@ -95,17 +92,17 @@ export function service(name: string, service: Service, opts: ServiceOpts = {}) 
   const prefix = opts.prefix ?? ''
   routes = routes.map((route: ServiceRoute) => ({
     ...route,
-    path: prefix + route.path
+    path: prefix + path + route.path
   }))
 
   const debug = opts.debug
   if (debug) {
-    console.log(`Available ${name} service routes:`)
+    console.log(`Available ${path} service routes:`)
     console.log(routes.map(buildDebugRoute))
   }
   
   return async (ctx, next) => {
-    attachService(ctx, name, service)
+    attachService(ctx, path, service)
 
     const route = routes.find((r) => r.method === ctx.method && pathToRegexp(r.path).test(ctx.path))
     if (!route) {

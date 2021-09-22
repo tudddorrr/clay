@@ -1,6 +1,10 @@
 # Changelog
 
-## 3.1.1 (18th July 2021)
+## 4.0.0 (20th September 2021)
+* Route base paths are now declared in the middleware declaration
+* Services are now registered with lodash.set allowing for namespaced access
+
+## 3.1.x (18th July 2021)
 * (3.1.0) Add @Routes decorator for declaring routes
 * (3.1.1) Fix missing export for new decorator
 

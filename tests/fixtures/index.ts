@@ -11,27 +11,19 @@ import SearchService from './services/search'
 const app = new Koa()
 app.use(bodyParser())
 
-app.use(service('users', new UserService(), {
-  prefix: '/users'
-}))
+app.use(service('/users', new UserService()))
+app.use(service('/api/users', new UserService()))
 
-app.use(service('comments', new CommentService(), {
-  prefix: '/comments'
-}))
+app.use(service('/comments', new CommentService()))
+app.use(service('/api/comments', new CommentService()))
 
-app.use(service('albums', new AlbumService()))
+app.use(service('/albums', new AlbumService()))
 
-app.use(service('meta', new MetaService(), {
-  prefix: '/meta'
-}))
+app.use(service('/meta', new MetaService()))
 
-app.use(service('secrets', new SecretsService(), {
-  prefix: '/secrets'
-}))
+app.use(service('/secrets', new SecretsService()))
 
-app.use(service('search', new SearchService(), {
-  prefix: '/search'
-}))
+app.use(service('/search', new SearchService()))
 
 const server = app.listen(3003, () => console.log('Listening...'))
 export default server

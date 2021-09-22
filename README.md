@@ -25,9 +25,7 @@ npm i koa-rest-services --save
 
 const app = new Koa()
 
-app.use(service('users', new UserService(), {
-  prefix: '/users'
-}))
+app.use(service('/users', new UserService()))
 
 app.listen(3000, () => console.log('Listening...'))
 ```
@@ -51,14 +49,16 @@ By default you'll get a method for each HTTP method (GET/POST/PUT/PATCH/DELETE).
 ```
 // AlbumService.ts
 @Routes([
+  // e.g. http://example.me/albums/1/personnel/3
   {
     method: 'GET',
-    path: '/albums/:id/personnel/:personnelId',
+    path: '/:id/personnel/:personnelId',
     handler: 'getPersonnel'
   },
+  // i.e. http://example.me/albums
   {
     method: 'GET',
-    path: '/albums',
+    path: '', // can be omitted
     handler: 'getAll'
   }
 ])

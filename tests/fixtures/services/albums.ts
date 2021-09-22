@@ -15,31 +15,30 @@ interface Album {
 @Routes([
   {
     method: 'GET',
-    path: '/albums/titles',
+    path: '/titles',
     handler: 'getAlbumTitles'
   },
   {
     method: 'GET',
-    path: '/albums/title',
+    path: '/title',
     handler: 'getAlbumTitle'
   },
   {
     method: 'GET',
-    path: '/albums/:id'
+    path: '/:id'
   },
   {
     method: 'GET',
-    path: '/albums/:id/personnel/:personnelId',
+    path: '/:id/personnel/:personnelId',
     handler: 'getPersonnel'
   },
   {
     method: 'GET',
-    path: '/albums',
     handler: 'getMany'
   },
   {
     method: 'POST',
-    path: '/albums/:id/reviews',
+    path: '/:id/reviews',
     handler: () => async (req: ServiceRequest): Promise<ServiceResponse> => {
       return {
         status: 200,
@@ -51,7 +50,7 @@ interface Album {
   },
   {
     method: 'PUT',
-    path: '/albums/:id/reviews/:reviewId',
+    path: '/:id/reviews/:reviewId',
     handler: (service: AlbumService) => async (req: ServiceRequest): Promise<ServiceResponse> => {
       return await service.editReview(req)
     }
