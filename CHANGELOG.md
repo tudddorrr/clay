@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.0.1 (16th October 2021)
+* Added export for `ServicePolicyResponse`, returning a union type for `boolean` and `ServicePolicyDenial`
+
 ## 4.0.0 (20th September 2021)
 * Route base paths are now declared in the middleware declaration
 * Services are now registered with lodash.set allowing for namespaced access

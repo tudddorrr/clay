@@ -117,11 +117,11 @@ If any of the keys are missing, the response will simply be: `Missing [body or q
 
 ```
 class SecretsServicePolicy extends ServicePolicy {
-  async get(req: ServiceRequest): Promise<boolean> {
+  async get(req: ServiceRequest): Promise<ServicePolicyResponse> {
     return this.ctx.user.hasScope('get')
   }
 
-  async post(req: ServiceRequest): Promise<boolean> {
+  async post(req: ServiceRequest): Promise<ServicePolicyResponse> {
     return this.ctx.user.hasScope('post')
   }
 }
@@ -142,7 +142,11 @@ Policy classes should extend the `ServicePolicy` class which simply sets the Koa
 To override the default error code and message, return a `ServicePolicyDenial`. This will pass any data you specify and the optional status code (defaulting to 403) to Koa's throw function.
 
 ```
-async put(req: ServiceRequest): Promise<boolean | ServicePolicyDenial> {
+async put(req: ServiceRequest): Promise<ServicePolicyResponse> {
   return new ServicePolicyDenial({ message: 'Method not implemented yet. Come back later' }, 405)
 }
 ```
+
+### ServicePolicyResponse
+
+The `ServicePolicyResponse` type is a union of the `boolean` and `ServicePolicyDenial` types.

@@ -76,3 +76,5 @@ export class ServicePolicyDenial {
     this.status = status
   }
 }
+
+export type ServicePolicyResponse = boolean | ServicePolicyDenial
