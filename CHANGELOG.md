@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.0.2 (6th November 2021)
+* Fix type of `ServiceRequest.path`
+
 ## 4.0.1 (16th October 2021)
 * Added export for `ServicePolicyResponse`, returning a union type for `boolean` and `ServicePolicyDenial`
 

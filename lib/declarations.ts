@@ -3,7 +3,7 @@ import { Context } from 'koa'
 export interface ServiceRequest {
   ctx: Context
   headers: { [key: string]: any }
-  path: { [key: string]: string }
+  path: string
   query?: { [key: string]: string }
   params?: { [key: string]: string }
   body?: { [key: string]: any }
