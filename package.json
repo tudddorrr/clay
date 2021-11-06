@@ -1,6 +1,6 @@
 {
   "name": "koa-rest-services",
-  "version": "4.0.1",
+  "version": "4.0.2",
   "description": "Koa middleware for building REST services without the hassle",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
