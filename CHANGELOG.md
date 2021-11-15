@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.0.3 (15th November 2021)
+* Only reject null or undefined values in `@Validate` schemas
+
 ## 4.0.2 (6th November 2021)
 * Fix type of `ServiceRequest.path`
 

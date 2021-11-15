@@ -96,4 +96,52 @@ describe('@Validate hook', () => {
         done()
       })
   })
+
+  it('should only reject null and undefined values', (done: Function) => {    
+    chai
+      .request(server)
+      .post('/users')
+      .type('json')
+      .send(JSON.stringify({ name: false }))
+      .end((err, res) => {
+        expect(res).to.have.status(200)
+      })
+
+    chai
+      .request(server)
+      .post('/users')
+      .type('json')
+      .send(JSON.stringify({ name: '' }))
+      .end((err, res) => {
+        expect(res).to.have.status(200)
+      })
+
+    chai
+      .request(server)
+      .post('/users')
+      .type('json')
+      .send(JSON.stringify({ name: 0 }))
+      .end((err, res) => {
+        expect(res).to.have.status(200)
+        done()
+      })
+
+    chai
+      .request(server)
+      .post('/users')
+      .type('json')
+      .send(JSON.stringify({ name: null }))
+      .end((err, res) => {
+        expect(res).to.have.status(400)
+      })
+
+    chai
+      .request(server)
+      .post('/users')
+      .type('json')
+      .send(JSON.stringify({}))
+      .end((err, res) => {
+        expect(res).to.have.status(400)
+      })
+  })
 })
