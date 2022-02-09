@@ -1,4 +1,4 @@
-import { Service, ServiceRequest, ServiceResponse, Validate } from '../../../lib'
+import { Service, Request, Response, Validate } from '../../../lib'
 
 export default class SearchService implements Service {
   @Validate({
@@ -13,7 +13,7 @@ export default class SearchService implements Service {
       itemsPerPage: async (val: any): Promise<boolean> => !isNaN(val)
     }
   })
-  async index(req: ServiceRequest): Promise<ServiceResponse> {
+  async index(req: Request): Promise<Response> {
     return {
       status: 204
     }

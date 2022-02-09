@@ -1,21 +1,21 @@
 import { Context } from 'koa'
-import { ServicePolicy, ServicePolicyDenial, ServicePolicyResponse, ServiceRequest } from '../declarations'
+import { Policy, PolicyDenial, PolicyResponse, Request } from '../declarations'
 
-export const HasPermission = (PolicyType: new (ctx: Context) => ServicePolicy, method: string) => (tar: Object, _: string, descriptor: PropertyDescriptor) => {
+export const HasPermission = (PolicyType: new (ctx: Context) => Policy, method: string) => (tar: Object, _: string, descriptor: PropertyDescriptor) => {
   const base = descriptor.value
 
   descriptor.value = async function (...args) {
-    const req: ServiceRequest = args[0]
+    const req: Request = args[0]
     const policy = new PolicyType(req.ctx)
-    const hookResult: ServicePolicyResponse = await policy[method](...args)
+    const hookResult: PolicyResponse = await policy[method](...args)
 
     if (!hookResult) {
-      (<ServiceRequest>args[0]).ctx.throw(403)
+      (<Request>args[0]).ctx.throw(403)
       return
-    } else if (hookResult instanceof ServicePolicyDenial) {
-      const denial: ServicePolicyDenial = hookResult as ServicePolicyDenial
+    } else if (hookResult instanceof PolicyDenial) {
+      const denial: PolicyDenial = hookResult as PolicyDenial
       
-      (<ServiceRequest>args[0]).ctx.throw(denial.status, denial.data)
+      (<Request>args[0]).ctx.throw(denial.status, denial.data)
       return
     }
 

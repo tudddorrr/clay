@@ -1,7 +1,7 @@
-import { Service, ServiceRequest, ServiceResponse } from '../../../lib'
+import { Service, Request, Response } from '../../../lib'
 
 export default class MetaService implements Service {
-  async index(req: ServiceRequest): Promise<ServiceResponse> {
+  async index(req: Request): Promise<Response> {
     return {
       status: 200,
       body: {

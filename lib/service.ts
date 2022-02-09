@@ -1,6 +1,6 @@
 import { pathToRegexp } from 'path-to-regexp'
 import { Context } from 'koa'
-import { Service, ServiceRoute, ServiceOpts, ServiceRequest, ServiceResponse } from './declarations'
+import { Service, Route, ServiceOpts, Request, Response } from './declarations'
 import set from 'lodash.set'
 
 const attachService = (ctx: Context, path: string, service: Service): void => {
@@ -18,8 +18,8 @@ const buildParams = (ctx: Context, path: string): any => {
   }, {})
 }
 
-const buildDefaultRoutes = (service: Service): ServiceRoute[] => {
-  const routes: ServiceRoute[] = []
+const buildDefaultRoutes = (service: Service): Route[] => {
+  const routes: Route[] = []
   const methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
 
   methods.forEach((method) => {
@@ -41,7 +41,7 @@ const buildDefaultRoutes = (service: Service): ServiceRoute[] => {
 }
 
 const getDefaultPathForMethod = (service: Service, method: string): string => {
-  const defaultRoutes: ServiceRoute[] = buildDefaultRoutes(service)
+  const defaultRoutes: Route[] = buildDefaultRoutes(service)
   if (method === 'GET') {
     return ''
   } else {
@@ -49,7 +49,7 @@ const getDefaultPathForMethod = (service: Service, method: string): string => {
   }
 }
 
-const getRouteHandler = (service: Service, route: ServiceRoute): Function => {
+const getRouteHandler = (service: Service, route: Route): Function => {
   if (typeof route.handler === 'string') {
     return service[route.handler]
   } else if (typeof route.handler === 'function') {
@@ -60,23 +60,23 @@ const getRouteHandler = (service: Service, route: ServiceRoute): Function => {
   }
 }
 
-const buildDebugRoute = (route: ServiceRoute) => {
+const buildDebugRoute = (route: Route) => {
   const handler = route.handler
   ? typeof route.handler === 'function' ? '[Function]' : `${route.handler}()`
   : `${route.method.toLowerCase()}()`
   return `${route.method} ${route.path} => ${handler}`
 }
 
-const hasDefinedRoute = (routes: ServiceRoute[], method: string): boolean => {
+const hasDefinedRoute = (routes: Route[], method: string): boolean => {
   return Boolean(routes?.find((route) => route.method === method))
 }
 
 export function service(path: string, service: Service, opts: ServiceOpts = {}) {
-  let routes: ServiceRoute[] = buildDefaultRoutes(service).filter((route) => {
+  let routes: Route[] = buildDefaultRoutes(service).filter((route) => {
     return !hasDefinedRoute(service.routes, route.method)
   })
 
-  const definedRoutes: ServiceRoute[] = service.routes?.map((route: ServiceRoute) => {
+  const definedRoutes: Route[] = service.routes?.map((route: Route) => {
     return {
       ...route,
       path: route.path ?? getDefaultPathForMethod(service, route.method) ?? ''
@@ -90,7 +90,7 @@ export function service(path: string, service: Service, opts: ServiceOpts = {}) 
   }
 
   const prefix = opts.prefix ?? ''
-  routes = routes.map((route: ServiceRoute) => ({
+  routes = routes.map((route: Route) => ({
     ...route,
     path: prefix + path + route.path
   }))
@@ -118,7 +118,7 @@ export function service(path: string, service: Service, opts: ServiceOpts = {}) 
       return await next()
     }
 
-    const data: ServiceRequest = {
+    const data: Request = {
       ctx,
       query: ctx.query,
       path: ctx.path,
@@ -127,7 +127,7 @@ export function service(path: string, service: Service, opts: ServiceOpts = {}) 
       body: ctx.request.body
     }
 
-    const res: ServiceResponse = await handler.apply(service, [data])
+    const res: Response = await handler.apply(service, [data])
     ctx.status = res.status
     ctx.body = res.body
 

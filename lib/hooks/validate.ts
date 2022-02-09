@@ -1,6 +1,6 @@
-import { ServiceRequest, ValidationSchema } from '../declarations'
+import { Request, ValidationSchema } from '../declarations'
 
-function reject(req: ServiceRequest, message?: string): void {
+function reject(req: Request, message?: string): void {
   req.ctx.throw(400, message)
 }
 
@@ -8,7 +8,7 @@ function valueIsValid(val: unknown): boolean {
   return val !== null && val !== undefined
 }
 
-async function checkValidationSchemaParam(req: ServiceRequest, schema: ValidationSchema, schemaParam: string): Promise<void> {
+async function checkValidationSchemaParam(req: Request, schema: ValidationSchema, schemaParam: string): Promise<void> {
   if (Array.isArray(schema[schemaParam])) {
     // e.g. { body: ['name', 'email'] }
     for (let key of schema[schemaParam]) {
@@ -40,7 +40,7 @@ export const Validate = (schema: ValidationSchema) => (tar: Object, _: string, d
   const base = descriptor.value
 
   descriptor.value = async function (...args) {
-    const req = <ServiceRequest>args[0]
+    const req = <Request>args[0]
 
     if (schema.query) await checkValidationSchemaParam(req, schema, 'query')
     if (schema.body) await checkValidationSchemaParam(req, schema, 'body')

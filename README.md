@@ -35,11 +35,11 @@ Clients will now have access to handler functions you implement in your service:
 ```
 // UserService.ts
 
-async get(req: ServiceRequest) {
+async get(req: Request) {
   ...
 }
 
-async patch(req: ServiceRequest) {
+async patch(req: Request) {
   ...
 }
 ```
@@ -63,11 +63,11 @@ By default you'll get a method for each HTTP method (GET/POST/PUT/PATCH/DELETE).
   }
 ])
 class AlbumService implements Service {
-  async getPersonnel(req: ServiceRequest) {
+  async getPersonnel(req: Request) {
     ...
   }
 
-  async getAll(req: ServiceRequest) {
+  async getAll(req: Request) {
     ...
   }
 }
@@ -89,7 +89,7 @@ Hooks let you run functions before or after your endpoint handlers. They can mod
     name: 'User needs a name'
   }
 })
-async post(req: ServiceRequest): Promise<User> {
+async post(req: Request): Promise<User> {
   user = createUser(req.body)
 
   return {
@@ -104,14 +104,14 @@ async post(req: ServiceRequest): Promise<User> {
 ```
 // UserService.ts
 
-timestamp(hook: HookParams): ServiceResponse {
+timestamp(hook: HookParams): Response {
   // modifies the response to add a timestamp key
   const res = hook.result
   return lodash.set('res.body.timestamp', new Date())
 }
 
 @After('timestamp')
-async get(req: ServiceRequest) {
+async get(req: Request) {
   return {
     status: 200,
     body: {

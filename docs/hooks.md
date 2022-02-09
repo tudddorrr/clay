@@ -14,18 +14,18 @@ You can invoke functions either by passing a function or a string with the name 
 validate(hook: HookParams) { ... }
 
 @Before('validate')
-async get(req: ServiceRequest) { ... }
+async get(req: Request) { ... }
 
 // OR
 
 @Before((hook: HookParams) => { ... })
-async get(req: ServiceRequest) { ... }
+async get(req: Request) { ... }
 ```
 
 ### HookParams
 
 Hooks are called with a `HookParams` object containing:
-- `req`: the `ServiceRequest` passed to the handler
+- `req`: the `Request` passed to the handler
 - `result`: passed to the `@After` hook containing the return value of the function
 - `caller`: `this` context of the class (useful for calling another method in the class)
 
@@ -35,10 +35,10 @@ You can modify the value of request bodies using the `@Before` hook:
 
 ```
 @Before((hook: HookParams): void => {
-  const req: ServiceRequest = hook.req
+  const req: Request = hook.req
   req.body.receivedAt = Date.now()
 })
-async post(req: ServiceRequest) { ... }
+async post(req: Request) { ... }
 ```
 
 ### Modifying responses
@@ -46,14 +46,14 @@ async post(req: ServiceRequest) { ... }
 You can modify the response object by returning a value in the `@After` hook:
 
 ```
-@After((hook: HookParams): void | ServiceResponse => {
+@After((hook: HookParams): void | Response => {
   if (!hook.result.body) {
     return {
       status: 204
     }
   }
 })
-async get(req: ServiceRequest): Promise<ServiceResponse> {
+async get(req: Request): Promise<Response> {
   return {
     status: 200
   }
@@ -74,20 +74,20 @@ async get(req: ServiceRequest): Promise<ServiceResponse> {
     count: 'Please provide how many users you want to return'
   }
 })
-async get(req: ServiceRequest): Promise<ServiceResponse> { ... }
+async get(req: Request): Promise<Response> { ... }
 
 ...
 
 @Validate({
   body: {
     username: 'Please provide a username',
-    age: async (val: number, req: ServiceRequest) => {
+    age: async (val: number, req: Request) => {
       if (val < 13) throw new Error('User needs to be at least 13 years old to register')
       return true
     }
   }
 })
-async post(req: ServiceRequest): Promise<ServiceResponse> { ... }
+async post(req: Request): Promise<Response> { ... }
 
 ...
 
@@ -98,7 +98,7 @@ async post(req: ServiceRequest): Promise<ServiceResponse> { ... }
     page: true // if missing, returns 'Missing query key: page'
   }
 })
-async get(req: ServiceRequest): Promise<ServiceResponse> { ... }
+async get(req: Request): Promise<Response> { ... }
 ```
 
 For more simple use cases, you can also provide the body and query keys an array:
@@ -107,7 +107,7 @@ For more simple use cases, you can also provide the body and query keys an array
 @Validate({
   body: ['username', 'age']
 })
-async post(req: ServiceRequest): Promise<ServiceResponse> { ... }
+async post(req: Request): Promise<Response> { ... }
 ```
 
 If any of the keys are missing, the response will simply be: `Missing [body or query] key: [key name]`. In the case above, if there's no `username` provided, your response will be: `Missing body key: username`.
@@ -116,37 +116,37 @@ If any of the keys are missing, the response will simply be: `Missing [body or q
 @HasPermission runs before your function to check if the endpoint can be called:
 
 ```
-class SecretsServicePolicy extends ServicePolicy {
-  async get(req: ServiceRequest): Promise<ServicePolicyResponse> {
+class SecretsPolicy extends Policy {
+  async get(req: Request): Promise<PolicyResponse> {
     return this.ctx.user.hasScope('get')
   }
 
-  async post(req: ServiceRequest): Promise<ServicePolicyResponse> {
+  async post(req: Request): Promise<PolicyResponse> {
     return this.ctx.user.hasScope('post')
   }
 }
 
 class SecretsService implements Service {
-  @HasPermission(SecretsServicePolicy, 'get')
-  async get(req: ServiceRequest): Promise<ServiceResponse> { ... }
+  @HasPermission(SecretsPolicy, 'get')
+  async get(req: Request): Promise<Response> { ... }
 
-  @HasPermission(SecretsServicePolicy, 'post')
-  async post(req: ServiceRequest): Promise<ServiceResponse> { ... }
+  @HasPermission(SecretsPolicy, 'post')
+  async post(req: Request): Promise<Response> { ... }
 }
 ```
 
-Policy classes should extend the `ServicePolicy` class which simply sets the Koa context (`ctx`) as a member variable. Beyond that, the implementation is totally up to you - you could check the `ctx.state` (if you're using `koa-jwt`) or even the request to make sure the required permissions are met.
+Policy classes should extend the `Policy` class which simply sets the Koa context (`ctx`) as a member variable. Beyond that, the implementation is totally up to you - you could check the `ctx.state` (if you're using `koa-jwt`) or even the request to make sure the required permissions are met.
 
 ### Custom denials
 
-To override the default error code and message, return a `ServicePolicyDenial`. This will pass any data you specify and the optional status code (defaulting to 403) to Koa's throw function.
+To override the default error code and message, return a `PolicyDenial`. This will pass any data you specify and the optional status code (defaulting to 403) to Koa's throw function.
 
 ```
-async put(req: ServiceRequest): Promise<ServicePolicyResponse> {
-  return new ServicePolicyDenial({ message: 'Method not implemented yet. Come back later' }, 405)
+async put(req: Request): Promise<PolicyResponse> {
+  return new PolicyDenial({ message: 'Method not implemented yet. Come back later' }, 405)
 }
 ```
 
-### ServicePolicyResponse
+### PolicyResponse
 
-The `ServicePolicyResponse` type is a union of the `boolean` and `ServicePolicyDenial` types.
+The `PolicyResponse` type is a union of the `boolean` and `PolicyDenial` types.

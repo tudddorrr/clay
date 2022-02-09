@@ -1,4 +1,4 @@
-import { Service, ServiceRequest, HookParams, ServiceResponse, After, Routes } from '../../../lib'
+import { Service, Request, HookParams, Response, After, Routes } from '../../../lib'
 
 interface Comment {
   id: number
@@ -31,10 +31,10 @@ export default class CommentService implements Service {
   }
 
   @After((hook: HookParams): void => {
-    const req: ServiceRequest = hook.req
+    const req: Request = hook.req
     hook.caller.notifyEveryone(req.body.title)
   })
-  async post(req: ServiceRequest): Promise<ServiceResponse> {
+  async post(req: Request): Promise<Response> {
     const len = this.comments.push({
       ...req.body,
       id: this.comments.length + 1,
@@ -52,12 +52,12 @@ export default class CommentService implements Service {
 
   @After(async (hook: HookParams): Promise<void> => {
     // this shouldn't modify the response returned
-    const req: ServiceRequest = hook.req
+    const req: Request = hook.req
     req.body.metadata = {
       timestamp: Date.now()
     }
   })
-  async getMany(req: ServiceRequest): Promise<ServiceResponse> {
+  async getMany(req: Request): Promise<Response> {
     return {
       status: 200,
       body: {
@@ -66,7 +66,7 @@ export default class CommentService implements Service {
     }
   }
 
-  async getOne(req: ServiceRequest): Promise<ServiceResponse> {
+  async getOne(req: Request): Promise<Response> {
     return {
       status: 200,
       body: {
@@ -75,7 +75,7 @@ export default class CommentService implements Service {
     }
   }
 
-  async delete(req: ServiceRequest): Promise<ServiceResponse> {
+  async delete(req: Request): Promise<Response> {
     return {
       status: 204
     }

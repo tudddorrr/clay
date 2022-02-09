@@ -1,6 +1,6 @@
 import { Context } from 'koa'
 
-export interface ServiceRequest {
+export interface Request {
   ctx: Context
   headers: { [key: string]: any }
   path: string
@@ -9,7 +9,7 @@ export interface ServiceRequest {
   body?: { [key: string]: any }
 }
 
-export interface ServiceResponse {
+export interface Response {
   status: number
   body?: {
     [key: string]: any
@@ -18,28 +18,28 @@ export interface ServiceResponse {
 
 export interface Service {
   [key: string]: any
-  routes?: ServiceRoute[]
+  routes?: Route[]
 
-  index? (req?: ServiceRequest): Promise<ServiceResponse>
+  index? (req?: Request): Promise<Response>
 
-  get? (req?: ServiceRequest): Promise<ServiceResponse>
+  get? (req?: Request): Promise<Response>
 
-  post? (req?: ServiceRequest): Promise<ServiceResponse>
+  post? (req?: Request): Promise<Response>
 
-  put? (req?: ServiceRequest): Promise<ServiceResponse>
+  put? (req?: Request): Promise<Response>
 
-  patch? (req?: ServiceRequest): Promise<ServiceResponse>
+  patch? (req?: Request): Promise<Response>
 
-  delete? (req?: ServiceRequest): Promise<ServiceResponse>
+  delete? (req?: Request): Promise<Response>
 }
 
 export interface HookParams {
-  req: ServiceRequest
-  result?: ServiceResponse
+  req: Request
+  result?: Response
   caller: any
 }
 
-export interface ServiceRoute {
+export interface Route {
   method: string
   path?: string
   handler?: string | Function
@@ -50,7 +50,7 @@ export interface ServiceOpts {
   debug?: boolean
 }
 
-export type ValidationFunc = (val: unknown, req: ServiceRequest) => Promise<boolean>
+export type ValidationFunc = (val: unknown, req: Request) => Promise<boolean>
 export type Validatable = string | ValidationFunc | boolean
 
 export interface ValidationSchema {
@@ -59,7 +59,7 @@ export interface ValidationSchema {
   headers?: { [key: string]: Validatable } | string[]
 }
 
-export class ServicePolicy {
+export class Policy {
   ctx: Context
 
   constructor(ctx: Context) {
@@ -67,7 +67,7 @@ export class ServicePolicy {
   }
 }
 
-export class ServicePolicyDenial {
+export class PolicyDenial {
   data: { [key: string]: any }
   status: number
 
@@ -77,4 +77,4 @@ export class ServicePolicyDenial {
   }
 }
 
-export type ServicePolicyResponse = boolean | ServicePolicyDenial
+export type PolicyResponse = boolean | PolicyDenial

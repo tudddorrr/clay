@@ -1,5 +1,8 @@
 # Changelog
 
+## 5.0.0 (Unreleased)
+* Remove `Service` prefix from all types and interfaces (e.g. ServiceRequest -> Request)
+
 ## 4.0.3 (15th November 2021)
 * Only reject null or undefined values in `@Validate` schemas
 

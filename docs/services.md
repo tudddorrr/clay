@@ -24,20 +24,20 @@ A service is any class that implements the `Service` interface. The interface co
 
 ```
 export default class UsersService implements Service {
-  async get(req: ServiceRequest): Promise<ServiceResponse> { ... }
+  async get(req: Request): Promise<Response> { ... }
 
-  async put(req: ServiceRequest): Promise<ServiceResponse> { ... }
+  async put(req: Request): Promise<Response> { ... }
 }
 ```
 
 ## Routes
 
-A route (`ServiceRoute`) is comprised of:
+A route (`Route`) is comprised of:
 - `method`: a HTTP method (e.g. PUT)
 - `path`: The path of the endpoint (optional, e.g. /:id)
 - `handler` (optional): The name of or a function to call when the endpoint is called. If not defined, this will default to the HTTP method in lowercase (i.e. GET requests will call `get()`)
 
-Routes can be declared using the `@Routes` decorator on your class which takes in a `ServiceRoute[]`. They also exist as a member variable of your Service class named `routes`:
+Routes can be declared using the `@Routes` decorator on your class which takes in a `Route[]`. They also exist as a member variable of your Service class named `routes`:
 
 ```
 @Routes([
@@ -71,7 +71,7 @@ You can define your route handlers as either function names or anonymous functio
   {
     method: 'POST',
     path: '/:id/reviews',
-    handler: () => async (req: ServiceRequest): Promise<ServiceResponse> => {
+    handler: () => async (req: Request): Promise<Response> => {
       return {
         status: 200,
         body: {
@@ -83,7 +83,7 @@ You can define your route handlers as either function names or anonymous functio
   {
     method: 'PUT',
     path: '/:id/reviews/:reviewId',
-    handler: (service: AlbumService) => async (req: ServiceRequest): Promise<ServiceResponse> => {
+    handler: (service: AlbumService) => async (req: Request): Promise<Response> => {
       return await service.editReview(req)
     }
   }
@@ -97,7 +97,7 @@ If no routes are defined, implementing a function named after a lowercase HTTP m
 ```
 // clients can now call PUT /users/:id
 
-async put(req: ServiceRequest) { ... }
+async put(req: Request) { ... }
 ```
 
 The following implicit routes will be exposed (if their respective functions are implemented):
@@ -115,7 +115,7 @@ For GET requests, `index()` is called for `GET /` and `get()` is called for `GET
 
 ## Requests
 
-Requests (`ServiceRequest`) come with a number of convenient properties:
+Requests (`Request`) come with a number of convenient properties:
 - `ctx`: The Koa context object
 - `headers`: The request headers (e.g. `{ content-type: application/json }`)
 - `path`: The request path (e.g. `/users/10?count=5`)

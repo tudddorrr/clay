@@ -41,7 +41,7 @@ describe('@HasPermission hook', () => {
       })
   })
 
-  it('should merge in data from ServicePolicyDenials and use the correct status code', (done: Function) => {    
+  it('should merge in data from PolicyDenials and use the correct status code', (done: Function) => {    
     chai
       .request(server)
       .put('/secrets/1')

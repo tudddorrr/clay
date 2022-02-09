@@ -1,4 +1,4 @@
-import { Service, ServiceRequest, ServiceResponse, Validate, Routes } from '../../../lib'
+import { Service, Request, Response, Validate, Routes } from '../../../lib'
 
 interface Personnel {
   id: number,
@@ -39,7 +39,7 @@ interface Album {
   {
     method: 'POST',
     path: '/:id/reviews',
-    handler: () => async (req: ServiceRequest): Promise<ServiceResponse> => {
+    handler: () => async (req: Request): Promise<Response> => {
       return {
         status: 200,
         body: {
@@ -51,7 +51,7 @@ interface Album {
   {
     method: 'PUT',
     path: '/:id/reviews/:reviewId',
-    handler: (service: AlbumService) => async (req: ServiceRequest): Promise<ServiceResponse> => {
+    handler: (service: AlbumService) => async (req: Request): Promise<Response> => {
       return await service.editReview(req)
     }
   }
@@ -89,7 +89,7 @@ export default class AlbumService implements Service {
     }
   ]
 
-  async get(req: ServiceRequest): Promise<ServiceResponse> {
+  async get(req: Request): Promise<Response> {
     const { id } = req.params
     const album = this.albums.find((a) => a.id === Number(id))
 
@@ -105,7 +105,7 @@ export default class AlbumService implements Service {
     }
   }
 
-  async getPersonnel(req: ServiceRequest): Promise<ServiceResponse> {
+  async getPersonnel(req: Request): Promise<Response> {
     const { id, personnelId } = req.params
     const album = this.albums.find((a) => a.id === Number(id))
     const personnel = album?.personnel?.find((p) => p.id === Number(personnelId))
@@ -128,7 +128,7 @@ export default class AlbumService implements Service {
       count: 'Count not specified'
     }
   })
-  async getMany(req: ServiceRequest): Promise<ServiceResponse> {
+  async getMany(req: Request): Promise<Response> {
     const { count } = req.query
 
     return {
@@ -139,7 +139,7 @@ export default class AlbumService implements Service {
     }
   }
 
-  async editReview(req: ServiceRequest): Promise<ServiceResponse> {
+  async editReview(req: Request): Promise<Response> {
     return {
       status: 200,
       body: {
@@ -148,7 +148,7 @@ export default class AlbumService implements Service {
     }
   }
 
-  async getAlbumTitles(req: ServiceRequest): Promise<ServiceResponse> {
+  async getAlbumTitles(req: Request): Promise<Response> {
     return {
       status: 200,
       body: {
@@ -160,7 +160,7 @@ export default class AlbumService implements Service {
   @Validate({
     query: ['id']
   })
-  async getAlbumTitle(req: ServiceRequest): Promise<ServiceResponse> {
+  async getAlbumTitle(req: Request): Promise<Response> {
     const { id } = req.query
     const album = this.albums.find((album) => album.id === Number(id))
 
