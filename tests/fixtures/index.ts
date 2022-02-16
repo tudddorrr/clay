@@ -25,5 +25,6 @@ app.use(service('/secrets', new SecretsService()))
 
 app.use(service('/search', new SearchService()))
 
-const server = app.listen(3003, () => console.log('Listening...'))
+const port = 3003
+const server = app.listen(port, () => console.log(`Listening on ${port}`))
 export default server

@@ -48,7 +48,10 @@ export default class UserService implements Service {
 
   @Validate({
     body: {
-      name: 'Needs a name'
+      name: {
+        required: true,
+        error: 'Needs a name'
+      }
     }
   })
   @Before((hook: HookParams): void => {

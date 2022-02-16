@@ -39,8 +39,10 @@ export interface HookParams {
   caller: any
 }
 
+export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
+
 export interface Route {
-  method: string
+  method: HttpMethod
   path?: string
   handler?: string | Function
 }
@@ -50,13 +52,27 @@ export interface ServiceOpts {
   debug?: boolean
 }
 
-export type ValidationFunc = (val: unknown, req: Request) => Promise<boolean>
-export type Validatable = string | ValidationFunc | boolean
+export type ValidationCondition = {
+  check: boolean,
+  error?: string
+}
 
-export interface ValidationSchema {
-  query?: { [key: string]: Validatable } | string[]
-  body?: { [key: string]: Validatable } | string[]
-  headers?: { [key: string]: Validatable } | string[]
+export type BaseValidationConfig = {
+  requiredIf?: (req: Request) => Promise<boolean>,
+  error?: string,
+  validation?: (val: unknown, req: Request) => Promise<ValidationCondition[]> 
+}
+
+export type ValidatablePropertyConfig = BaseValidationConfig & {
+  required?: boolean
+}
+
+export type Validatable = { [key: string]: ValidatablePropertyConfig } | (string | (new () => any))[]
+
+export type ValidationSchema = {
+  query?: Validatable
+  body?: Validatable
+  headers?: Validatable
 }
 
 export class Policy {
@@ -78,3 +94,15 @@ export class PolicyDenial {
 }
 
 export type PolicyResponse = boolean | PolicyDenial
+
+export type RequiredPropertyConfig = BaseValidationConfig & {
+  as?: string
+  methods?: HttpMethod[]
+}
+
+export type EntityWithRequirements = {
+  _requestRequirements?: {
+    [key: string]: RequiredPropertyConfig
+  }
+  [key: string]: any
+}

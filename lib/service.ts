@@ -1,6 +1,6 @@
 import { pathToRegexp } from 'path-to-regexp'
 import { Context } from 'koa'
-import { Service, Route, ServiceOpts, Request, Response } from './declarations'
+import { Service, Route, ServiceOpts, Request, Response, HttpMethod } from './declarations'
 import set from 'lodash.set'
 
 const attachService = (ctx: Context, path: string, service: Service): void => {
@@ -20,9 +20,9 @@ const buildParams = (ctx: Context, path: string): any => {
 
 const buildDefaultRoutes = (service: Service): Route[] => {
   const routes: Route[] = []
-  const methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
+  const methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'] as HttpMethod[]
 
-  methods.forEach((method) => {
+  methods.forEach((method: HttpMethod) => {
     if (service[method.toLowerCase()]) {
       routes.push({
         method,

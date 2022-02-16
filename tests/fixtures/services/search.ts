@@ -1,16 +1,30 @@
-import { Service, Request, Response, Validate } from '../../../lib'
+import { Service, Request, Response, Validate, ValidationCondition } from '../../../lib'
 
 export default class SearchService implements Service {
   @Validate({
     query: {
-      search: true,
-      startDate: 'Bad start date',
-      endDate: async (val: string) => {
-        if (isNaN(Number(val))) throw new Error('Bad end date')
-        return Boolean(val)
+      search: {
+        required: true
       },
-      page: false,
-      itemsPerPage: async (val: any): Promise<boolean> => !isNaN(val)
+      startDate: {
+        required: true,
+        error: 'Bad start date'
+      },
+      endDate: {
+        requiredIf: async (req: Request): Promise<boolean> => {
+          return new Date().getMilliseconds() - new Date(req.query.startDate).getMilliseconds() < 24 * 60 * 60 * 1000
+        },
+        validation: async (val: unknown): Promise<ValidationCondition[]> => [{
+          check: !isNaN(val as number),
+          error: 'Bad end date'
+        }]
+      },
+      itemsPerPage: {
+        required: true,
+        validation: async (val: unknown): Promise<ValidationCondition[]> => [{
+          check: !isNaN(val as number)
+        }]
+      }
     }
   })
   async index(req: Request): Promise<Response> {

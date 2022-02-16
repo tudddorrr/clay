@@ -125,7 +125,10 @@ export default class AlbumService implements Service {
 
   @Validate({
     query: {
-      count: 'Count not specified'
+      count: {
+        required: true,
+        error: 'Count not specified'
+      }
     }
   })
   async getMany(req: Request): Promise<Response> {
