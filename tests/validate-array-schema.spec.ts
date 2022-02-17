@@ -1,7 +1,7 @@
 import chai from 'chai'
 import { Service, Request, Response, Validate } from '../lib'
 import server from './fixtures'
-import buildFakeRequest from './buildFakeRequest'
+import buildMockRequest from './utils/buildMockRequest'
 
 const expect = chai.expect
 
@@ -20,7 +20,7 @@ describe('@Validate hook array schema', () => {
       }
     }
 
-    const res = await new SearchService().index(buildFakeRequest({
+    const res = await new SearchService().index(buildMockRequest({
       query: {
         itemsPerPage: '5'
       }
@@ -43,7 +43,7 @@ describe('@Validate hook array schema', () => {
       }
     }
 
-    const res = await new SearchService().index(buildFakeRequest())
+    const res = await new SearchService().index(buildMockRequest())
 
     expect(res.status).to.equal(400)
     expect(res.body.errors).to.have.keys(['search', 'itemsPerPage'])
@@ -62,7 +62,7 @@ describe('@Validate hook array schema', () => {
       }
     }
 
-    const res = await new SearchService().index(buildFakeRequest({
+    const res = await new SearchService().index(buildMockRequest({
       query: {
         search: ''
       }

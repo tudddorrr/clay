@@ -1,7 +1,7 @@
 import chai from 'chai'
 import { Service, Request, Response, Validate, Required } from '../lib'
 import server from './fixtures'
-import buildFakeRequest from './buildFakeRequest'
+import buildMockRequest from './utils/buildMockRequest'
 
 const expect = chai.expect
 
@@ -25,7 +25,7 @@ describe('@Required hook', () => {
       }
     }
 
-    const res = await new StatsService().post(buildFakeRequest({
+    const res = await new StatsService().post(buildMockRequest({
       ctx: {
         method: 'POST',
         state: {}
@@ -53,7 +53,7 @@ describe('@Required hook', () => {
       }
     }
 
-    const res = await new StatsService().patch(buildFakeRequest({
+    const res = await new StatsService().patch(buildMockRequest({
       ctx: {
         method: 'PATCH',
         state: {}
@@ -78,7 +78,7 @@ describe('@Required hook', () => {
       }
     }
 
-    const res = await new StatsService().post(buildFakeRequest({
+    const res = await new StatsService().post(buildMockRequest({
       ctx: {
         method: 'POST',
         state: {}
@@ -106,7 +106,7 @@ describe('@Required hook', () => {
       }
     }
 
-    const res = await new StatsService().post(buildFakeRequest({
+    const res = await new StatsService().post(buildMockRequest({
       ctx: {
         method: 'POST',
         state: {}
@@ -137,7 +137,7 @@ describe('@Required hook', () => {
       }
     }
 
-    const res = await new StatsService().post(buildFakeRequest({
+    const res = await new StatsService().post(buildMockRequest({
       ctx: {
         method: 'POST',
         state: {}
@@ -164,7 +164,7 @@ describe('@Required hook', () => {
       }
     }
 
-    const res = await new StatsService().post(buildFakeRequest({
+    const res = await new StatsService().post(buildMockRequest({
       ctx: {
         method: 'POST',
         state: {}
@@ -194,7 +194,7 @@ describe('@Required hook', () => {
       }
     }
 
-    const res = await new UsersService().post(buildFakeRequest({
+    const res = await new UsersService().post(buildMockRequest({
       ctx: {
         method: 'POST',
         state: {}

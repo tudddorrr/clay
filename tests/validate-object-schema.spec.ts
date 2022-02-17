@@ -1,7 +1,7 @@
 import chai from 'chai'
 import { Service, Request, Response, Validate, ValidationCondition } from '../lib'
 import server from './fixtures'
-import buildFakeRequest from './buildFakeRequest'
+import buildMockRequest from './utils/buildMockRequest'
 
 const expect = chai.expect
 
@@ -27,7 +27,7 @@ describe('@Validate hook object schema', () => {
       }
     }
 
-    const res = await new SearchService().index(buildFakeRequest({
+    const res = await new SearchService().index(buildMockRequest({
       query: {
         itemsPerPage: '5'
       }
@@ -57,7 +57,7 @@ describe('@Validate hook object schema', () => {
       }
     }
 
-    const res = await new SearchService().index(buildFakeRequest())
+    const res = await new SearchService().index(buildMockRequest())
 
     expect(res.status).to.equal(400)
     expect(res.body.errors).to.have.keys(['search', 'itemsPerPage'])
@@ -83,7 +83,7 @@ describe('@Validate hook object schema', () => {
       }
     }
 
-    const res = await new SearchService().index(buildFakeRequest({
+    const res = await new SearchService().index(buildMockRequest({
       query: {
         search: 'abc'
       }
@@ -111,7 +111,7 @@ describe('@Validate hook object schema', () => {
       }
     }
 
-    const res = await new SearchService().index(buildFakeRequest({
+    const res = await new SearchService().index(buildMockRequest({
       query: {
         search: 'abc'
       }
@@ -134,7 +134,7 @@ describe('@Validate hook object schema', () => {
       }
     }
 
-    const res = await new SearchService().index(buildFakeRequest({
+    const res = await new SearchService().index(buildMockRequest({
       query: {
         search: ''
       }
@@ -162,7 +162,7 @@ describe('@Validate hook object schema', () => {
       }
     }
 
-    const res = await new SearchService().index(buildFakeRequest({
+    const res = await new SearchService().index(buildMockRequest({
       query: {
         paginate: true
       }
@@ -192,7 +192,7 @@ describe('@Validate hook object schema', () => {
       }
     }
 
-    const res = await new SearchService().index(buildFakeRequest({
+    const res = await new SearchService().index(buildMockRequest({
       query: {
         itemsPerPage: 'i would like 25 please'
       }
@@ -220,7 +220,7 @@ describe('@Validate hook object schema', () => {
       }
     }
 
-    const res = await new SearchService().index(buildFakeRequest())
+    const res = await new SearchService().index(buildMockRequest())
     expect(res.status).to.equal(204)
   })
 
@@ -247,7 +247,7 @@ describe('@Validate hook object schema', () => {
       }
     }
 
-    const res = await new SearchService().index(buildFakeRequest({
+    const res = await new SearchService().index(buildMockRequest({
       query: {
         itemsPerPage: -1
       }

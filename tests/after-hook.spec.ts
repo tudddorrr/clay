@@ -1,6 +1,6 @@
 import chai from 'chai'
 import { After, HookParams, Request, Response, Service } from '../lib'
-import buildFakeRequest from './buildFakeRequest'
+import buildMockRequest from './utils/buildMockRequest'
 import server from './fixtures/index'
 const expect = chai.expect
 
@@ -27,7 +27,7 @@ describe('@After hook', () => {
       }
     }
 
-    const res = await new DemoService().post(buildFakeRequest({
+    const res = await new DemoService().post(buildMockRequest({
       ctx: {
         method: 'POST',
         state: {}
@@ -57,7 +57,7 @@ describe('@After hook', () => {
       }
     }
 
-    const res = await new DemoService().post(buildFakeRequest({
+    const res = await new DemoService().post(buildMockRequest({
       ctx: {
         method: 'POST',
         state: {}
