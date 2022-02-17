@@ -176,7 +176,7 @@ describe('@Required hook', () => {
   })
 
   it('should let requiredIf take precedent over the request method requirement', async () => {
-    class Stat {
+    class User {
       firstName: string
 
       @Required({
@@ -185,16 +185,16 @@ describe('@Required hook', () => {
       lastName: string
     }
 
-    class StatsService implements Service {
+    class UsersService implements Service {
       @Validate({
-        body: [Stat]
+        body: [User]
       })
       async post(req: Request): Promise<Response> {
         return { status: 204 }
       }
     }
 
-    const res = await new StatsService().post(buildFakeRequest({
+    const res = await new UsersService().post(buildFakeRequest({
       ctx: {
         method: 'POST',
         state: {}

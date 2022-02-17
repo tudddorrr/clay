@@ -1,21 +1,29 @@
-import { HookParams } from '../declarations'
+import { HookParams, Request, Response } from '../declarations'
 
 export const After = (func: string | Function) => (tar: Object, _: string, descriptor: PropertyDescriptor): PropertyDescriptor => {
   const base = descriptor.value
 
   descriptor.value = async function (...args) {
-    let result = await base.apply(this, args)
-    let hookResult = null
-    const hook: HookParams = { req: args[0], result, caller: this }
+    const req: Request = args[0]
+    const result: Response = await base.apply(this, args)
 
+    Object.freeze(result)
+    Object.freeze(result.body)
+
+    const hook: HookParams = {
+      req,
+      result,
+      caller: this
+    }
+
+    let hookResult: Response = null
     if (typeof func === 'string') {
       hookResult = await tar[func]?.(hook)
     } else if (typeof func === 'function') {
       hookResult = await func(hook)
     }
 
-    if (hookResult) result = hookResult
-    return result
+    return hookResult ?? result
   }
 
   return descriptor

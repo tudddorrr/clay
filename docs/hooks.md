@@ -43,7 +43,7 @@ async post(req: Request) { ... }
 
 ### Modifying responses
 
-You can modify the response object by returning a value in the `@After` hook:
+You can change a response by returning a value in the `@After` hook:
 
 ```
 @After((hook: HookParams): void | Response => {
@@ -61,6 +61,8 @@ async get(req: Request): Promise<Response> {
 
 // status returned is 204
 ```
+
+Note: The `hook.result` and `hook.result.body` are frozen to prevent mutation. For `@After` you must return a valid `Response` (e.g. via destructuring or Object.assign) from your callback.
 
 ## @Validate and @Required
 

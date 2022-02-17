@@ -4,6 +4,7 @@
 * Remove `Service` prefix from all types and interfaces (e.g. ServiceRequest -> Request)
 * Added @Required hook for entity properties
 * Reworked how the @Validate object schema works, [see the docs](https://github.com/tudddorrr/koa-rest-services/tree/main/docs/validation.md)
+* The @After hook's `result` is now frozen and cannot be modified
 
 ## 4.0.3 (15th November 2021)
 * Only reject null or undefined values in `@Validate` schemas
