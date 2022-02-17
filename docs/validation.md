@@ -14,7 +14,7 @@ When validation fails, an error object will be returned in the response body wit
 }
 ```
 
-There are two ways to define validation with this hook:
+There are two ways to define validation with this decorator:
 
 ### Array schema
 

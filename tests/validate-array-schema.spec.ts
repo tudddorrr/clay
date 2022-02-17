@@ -5,7 +5,7 @@ import buildMockRequest from './utils/buildMockRequest'
 
 const expect = chai.expect
 
-describe('@Validate hook array schema', () => {
+describe('@Validate decorator array schema', () => {
   after(() => {
     server.close()
   })

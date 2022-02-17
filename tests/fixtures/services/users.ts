@@ -1,4 +1,4 @@
-import { Service, Request, HookParams, Response, Before, After, Validate } from '../../../lib'
+import { Service, Request, Response, Validate } from '../../../lib'
 
 interface User {
   id: number
@@ -9,20 +9,6 @@ interface User {
 export default class UserService implements Service {
   users: User[] = []
 
-  metadata(hook: HookParams): Response {
-    const res: Response = hook.result
-    return {
-      ...res,
-      body: {
-        ...res.body,
-        metadata: {
-          timestamp: new Date()
-        }
-      }
-    }
-  }
-
-  @After('metadata')
   async get(req: Request): Promise<Response> {
     const { id } = req.params
 
@@ -35,7 +21,6 @@ export default class UserService implements Service {
     }
   }
 
-  @After('metadata')
   async index(req: Request): Promise<Response> {
     // handle /users
     return {
@@ -53,10 +38,6 @@ export default class UserService implements Service {
         error: 'Needs a name'
       }
     }
-  })
-  @Before((hook: HookParams): void => {
-    const req: Request = hook.req
-    req.body.createdAt = new Date()
   })
   async post(req: Request): Promise<Response> {
     const len = this.users.push({

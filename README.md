@@ -2,9 +2,8 @@ Build Koa REST services without the hassle: quick to configure, minimal boilerpl
 
 ## Features
 * Expose API routes with minimal config
-* Run functions before and after handling requests
-* Validate requests and provide custom error messages when keys are missing/invalid
-* Transform entities before sending them to prevent exposing sensitive data
+* Validate requests against conditions or an entity's required values
+* Secure your endpoints with permission preflight checks
 
 ## Examples
 Docs: [docs](https://github.com/tudddorrr/koa-rest-services/tree/main/docs)
@@ -75,48 +74,46 @@ class AlbumService implements Service {
 
 When a request is made, the specified handler function will be invoked.
 
-## Hooks
+## Permissions and validation
 
-Hooks let you run functions before or after your endpoint handlers. They can modify requests/responses, validate requests and check user permissions. For example:
-
-### Validating requests:
+Secure your endpoints using the [@HasPermission decorator](https://github.com/tudddorrr/koa-rest-services/tree/main/docs/permissions.md), which will run a function to determine if the route can be accessed:
 
 ```
-// UserService.ts
+class SecretsPolicy extends Policy {
+  async get(req: Request): Promise<PolicyResponse> {
+    return req.ctx.user.hasScope('get')
+  }
+}
+
+class SecretsService implements Service {
+  @HasPermission(SecretsPolicy, 'get')
+  async get(req: Request): Promise<Response> { ... }
+}
+```
+
+Validate incoming request data (body, query and headers) using the [@Validate decorator](https://github.com/tudddorrr/koa-rest-services/tree/main/docs/permissions.md)
+
+```
+@Validate({
+  body: ['username', 'age'], // these keys are required
+})
+async post(req: Request): Promise<Response> { ... }
+```
+
+You can also validate requests against an entity's required properties. Additionally, you can make keys required based on the request method:
+
+```
+class User {
+  @Required() // required in POST and PUT requests
+  username: string
+
+  @Required(['PUT']) // required in PUT requests
+  age: number
+}
 
 @Validate({
-  body: {
-    name: 'User needs a name'
-  }
+  body: [User]
 })
-async post(req: Request): Promise<User> {
-  user = createUser(req.body)
-
-  return {
-    status: 200,
-    body: user
-  }
-}
+async post(req: Request): Promise<Response> { ... }
 ```
 
-### Adding in metadata:
-
-```
-// UserService.ts
-
-timestamp(hook: HookParams): Response {
-  // modifies the response to add a timestamp key
-  const res = hook.result
-  return lodash.set('res.body.timestamp', new Date())
-}
-
-@After('timestamp')
-async get(req: Request) {
-  return {
-    status: 200,
-    body: {
-      users
-    }
-  }
-}
-```

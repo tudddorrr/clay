@@ -33,12 +33,6 @@ export interface Service {
   delete? (req?: Request): Promise<Response>
 }
 
-export interface HookParams {
-  req: Request
-  result?: Response
-  caller: any
-}
-
 export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
 
 export interface Route {

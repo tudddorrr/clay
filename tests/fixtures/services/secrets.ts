@@ -1,4 +1,4 @@
-import { HasPermission, HookParams, Service, Policy, Request, Response, Before, PolicyDenial, PolicyResponse } from '../../../lib'
+import { HasPermission, Service, Policy, Request, Response, PolicyDenial, PolicyResponse, Validate } from '../../../lib'
 
 class SecretsPolicy extends Policy {
   async index(req: Request): Promise<boolean> {
@@ -6,7 +6,7 @@ class SecretsPolicy extends Policy {
   }
 
   async post(req: Request): Promise<boolean> {
-    return this.ctx.state.key === 'abc123'
+    return this.ctx.headers.key === 'abc123'
   }
 
   async put(req: Request): Promise<PolicyResponse> {
@@ -22,7 +22,9 @@ export default class SecretsService implements Service {
     }
   }
 
-  @Before((hook: HookParams) => hook.req.ctx.state.key = hook.req.body.key)
+  @Validate({
+    headers: ['key']
+  })
   @HasPermission(SecretsPolicy, 'post')
   async post(req: Request): Promise<Response> {
     return {

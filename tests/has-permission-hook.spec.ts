@@ -5,7 +5,7 @@ const expect = chai.expect
 
 chai.use(http)
 
-describe('@HasPermission hook', () => {
+describe('@HasPermission decorator', () => {
   after(() => {
     server.close()
   })
@@ -34,7 +34,7 @@ describe('@HasPermission hook', () => {
     chai
       .request(server)
       .post('/secrets')
-      .send({ key: 'abc123' })
+      .set('key', 'abc123')
       .end((err, res) => {
         expect(res).to.have.status(204)
         done()

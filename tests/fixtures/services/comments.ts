@@ -1,4 +1,4 @@
-import { Service, Request, HookParams, Response, After, Routes } from '../../../lib'
+import { Service, Request, Response, Routes } from '../../../lib'
 
 interface Comment {
   id: number
@@ -30,10 +30,6 @@ export default class CommentService implements Service {
     // send emails out...
   }
 
-  @After((hook: HookParams): void => {
-    const req: Request = hook.req
-    hook.caller.notifyEveryone(req.body.title)
-  })
   async post(req: Request): Promise<Response> {
     const len = this.comments.push({
       ...req.body,
@@ -50,13 +46,6 @@ export default class CommentService implements Service {
     }
   }
 
-  @After(async (hook: HookParams): Promise<void> => {
-    // this shouldn't modify the response returned
-    const req: Request = hook.req
-    req.body.metadata = {
-      timestamp: Date.now()
-    }
-  })
   async getMany(req: Request): Promise<Response> {
     return {
       status: 200,

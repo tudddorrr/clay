@@ -5,7 +5,7 @@ import buildMockRequest from './utils/buildMockRequest'
 
 const expect = chai.expect
 
-describe('@Required hook', () => {
+describe('@Required decorator', () => {
   after(() => {
     server.close()
   })
