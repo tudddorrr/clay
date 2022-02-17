@@ -91,7 +91,7 @@ class SecretsService implements Service {
 }
 ```
 
-Validate incoming request data (body, query and headers) using the [@Validate decorator](https://github.com/tudddorrr/koa-rest-services/tree/main/docs/permissions.md)
+Validate incoming request data (body, query and headers) using the [@Validate decorator](https://github.com/tudddorrr/koa-rest-services/tree/main/docs/permissions.md):
 
 ```
 @Validate({
@@ -107,7 +107,7 @@ class User {
   @Required() // required in POST and PUT requests
   username: string
 
-  @Required(['PUT']) // required in PUT requests
+  @Required({ methods: ['PUT'] }) // required in PUT requests
   age: number
 }
 

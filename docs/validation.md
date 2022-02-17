@@ -121,13 +121,13 @@ By default, if a property is decorated with @Required, it will be required on PO
 
 ```
 class User {
-  @Required(['PUT', 'PATCH']) // required for PUT and PATCH requests
+  @Required({ methods: ['PUT', 'PATCH'] }) // required for PUT and PATCH requests
   id: number
 
   @Required() // required for POST and PUT requests
   name: string
 
-  @Required(['PATCH']) // required for PATCH requests
+  @Required({ methods: ['PATCH'] }) // required for PATCH requests
   termsAccepted: boolean
 }
 ```
