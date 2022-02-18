@@ -5,7 +5,7 @@ import set from 'lodash.set'
 
 const attachService = (ctx: Context, path: string, service: Service): void => {
   const standardisedPath = path.substring(1, path.length).replace(/\//g, '.')
-  set(ctx, 'services.' + standardisedPath, service)
+  set(ctx.state, 'services.' + standardisedPath, service)
 }
 
 const buildParams = (ctx: Context, path: string): any => {

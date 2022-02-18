@@ -125,7 +125,7 @@ Requests (`Request`) come with a number of convenient properties:
 
 ## Accessing other services
 
-You can access services from the app's context using: `ctx.services[serviceName]`. Services are registered using `lodash.set`, for example:
+You can access services from the app's context using: `ctx.state.services[serviceName]`. Services are registered using `lodash.set`, for example:
 
 - `app.use(service('/users', new UserService()))`, can be accessed via `ctx.services.users`
 - `app.use(service('/api/users', new UserService()))`, can be accessed via `ctx.services.api.users`

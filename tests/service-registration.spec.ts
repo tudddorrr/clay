@@ -1,35 +1,43 @@
 import chai from 'chai'
-import http from 'chai-http'
+import Koa from 'koa'
 import server from './fixtures/index'
+import supertest from 'supertest'
+import { Request, Response, service, Service } from '../lib'
 const expect = chai.expect
-
-chai.use(http)
 
 describe('Service registration', () => {
   after(() => {
     server.close()
   })
 
-  it('should correctly register services', (done: Function) => {
-    chai
-    .request(server)
-    .get('/meta')
-    .end((err, res) => {
-      expect(res).to.have.status(200)
-      expect(res.body).to.have.property('services').with.keys(['users', 'comments', 'albums', 'meta', 'search', 'secrets', 'api'])
-      done()
-    })
+  class GenericService implements Service {
+    async index(req: Request): Promise<Response> {
+      return {
+        status: 200,
+        body: {
+          services: req.ctx.state.services
+        }
+      }
+    }
+  }
+
+  it('should correctly register services', async () => {
+    const app = new Koa()
+    app.use(service('/users', new GenericService()))
+    app.use(service('/comments', new GenericService()))
+    app.use(service('/albums', new GenericService()))
+
+    const res = await supertest(app.callback()).get('/users')
+    expect(res.body.services).to.have.keys(['users', 'comments', 'albums'])
   })
 
-  it('should correctly namespace services', (done: Function) => {
-    chai
-    .request(server)
-    .get('/meta')
-    .end((err, res) => {
-      expect(res).to.have.status(200)
-      expect(res.body.services).to.have.property('api').with.keys(['users', 'comments'])
-      done()
-    })
+  it('should correctly namespace services', async () => {
+    const app = new Koa()
+    app.use(service('/api/users', new GenericService()))
+    app.use(service('/api/comments', new GenericService()))
+
+    const res = await supertest(app.callback()).get('/api/users')
+    expect(res.body.services).to.have.property('api').with.keys(['users', 'comments'])
   })
 })
 
