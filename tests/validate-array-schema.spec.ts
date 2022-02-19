@@ -1,15 +1,10 @@
 import chai from 'chai'
 import { Service, Request, Response, Validate } from '../lib'
-import server from './fixtures'
 import buildMockRequest from './utils/buildMockRequest'
 
 const expect = chai.expect
 
 describe('@Validate decorator array schema', () => {
-  after(() => {
-    server.close()
-  })
-
   it('should return a single error for a missing property', async () => {
     class SearchService implements Service {
       @Validate({

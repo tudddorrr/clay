@@ -1,46 +1,80 @@
 import chai from 'chai'
-import http from 'chai-http'
-import server from './fixtures/index'
+import Koa from 'koa'
+import supertest from 'supertest'
+import bodyParser from 'koa-bodyparser'
+import { Request, Response, Service, service } from '../lib'
 const expect = chai.expect
 
-chai.use(http)
-
 describe('Implicit routes', () => {
-  after(() => {
-    server.close()
-  })
+  it('should handle an implicit POST route', async () => {
+    class UserService implements Service {
+      async post(req: Request): Promise<Response> {
+        return {
+          status: 200,
+          body: {
+            user: {
+              id: req.body.id
+            }
+          }
+        }
+      }
+    }
 
-  it('should handle an implicit POST route', (done: Function) => {
-    chai
-      .request(server)
+    const app = new Koa()
+    app.use(bodyParser())
+    app.use(service('/users', new UserService()))
+
+    const res = await supertest(app.callback())
       .post('/users')
-      .type('json')
-      .send(JSON.stringify({ name: 'Bob' }))
-      .end((err, res) => {
-        expect(res).to.have.status(200)
-        done()
-      })
+      .send({ id: 1 })
+      .expect(200)
+
+    expect(res.body.user).to.have.key('id')
   })
 
-  it('should handle an implicit index GET route', (done: Function) => {
-    chai
-      .request(server)
+  it('should handle an implicit index GET route', async () => {
+    class UserService implements Service {
+      async index(req: Request): Promise<Response> {
+        return {
+          status: 200,
+          body: {
+            users: []
+          }
+        }
+      }
+    }
+
+    const app = new Koa()
+    app.use(service('/users', new UserService()))
+
+    const res = await supertest(app.callback())
       .get('/users')
-      .end((err, res) => {
-        expect(res).to.have.status(200)
-        expect(res.body).to.have.property('users').with.lengthOf(1)
-        done()
-      })
+      .expect(200)
+
+    expect(res.body.users).to.eql([])
   })
 
-  it('should handle an implicit single GET route', (done: Function) => {
-    chai
-      .request(server)
+  it('should handle an implicit single GET route', async () => {
+    class UserService implements Service {
+      async get(req: Request): Promise<Response> {
+        return {
+          status: 200,
+          body: {
+            user: {
+              id: req.params.id
+            }
+          }
+        }
+      }
+    }
+
+    const app = new Koa()
+    app.use(service('/users', new UserService()))
+
+    const res = await supertest(app.callback())
       .get('/users/1')
-      .end((err, res) => {
-        expect(res).to.have.status(200)
-        expect(res.body).to.have.property('user')
-        done()
-      })
+      .expect(200)
+
+    expect(res.body.user).to.have.key('id')
   })
 })

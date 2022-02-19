@@ -1,36 +1,77 @@
 import chai from 'chai'
-import http from 'chai-http'
-import server from './fixtures/index'
+import Koa from 'koa'
+import supertest from 'supertest'
+import { Request, Response, Routes, service, Service } from '../lib'
 const expect = chai.expect
 
-chai.use(http)
-
 describe('Handler functions', () => {
-  after(() => {
-    server.close()
-  })
+  it('should handle a route handler defined as an anonymous function', async () => {
+    @Routes([
+      {
+        method: 'GET',
+        path: '/:id',
+        handler: () => async (req: Request): Promise<Response> => {
+          return {
+            status: 200,
+            body: {
+              album: {
+                id: Number(req.params.id)
+              }
+            }
+          }
+        }
+      }
+    ])
+    class AlbumService implements Service {}
 
-  it('should handle a route handler defined as an anonymous function', (done: Function) => {
-    chai
-      .request(server)
-      .post('/albums/2/reviews')
-      .type('json')
-      .send(JSON.stringify({ title: 'Bad album', text: 'That\'s just my opinion' }))
-      .end((err, res) => {
-        expect(res).to.have.status(200)
-        expect(res.body).to.have.property('review')
-        done()
-      })
+    const app = new Koa()
+    app.use(service('/albums', new AlbumService()))
+
+    const res = await supertest(app.callback())
+      .get('/albums/1')
+      .expect(200)
+
+    expect(res.body).to.eql({
+      album: {
+        id: 1
+      }
+    })
   })
   
-  it('should handle a route handler that calls a function from the service', (done: Function) => {
-    chai
-      .request(server)
-      .put('/albums/2/reviews/1')
-      .end((err, res) => {
-        expect(res).to.have.status(200)
-        expect(res.body).to.have.property('updatedAt')
-        done()
-      })
+  it('should handle a route handler that calls a function from the service', async () => {
+    @Routes([
+      {
+        method: 'GET',
+        path: '/:id',
+        handler: (service: AlbumService) => async (req: Request): Promise<Response> => {
+          return await service.getAlbum(req)
+        }
+      }
+    ])
+    class AlbumService implements Service {
+      async getAlbum(req: Request): Promise<Response> {
+        return {
+          status: 200,
+          body: {
+            album: {
+              id: Number(req.params.id)
+            }
+          }
+        }
+      }
+    }
+
+    const app = new Koa()
+    app.use(service('/albums', new AlbumService()))
+
+    const res = await supertest(app.callback())
+      .get('/albums/1')
+      .expect(200)
+
+    expect(res.body).to.eql({
+      album: {
+        id: 1
+      }
+    })
   })
 })

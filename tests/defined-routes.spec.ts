@@ -1,67 +1,118 @@
-import chai from 'chai'
-import http from 'chai-http'
-import server from './fixtures/index'
-const expect = chai.expect
-
-chai.use(http)
+import Koa from 'koa'
+import supertest from 'supertest'
+import { Request, Response, Routes, service, Service } from '../lib'
 
 describe('Defined routes', () => {
-  after(() => {
-    server.close()
-  })
+  it('should handle a defined POST route', async () => {
+    @Routes([
+      {
+        method: 'POST'
+      }
+    ])
+    class DemoService implements Service {
+      async post(req: Request): Promise<Response> {
+        return {
+          status: 204
+        }
+      }
+    }
 
-  it('should handle a defined POST route', (done: Function) => {
-    chai
-      .request(server)
-      .post('/comments')
-      .type('json')
-      .send(JSON.stringify({ title: 'Hello world', text: 'This is my comment' }))
-      .end((err, res) => {
-        expect(res).to.have.status(200)
-        expect(res.body).to.have.property('comment')
-        done()
-      })
+    const app = new Koa()
+    app.use(service('/demo', new DemoService()))
+
+    await supertest(app.callback())
+      .post('/demo')
+      .expect(204)
   })
   
-  it('should handle a defined index GET route', (done: Function) => {
-    chai
-      .request(server)
-      .get('/comments')
-      .end((err, res) => {
-        expect(res).to.have.status(200)
-        expect(res.body).to.have.property('comments')
-        done()
-      })
+  it('should handle a defined index GET route', async () => {
+    @Routes([
+      {
+        method: 'GET',
+        handler: 'getMany'
+      }
+    ])
+    class DemoService implements Service {
+      async getMany(req: Request): Promise<Response> {
+        return {
+          status: 204
+        }
+      }
+    }
+
+    const app = new Koa()
+    app.use(service('/demo', new DemoService()))
+
+    await supertest(app.callback())
+      .get('/demo')
+      .expect(204)
   })
 
-  it('should handle a defined single GET route', (done: Function) => {
-    chai
-      .request(server)
-      .get('/comments/1')
-      .end((err, res) => {
-        expect(res).to.have.status(200)
-        expect(res.body).to.have.property('comment')
-        done()
-      })
+  it('should handle a defined single GET route', async () => {
+    @Routes([
+      {
+        method: 'GET',
+        path: '/:id',
+        handler: 'getOne'
+      }
+    ])
+    class DemoService implements Service {
+      async getOne(req: Request): Promise<Response> {
+        return {
+          status: 204
+        }
+      }
+    }
+
+    const app = new Koa()
+    app.use(service('/demo', new DemoService()))
+
+    await supertest(app.callback())
+      .get('/demo/1')
+      .expect(204)
   })
 
-  it('should use the correct default path for the method if no path is specified', (done: Function) => {
-    chai
-      .request(server)
-      .delete('/comments/123')
-      .end((err, res) => {
-        expect(res).to.not.have.status(404)
-        done()
-      })
+  it('should use the correct default path for the method if no path is specified', async () => {
+    @Routes([
+      {
+        method: 'DELETE'
+      }
+    ])
+    class DemoService implements Service {
+      async delete(req: Request): Promise<Response> {
+        return {
+          status: 204
+        }
+      }
+    }
+
+    const app = new Koa()
+    app.use(service('/demo', new DemoService()))
+
+    await supertest(app.callback())
+      .delete('/demo/1')
+      .expect(204)
   })
 
-  it('should not handle an undefined route method', (done: Function) => {
-    chai
-      .request(server)
-      .patch('/comments/123')
-      .end((err, res) => {
-        expect(res).to.have.status(404)
-        done()
-      })
+  it('should not handle an undefined route method', async () => {
+    @Routes([
+      {
+        method: 'GET'
+      }
+    ])
+    class DemoService implements Service {
+      async delete(req: Request): Promise<Response> {
+        return {
+          status: 204
+        }
+      }
+    }
+
+    const app = new Koa()
+    app.use(service('/demo', new DemoService()))
+
+    await supertest(app.callback())
+      .delete('/demo')
+      .expect(404)
   })
 })

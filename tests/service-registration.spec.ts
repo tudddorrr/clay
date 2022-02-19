@@ -1,15 +1,10 @@
 import chai from 'chai'
 import Koa from 'koa'
-import server from './fixtures/index'
 import supertest from 'supertest'
 import { Request, Response, service, Service } from '../lib'
 const expect = chai.expect
 
 describe('Service registration', () => {
-  after(() => {
-    server.close()
-  })
-
   class GenericService implements Service {
     async index(req: Request): Promise<Response> {
       return {

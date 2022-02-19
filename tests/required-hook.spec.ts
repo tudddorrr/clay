@@ -1,15 +1,10 @@
 import chai from 'chai'
 import { Service, Request, Response, Validate, Required } from '../lib'
-import server from './fixtures'
 import buildMockRequest from './utils/buildMockRequest'
 
 const expect = chai.expect
 
 describe('@Required decorator', () => {
-  after(() => {
-    server.close()
-  })
-
   it('should return a single error for a missing property with no configuration on a post request', async () => {
     class Stat {
       @Required()
