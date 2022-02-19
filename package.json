@@ -1,7 +1,7 @@
 {
   "name": "koa-clay",
   "version": "5.0.0",
-  "description": "Koa middleware for building REST services without the hassle",
+  "description": "An ultra convenient minimal framework for building Koa apps",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -16,7 +16,12 @@
     "http",
     "service",
     "middleware",
-    "router"
+    "router",
+    "rest",
+    "api",
+    "validation",
+    "request",
+    "permission"
   ],
   "author": "Tudor Sandulescu",
   "license": "MIT",
