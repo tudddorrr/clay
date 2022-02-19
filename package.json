@@ -1,6 +1,6 @@
 {
-  "name": "koa-rest-services",
-  "version": "4.0.3",
+  "name": "koa-clay",
+  "version": "5.0.0",
   "description": "Koa middleware for building REST services without the hassle",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -22,7 +22,7 @@
   "license": "MIT",
   "devDependencies": {
     "@types/koa": "^2.11.6",
-    "@types/koa-bodyparser": "^4.3.0",
+    "@types/koa-bodyparser": "^4.3.5",
     "@types/mocha": "^8.2.0",
     "@types/node": "^14.14.16",
     "chai": "^4.2.0",
@@ -44,6 +44,6 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/tudddorrr/koa-rest-services.git"
+    "url": "https://github.com/tudddorrr/clay.git"
   }
 }

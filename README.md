@@ -1,4 +1,4 @@
-Build Koa REST services without the hassle: quick to configure, minimal boilerplate and super convenient.
+Clay is an ultra convenient minimal framework for building Koa apps.
 
 ## Features
 * Expose API routes with minimal config
@@ -6,15 +6,15 @@ Build Koa REST services without the hassle: quick to configure, minimal boilerpl
 * Secure your endpoints with permission preflight checks
 
 ## Examples
-Docs: [docs](https://github.com/tudddorrr/koa-rest-services/tree/main/docs)
+Docs: [docs](https://github.com/tudddorrr/clay/tree/main/docs)
 
-Tests: [tests](https://github.com/tudddorrr/koa-rest-services/tree/main/tests)
+Tests: [tests](https://github.com/tudddorrr/clay/tree/main/tests)
 
 ## Installation
 ```
-yarn add koa-rest-services
+yarn add koa-clay
 // OR
-npm i koa-rest-services --save
+npm i koa-clay --save
 ```
 
 ## Lightweight route configuration
@@ -76,7 +76,7 @@ When a request is made, the specified handler function will be invoked.
 
 ## Permissions and validation
 
-Secure your endpoints using the [@HasPermission decorator](https://github.com/tudddorrr/koa-rest-services/tree/main/docs/permissions.md), which will run a function to determine if the route can be accessed:
+Secure your endpoints using the [@HasPermission decorator](https://github.com/tudddorrr/clay/tree/main/docs/permissions.md), which will run a function to determine if the route can be accessed:
 
 ```
 class SecretsPolicy extends Policy {
@@ -91,7 +91,7 @@ class SecretsService implements Service {
 }
 ```
 
-Validate incoming request data (body, query and headers) using the [@Validate decorator](https://github.com/tudddorrr/koa-rest-services/tree/main/docs/permissions.md):
+Validate incoming request data (body, query and headers) using the [@Validate decorator](https://github.com/tudddorrr/clay/tree/main/docs/permissions.md):
 
 ```
 @Validate({
