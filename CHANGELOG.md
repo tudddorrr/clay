@@ -6,6 +6,7 @@
 * Reworked how the @Validate object schema works, [see the docs](https://github.com/tudddorrr/koa-rest-services/tree/main/docs/validation.md)
 * Removed the @Before and @After decorators
 * Move registered services into `ctx.state`
+* Made koa-bodyparser a dependency
 
 ## 4.0.3 (15th November 2021)
 * Only reject null or undefined values in `@Validate` schemas
