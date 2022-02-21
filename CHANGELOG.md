@@ -1,10 +1,13 @@
 # Changelog
 
-## 5.0.0 (Unreleased)
+## 5.1.0 (21st Feb 2022)
+* Add new reworked @Before/@After [see the docs](https://github.com/tudddorrr/clay/tree/main/docs/before-after.md)
+
+## 5.0.0 (19th Feb 2022)
 * New name: Clay!
 * Remove `Service` prefix from all types and interfaces (e.g. ServiceRequest -> Request)
 * Added @Required decorator for entity properties
-* Reworked how the @Validate object schema works, [see the docs](https://github.com/tudddorrr/koa-clay/tree/main/docs/validation.md)
+* Reworked how the @Validate object schema works, [see the docs](https://github.com/tudddorrr/clay/tree/main/docs/validation.md)
 * Removed the @Before and @After decorators
 * Move registered services into `ctx.state`
 * Made koa-bodyparser a dependency

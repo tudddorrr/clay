@@ -23,7 +23,7 @@ app.use(service('/users', new UserService(), {
 A service is any class that implements the `Service` interface. The interface comes with functions for each HTTP method (e.g. `get()` and `put()`).
 
 ```
-export default class UsersService implements Service {
+export default class UserService implements Service {
   async get(req: Request): Promise<Response> { ... }
 
   async put(req: Request): Promise<Response> { ... }

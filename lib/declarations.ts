@@ -100,3 +100,6 @@ export type EntityWithRequirements = {
   }
   [key: string]: any
 }
+
+export type BeforeCallback = (req: Request, caller: Service) => Promise<void>
+export type AfterCallback = (req: Request, res: Response, caller: Service) => Promise<void>

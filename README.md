@@ -85,7 +85,7 @@ class SecretsPolicy extends Policy {
   }
 }
 
-class SecretsService implements Service {
+class SecretService implements Service {
   @HasPermission(SecretsPolicy, 'get')
   async get(req: Request): Promise<Response> { ... }
 }

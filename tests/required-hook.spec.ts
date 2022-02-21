@@ -11,7 +11,7 @@ describe('@Required decorator', () => {
       name: string
     }
 
-    class StatsService implements Service {
+    class StatService implements Service {
       @Validate({
         body: [Stat]
       })
@@ -20,7 +20,7 @@ describe('@Required decorator', () => {
       }
     }
 
-    const res = await new StatsService().post(buildMockRequest({
+    const res = await new StatService().post(buildMockRequest({
       ctx: {
         method: 'POST',
         state: {}
@@ -39,7 +39,7 @@ describe('@Required decorator', () => {
       name: string
     }
 
-    class StatsService implements Service {
+    class StatService implements Service {
       @Validate({
         body: [Stat]
       })
@@ -48,7 +48,7 @@ describe('@Required decorator', () => {
       }
     }
 
-    const res = await new StatsService().patch(buildMockRequest({
+    const res = await new StatService().patch(buildMockRequest({
       ctx: {
         method: 'PATCH',
         state: {}
@@ -64,7 +64,7 @@ describe('@Required decorator', () => {
       name: string
     }
 
-    class StatsService implements Service {
+    class StatService implements Service {
       @Validate({
         body: [Stat]
       })
@@ -73,7 +73,7 @@ describe('@Required decorator', () => {
       }
     }
 
-    const res = await new StatsService().post(buildMockRequest({
+    const res = await new StatService().post(buildMockRequest({
       ctx: {
         method: 'POST',
         state: {}
@@ -92,7 +92,7 @@ describe('@Required decorator', () => {
       name: string
     }
 
-    class StatsService implements Service {
+    class StatService implements Service {
       @Validate({
         body: [Stat]
       })
@@ -101,7 +101,7 @@ describe('@Required decorator', () => {
       }
     }
 
-    const res = await new StatsService().post(buildMockRequest({
+    const res = await new StatService().post(buildMockRequest({
       ctx: {
         method: 'POST',
         state: {}
@@ -123,7 +123,7 @@ describe('@Required decorator', () => {
       name: string
     }
 
-    class StatsService implements Service {
+    class StatService implements Service {
       @Validate({
         body: [Stat]
       })
@@ -132,7 +132,7 @@ describe('@Required decorator', () => {
       }
     }
 
-    const res = await new StatsService().post(buildMockRequest({
+    const res = await new StatService().post(buildMockRequest({
       ctx: {
         method: 'POST',
         state: {}
@@ -150,7 +150,7 @@ describe('@Required decorator', () => {
       name: string
     }
 
-    class StatsService implements Service {
+    class StatService implements Service {
       @Validate({
         body: [Stat]
       })
@@ -159,7 +159,7 @@ describe('@Required decorator', () => {
       }
     }
 
-    const res = await new StatsService().post(buildMockRequest({
+    const res = await new StatService().post(buildMockRequest({
       ctx: {
         method: 'POST',
         state: {}
@@ -180,7 +180,7 @@ describe('@Required decorator', () => {
       lastName: string
     }
 
-    class UsersService implements Service {
+    class UserService implements Service {
       @Validate({
         body: [User]
       })
@@ -189,7 +189,7 @@ describe('@Required decorator', () => {
       }
     }
 
-    const res = await new UsersService().post(buildMockRequest({
+    const res = await new UserService().post(buildMockRequest({
       ctx: {
         method: 'POST',
         state: {}
