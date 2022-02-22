@@ -82,4 +82,34 @@ describe('@Before decorator', () => {
 
     expect(error).to.equal('Cannot assign to read only property \'userId\' of object \'#<Object>\'')
   })
+
+  it('should not freeze the request context object', async () => {
+    class UserService implements Service {
+      @Before(async (req: Request): Promise<void> => {
+        req.ctx.state.user = {
+          id: Number(req.query.userId)
+        }
+      })
+      async get(req: Request): Promise<Response> {
+        return {
+          status: 200,
+          body: {
+            user: req.ctx.state.user
+          }
+        }
+      }
+    }
+
+    const res = await new UserService().get(buildMockRequest({
+      query: {
+        userId: '1'
+      }
+    }))
+
+    expect(res.body).to.eql({
+      user: {
+        id: 1
+      }
+    })  
+  })
 })

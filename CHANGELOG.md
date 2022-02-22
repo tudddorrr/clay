@@ -1,5 +1,8 @@
 # Changelog
 
+## 5.1.1 (22nd Feb 2022)
+* Keep Koa context unfrozen in @Before/@After
+
 ## 5.1.0 (21st Feb 2022)
 * Add new reworked @Before/@After [see the docs](https://github.com/tudddorrr/clay/tree/main/docs/before-after.md)
 

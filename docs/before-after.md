@@ -1,6 +1,6 @@
 # Before/After
 
-These decorators allow you to run functions before or after your request handler. Note: the values passed into the callbacks of these decorators are deeply frozen meaning you cannot modify them in any way.
+These decorators allow you to run functions before or after your request handler. Note: the values passed into the callbacks of these decorators are deeply frozen meaning you cannot modify them in any way. The only exception to this is the Koa context found in `req.ctx` which remains in the same state (unfrozen by default).
 
 ## @Before
 

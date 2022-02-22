@@ -5,7 +5,7 @@ import deepFreeze from '../utils/deepFreeze'
    const original = descriptor.value
 
    descriptor.value = async function (req: Request): Promise<Response> {
-      await func(deepFreeze(req), this)
+      await func(deepFreeze(req, ['ctx']), this)
 
       const res: Response = await original.apply(this, [req])
       return res
