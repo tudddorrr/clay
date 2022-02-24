@@ -123,6 +123,8 @@ Requests (`Request`) come with a number of convenient properties:
 - `params`: Parsed path parameters (e.g. `:id` would appear as `{ id: 10 }`)
 - `body`: The parsed request body (requires `koa-bodyparser`)
 
+Requests are readonly and therefore immutable (apart from the `ctx`'s state).
+
 ## Accessing other services
 
 You can access services from the app's context using: `ctx.state.services[serviceName]`. Services are registered using `lodash.set`, for example:

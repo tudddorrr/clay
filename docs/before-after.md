@@ -1,6 +1,6 @@
 # Before/After
 
-These decorators allow you to run functions before or after your request handler. Note: the values passed into the callbacks of these decorators are deeply frozen meaning you cannot modify them in any way. The only exception to this is the Koa context found in `req.ctx` which remains in the same state (unfrozen by default).
+These decorators allow you to run functions before or after your request handler. Note: requests and responses are `readonly`. The only exception to this is the Koa context's state.
 
 ## @Before
 
@@ -10,9 +10,11 @@ This will run _before_ your request handler, allowing you to access the request:
 class UserService {
   @Before(async (req: Request): Promise<void> => {
     const userId = req.query.userId
-    database.set(userId, {
+    const user = database.set(userId, {
       lastSeenAt: Date.now()
     })
+
+    req.ctx.state.user = user
   })
   async get(req: Request): Promise<Response> { ... }
 }

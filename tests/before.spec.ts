@@ -56,34 +56,7 @@ describe('@Before decorator', () => {
     expect(reqUserId).to.equal('1')
   })
 
-  it('should deep freeze the request object', async () => {
-    class UserService implements Service {
-      @Before(async (req: Request, caller: UserService): Promise<void> => {
-        req.query.userId = '2'
-      })
-      async get(req: Request): Promise<Response> {
-        return {
-          status: 200
-        }
-      }
-    }
-
-    let error: string = ''
-
-    try {
-      await new UserService().get(buildMockRequest({
-        query: {
-          userId: 1
-        }
-      }))
-    } catch (err) {
-      error = err.message
-    }
-
-    expect(error).to.equal('Cannot assign to read only property \'userId\' of object \'#<Object>\'')
-  })
-
-  it('should not freeze the request context object', async () => {
+  it('should allow the ctx state to be written to', async () => {
     class UserService implements Service {
       @Before(async (req: Request): Promise<void> => {
         req.ctx.state.user = {

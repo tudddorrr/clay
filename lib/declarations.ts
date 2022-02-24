@@ -1,18 +1,18 @@
 import { Context } from 'koa'
 
 export interface Request {
-  ctx: Context
-  headers: { [key: string]: any }
-  path: string
-  query?: { [key: string]: string }
-  params?: { [key: string]: string }
-  body?: { [key: string]: any }
+  readonly ctx: Context
+  readonly headers: { readonly [key: string]: any }
+  readonly path: string
+  readonly query?: { readonly [key: string]: string }
+  readonly params?: { readonly [key: string]: string }
+  readonly body?: { readonly [key: string]: any }
 }
 
 export interface Response {
-  status: number
-  body?: {
-    [key: string]: any
+  readonly status: number
+  readonly body?: {
+    readonly [key: string]: any
   }
 }
 

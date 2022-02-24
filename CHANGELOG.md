@@ -2,6 +2,7 @@
 
 ## 5.2.0 (Unreleased)
 * Add `break` to validation condition, if set to true than any later errors for that key are not added to the response
+* `Request` and `Response` objects and their properties are now `readonly` (apart from the context state)
 
 ## 5.1.1 (22nd Feb 2022)
 * Keep Koa context unfrozen in @Before/@After
