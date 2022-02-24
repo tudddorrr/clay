@@ -113,6 +113,8 @@ If multiple conditions fail they will all be present in the error object, for ex
 }
 ```
 
+You can also add a `break` key to your validation conditions. If this is set to `true` and the check fails, no further errors will be added to the errors array.
+
 ## @Required
 
 @Required extends the @Validate object schema above and allows you to easily map between a request and an entity's expected properties.

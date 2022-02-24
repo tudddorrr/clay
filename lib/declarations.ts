@@ -49,6 +49,7 @@ export interface ServiceOpts {
 export type ValidationCondition = {
   check: boolean,
   error?: string
+  break?: boolean
 }
 
 export type BaseValidationConfig = {

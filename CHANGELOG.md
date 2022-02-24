@@ -1,5 +1,8 @@
 # Changelog
 
+## 5.2.0 (Unreleased)
+* Add `break` to validation condition, if set to true than any later errors for that key are not added to the response
+
 ## 5.1.1 (22nd Feb 2022)
 * Keep Koa context unfrozen in @Before/@After
 

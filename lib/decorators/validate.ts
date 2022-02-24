@@ -19,9 +19,12 @@ async function handleValidationConfig(req: Request, config: BaseValidationConfig
     if (isRequired) reject(req, key, config.error ?? `${key} is missing from the request ${schemaParam}`)
   } else {
     const conditions: ValidationCondition[] = await config.validation?.(value, req)
-    conditions?.filter((condition) => !condition.check).forEach((condition) => {
-      reject(req, key, condition.error ?? `The provided ${key} value is invalid`)
-    })
+    const failedConditions = conditions?.filter((condition) => !condition.check) ?? []
+
+    for (const failedCondition of failedConditions) {
+      reject(req, key, failedCondition.error ?? `The provided ${key} value is invalid`)
+      if (failedCondition.break) break
+    }
   }
 }
 

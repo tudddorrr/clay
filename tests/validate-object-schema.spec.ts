@@ -255,4 +255,41 @@ describe('@Validate decorator object schema', () => {
       'itemsPerPage must be positive'
     ])
   })
+
+  it('should stop adding failed conditions to the errors array if break is set to true', async () => {
+    class SearchService implements Service {
+      @Validate({
+        query: {
+          itemsPerPage: {
+            validation: async (val: number): Promise<ValidationCondition[]> => [
+              {
+                check: val > 1,
+                error: 'itemsPerPage must be greater than 1',
+                break: true
+              },
+              {
+                check: val > 0,
+                error: 'itemsPerPage must be positive'
+              }
+            ]
+          }
+        }
+      })
+      async index(req: Request): Promise<Response> {
+        return { status: 204 }
+      }
+    }
+
+    const res = await new SearchService().index(buildMockRequest({
+      query: {
+        itemsPerPage: -1
+      }
+    }))
+
+    expect(res.status).to.equal(400)
+
+    expect(res.body.errors.itemsPerPage).to.eql([
+      'itemsPerPage must be greater than 1'
+    ])
+  })
 })
