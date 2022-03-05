@@ -1,6 +1,6 @@
 # Changelog
 
-## 5.2.0 (Unreleased)
+## 5.2.0 (24th Feb 2022)
 * Add `break` to validation condition, if set to true than any later errors for that key are not added to the response
 * `Request` and `Response` objects and their properties are now `readonly` (apart from the context state)
 
