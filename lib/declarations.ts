@@ -62,7 +62,7 @@ export type ValidatablePropertyConfig = BaseValidationConfig & {
   required?: boolean
 }
 
-export type Validatable = { [key: string]: ValidatablePropertyConfig } | (string | (new () => any))[]
+export type Validatable = { [key: string]: ValidatablePropertyConfig } | (string | (new (...args: any[]) => any))[]
 
 export type ValidationSchema = {
   query?: Validatable
