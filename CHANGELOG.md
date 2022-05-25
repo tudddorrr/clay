@@ -1,6 +1,6 @@
 # Changelog
 
-## 5.3.0 (Unreleased)
+## 5.3.0 (25th May 2022)
 * Route handlers can now return a `RedirectResponse` type
 * Added `redirect()` helper function for creating redirects
 
