@@ -9,28 +9,32 @@ export interface Request {
   readonly body?: { readonly [key: string]: any }
 }
 
-export interface Response {
+export type Response = {
   readonly status: number
   readonly body?: {
     readonly [key: string]: any
   }
 }
 
+export type RedirectStatus = 300 | 301 | 302 | 303 | 304 | 307 | 308
+
+export type RedirectResponse = {
+  readonly status: RedirectStatus
+  readonly url: string
+}
+
+export type RouteHandler = (req?: Request) => Promise<Response | RedirectResponse>
+
 export interface Service {
   [key: string]: any
   routes?: Route[]
 
-  index? (req?: Request): Promise<Response>
-
-  get? (req?: Request): Promise<Response>
-
-  post? (req?: Request): Promise<Response>
-
-  put? (req?: Request): Promise<Response>
-
-  patch? (req?: Request): Promise<Response>
-
-  delete? (req?: Request): Promise<Response>
+  index?: RouteHandler
+  get?: RouteHandler
+  post?: RouteHandler
+  put?: RouteHandler
+  patch?: RouteHandler
+  delete?: RouteHandler
 }
 
 export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'

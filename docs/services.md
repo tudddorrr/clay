@@ -133,3 +133,18 @@ You can access services from the app's context using: `ctx.state.services[servic
 - `app.use(service('/api/users', new UserService()))`, can be accessed via `ctx.services.api.users`
 - `app.use(service('/v1/api/users', new UserService()))`, can be accessed via `ctx.services.v1.api.users`
 
+## Redirects
+
+Sometimes you'll want to use `context.redirect()` instead of returning a response with a body. To do this you can use the `redirect()` helper function to return a `RedirectResponse`:
+
+```
+import { redirect, RedirectResponse, Service } from '../lib'
+
+class OldService implements Service {
+  async index(): Promise<RedirectResponse> {
+    return redirect('/new-location')
+  }
+}
+```
+
+By default the `redirect()` helper will return a 303. You can optionally pass a different 30x status code in the second parameter.

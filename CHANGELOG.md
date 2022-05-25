@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.3.0 (Unreleased)
+* Route handlers can now return a `RedirectResponse` type
+* Added `redirect()` helper function for creating redirects
+
 ## 5.2.1 (5th Mar 2022)
 * Support classes in @Validate that have parameters in their constructors
 

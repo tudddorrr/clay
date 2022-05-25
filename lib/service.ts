@@ -1,6 +1,6 @@
 import { pathToRegexp } from 'path-to-regexp'
 import { Context } from 'koa'
-import { Service, Route, ServiceOpts, Request, Response, HttpMethod } from './declarations'
+import { Service, Route, ServiceOpts, Request, Response, HttpMethod, RedirectResponse, RouteHandler } from './declarations'
 import set from 'lodash.set'
 
 const attachService = (ctx: Context, path: string, service: Service): void => {
@@ -49,11 +49,11 @@ const getDefaultPathForMethod = (service: Service, method: string): string => {
   }
 }
 
-const getRouteHandler = (service: Service, route: Route): Function => {
+const getRouteHandler = (service: Service, route: Route): RouteHandler => {
   if (typeof route.handler === 'string') {
     return service[route.handler]
   } else if (typeof route.handler === 'function') {
-    const handlerFunc = <Function>route.handler
+    const handlerFunc = route.handler
     return handlerFunc(service)
   } else {
     return service[route.method.toLowerCase()]
@@ -127,9 +127,14 @@ export function service(path: string, service: Service, opts: ServiceOpts = {}) 
       body: ctx.request.body
     }
 
-    const res: Response = await handler.apply(service, [data])
+    const res: Response | RedirectResponse = await handler.apply(service, [data])
     ctx.status = res.status
-    ctx.body = res.body
+
+    if ('url' in res) {
+      ctx.redirect(res.url)
+    } else {
+      ctx.body = res.body
+    }
 
     await next()
   }
