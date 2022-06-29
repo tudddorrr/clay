@@ -1,4 +1,6 @@
-import { Request, Response, BeforeCallback } from '../declarations'
+import { Request, Response, Service } from '../service'
+
+export type BeforeCallback = (req: Request, caller: Service) => Promise<void>
 
  export const Before = (func: BeforeCallback) => (tar: Object, _: string, descriptor: PropertyDescriptor): PropertyDescriptor => {
    const original = descriptor.value

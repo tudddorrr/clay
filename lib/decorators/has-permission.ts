@@ -1,5 +1,25 @@
 import { Context } from 'koa'
-import { Policy, PolicyDenial, PolicyResponse, Request } from '../declarations'
+import { Request } from '../service'
+
+export class Policy {
+  ctx: Context
+
+  constructor(ctx: Context) {
+    this.ctx = ctx
+  }
+}
+
+export class PolicyDenial {
+  data: { [key: string]: any }
+  status: number
+
+  constructor(data: { [key: string]: any }, status: number = 403) {
+    this.data = data
+    this.status = status
+  }
+}
+
+export type PolicyResponse = boolean | PolicyDenial
 
 export const HasPermission = (PolicyType: new (ctx: Context) => Policy, method: string) => (tar: Object, _: string, descriptor: PropertyDescriptor) => {
   const base = descriptor.value
@@ -14,7 +34,6 @@ export const HasPermission = (PolicyType: new (ctx: Context) => Policy, method: 
       return
     } else if (hookResult instanceof PolicyDenial) {
       const denial: PolicyDenial = hookResult as PolicyDenial
-      
       (<Request>args[0]).ctx.throw(denial.status, denial.data)
       return
     }

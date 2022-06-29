@@ -20,10 +20,10 @@ app.use(service('/users', new UserService(), {
 ```
 
 ## Structure
-A service is any class that implements the `Service` interface. The interface comes with functions for each HTTP method (e.g. `get()` and `put()`).
+A service is any class that extends the `Service` class. The class comes with functions for each HTTP method (e.g. `get()` and `put()`), which by default simply return a 405.
 
 ```
-export default class UserService implements Service {
+export default class UserService extends Service {
   async get(req: Request): Promise<Response> { ... }
 
   async put(req: Request): Promise<Response> { ... }
@@ -55,7 +55,7 @@ Routes can be declared using the `@Routes` decorator on your class which takes i
     path: '' // can be omitted
   }
 ])
-class AlbumService implements Service {
+class AlbumService extends Service {
   ...
   constructor() {
     console.log(this.routes)
@@ -138,9 +138,9 @@ You can access services from the app's context using: `ctx.state.services[servic
 Sometimes you'll want to use `context.redirect()` instead of returning a response with a body. To do this you can use the `redirect()` helper function to return a `RedirectResponse`:
 
 ```
-import { redirect, RedirectResponse, Service } from '../lib'
+import { redirect, RedirectResponse, Service } from 'koa-clay'
 
-class OldService implements Service {
+class OldService extends Service {
   async index(): Promise<RedirectResponse> {
     return redirect('/new-location')
   }

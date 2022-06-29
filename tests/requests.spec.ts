@@ -1,12 +1,12 @@
 import chai from 'chai'
 import Koa from 'koa'
 import supertest from 'supertest'
-import { Request, Response, Routes, service } from '../lib'
+import { Request, Response, Routes, Service, service } from '../lib'
 const expect = chai.expect
 
 describe('Request parsing', () => {
   it('should correctly parse a query param', async () => {
-    class AlbumService {
+    class AlbumService extends Service {
       async index(req: Request): Promise<Response> {
         expect(req.query.count).to.equal('2')
 
@@ -25,7 +25,7 @@ describe('Request parsing', () => {
   })
 
   it('should correctly parse many query params', async () => {
-    class AlbumService {
+    class AlbumService extends Service {
       async index(req: Request): Promise<Response> {
         expect(req.query.count).to.equal('2')
         expect(req.query.search).to.equal('never')
@@ -45,7 +45,7 @@ describe('Request parsing', () => {
   })
 
   it('should correctly parse a route param', async () => {
-    class AlbumService {
+    class AlbumService extends Service {
       async get(req: Request): Promise<Response> {
         expect(req.params.id).to.equal('1')
 
@@ -70,7 +70,7 @@ describe('Request parsing', () => {
         path: '/:id/personnel/:personnelId'
       }
     ])
-    class AlbumService {
+    class AlbumService extends Service {
       async get(req: Request): Promise<Response> {
         expect(req.params.id).to.equal('1')
         expect(req.params.personnelId).to.equal('3')

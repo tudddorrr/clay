@@ -6,7 +6,7 @@ const expect = chai.expect
 
 describe('@Validate decorator array schema', () => {
   it('should return a single error for a missing property', async () => {
-    class SearchService implements Service {
+    class SearchService extends Service {
       @Validate({
         query: ['search', 'itemsPerPage']
       })
@@ -29,7 +29,7 @@ describe('@Validate decorator array schema', () => {
   })
 
   it('should return a multiple errors for multiple missing properties', async () => {
-    class SearchService implements Service {
+    class SearchService extends Service {
       @Validate({
         query: ['search', 'itemsPerPage']
       })
@@ -48,7 +48,7 @@ describe('@Validate decorator array schema', () => {
   })
 
   it('should only return errors for null or undefined values', async () => {
-    class SearchService implements Service {
+    class SearchService extends Service {
       @Validate({
         query: ['search']
       })

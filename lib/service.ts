@@ -1,141 +1,72 @@
-import { pathToRegexp } from 'path-to-regexp'
 import { Context } from 'koa'
-import { Service, Route, ServiceOpts, Request, Response, HttpMethod, RedirectResponse, RouteHandler } from './declarations'
-import set from 'lodash.set'
+import { RouteDocs } from './documenter'
 
-const attachService = (ctx: Context, path: string, service: Service): void => {
-  const standardisedPath = path.substring(1, path.length).replace(/\//g, '.')
-  set(ctx.state, 'services.' + standardisedPath, service)
+export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
+
+export interface Route {
+  method: HttpMethod
+  path?: string
+  handler?: string | Function
+  docs?: RouteDocs
 }
 
-const buildParams = (ctx: Context, path: string): any => {
-  const routeUrlData = path.split('/')
-  const reqUrlData = ctx.path.split('/')
-
-  return routeUrlData.reduce((acc, cur, idx) => {
-    if (cur.startsWith(':')) return { ...acc, [cur.substring(1)]: reqUrlData[idx] }
-    return acc
-  }, {})
+export type Request = {
+  readonly ctx: Context
+  readonly headers: { readonly [key: string]: string }
+  readonly path: string
+  readonly query?: { readonly [key: string]: string }
+  readonly params?: { readonly [key: string]: string }
+  readonly body?: { readonly [key: string]: any }
 }
 
-const buildDefaultRoutes = (service: Service): Route[] => {
-  const routes: Route[] = []
-  const methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'] as HttpMethod[]
-
-  methods.forEach((method: HttpMethod) => {
-    if (service[method.toLowerCase()]) {
-      routes.push({
-        method,
-        path: `${method === 'POST' ? '' : '/:id'}`
-      })
-    }
-  })
-  
-  routes.push({
-    method: 'GET',
-    path: '',
-    handler: 'index'
-  })
-
-  return routes
-}
-
-const getDefaultPathForMethod = (service: Service, method: string): string => {
-  const defaultRoutes: Route[] = buildDefaultRoutes(service)
-  if (method === 'GET') {
-    return ''
-  } else {
-    return defaultRoutes.find((route) => route.method === method)?.path ?? ''
+export type Response = {
+  readonly status: number
+  readonly body?: {
+    readonly [key: string]: any
   }
 }
 
-const getRouteHandler = (service: Service, route: Route): RouteHandler => {
-  if (typeof route.handler === 'string') {
-    return service[route.handler]
-  } else if (typeof route.handler === 'function') {
-    const handlerFunc = route.handler
-    return handlerFunc(service)
-  } else {
-    return service[route.method.toLowerCase()]
-  }
+export type RedirectStatus = 300 | 301 | 302 | 303 | 304 | 307 | 308
+
+export type RedirectResponse = {
+  readonly status: RedirectStatus
+  readonly url: string
 }
 
-const buildDebugRoute = (route: Route) => {
-  const handler = route.handler
-  ? typeof route.handler === 'function' ? '[Function]' : `${route.handler}()`
-  : `${route.method.toLowerCase()}()`
-  return `${route.method} ${route.path} => ${handler}`
-}
+export type RouteHandler = (req: Request) => Promise<Response | RedirectResponse>
 
-const hasDefinedRoute = (routes: Route[], method: string): boolean => {
-  return Boolean(routes?.find((route) => route.method === method))
-}
+export class Service {
+  attached: boolean
 
-export function service(path: string, service: Service, opts: ServiceOpts = {}) {
-  let routes: Route[] = buildDefaultRoutes(service).filter((route) => {
-    return !hasDefinedRoute(service.routes, route.method)
-  })
+  routes: Route[]
+  definedRoutes: Route[]
 
-  const definedRoutes: Route[] = service.routes?.map((route: Route) => {
-    return {
-      ...route,
-      path: route.path ?? getDefaultPathForMethod(service, route.method) ?? ''
-    }
-  })
-  
-  if (definedRoutes) {
-    const definedMethods = definedRoutes.map((route) => route.method)
-    routes.filter((route) => !definedMethods.includes(route.method))
-    routes = routes.concat(definedRoutes)
+  setRoutes(routes: Route[]) {
+    this.routes = routes
+    this.attached = true
   }
 
-  const prefix = opts.prefix ?? ''
-  routes = routes.map((route: Route) => ({
-    ...route,
-    path: prefix + path + route.path
-  }))
-
-  const debug = opts.debug
-  if (debug) {
-    console.log(`Available ${path} service routes:`)
-    console.log(routes.map(buildDebugRoute))
+  async index(req: Request): Promise<Response> {
+    return { status: 405 }
   }
-  
-  return async (ctx, next) => {
-    attachService(ctx, path, service)
 
-    const route = routes.find((r) => r.method === ctx.method && pathToRegexp(r.path).test(ctx.path))
-    if (!route) {
-      if (debug) console.warn(`Route for ${ctx.method} ${ctx.path} not found`)
-      return await next()
-    }
+  async get(req: Request): Promise<Response> {
+    return { status: 405 }
+  }
 
-    if (debug) console.log(`Using route`, [buildDebugRoute(route)])
+  async post(req: Request): Promise<Response> {
+    return { status: 405 }
+  }
 
-    const handler = getRouteHandler(service, route)
-    if (!handler) {
-      if (debug) console.log('Warning: route handler not found')
-      return await next()
-    }
+  async put(req: Request): Promise<Response> {
+    return { status: 405 }
+  }
 
-    const data: Request = {
-      ctx,
-      query: ctx.query,
-      path: ctx.path,
-      headers: ctx.headers,
-      params: buildParams(ctx, route.path),
-      body: ctx.request.body
-    }
+  async patch(req: Request): Promise<Response> {
+    return { status: 405 }
+  }
 
-    const res: Response | RedirectResponse = await handler.apply(service, [data])
-    ctx.status = res.status
-
-    if ('url' in res) {
-      ctx.redirect(res.url)
-    } else {
-      ctx.body = res.body
-    }
-
-    await next()
+  async delete(req: Request): Promise<Response> {
+    return { status: 405 }
   }
 }

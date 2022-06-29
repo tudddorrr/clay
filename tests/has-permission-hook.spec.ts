@@ -12,7 +12,7 @@ describe('@HasPermission decorator', () => {
       }
     }
     
-    class SecretService implements Service {
+    class SecretService extends Service {
       @HasPermission(SecretPolicy, 'index')
       async index(req: Request): Promise<Response> {
         return {
@@ -36,7 +36,7 @@ describe('@HasPermission decorator', () => {
       }
     }
     
-    class SecretService implements Service {
+    class SecretService extends Service {
       @HasPermission(SecretPolicy, 'index')
       async index(req: Request): Promise<Response> {
         return {
@@ -60,7 +60,7 @@ describe('@HasPermission decorator', () => {
       }
     }
     
-    class SecretService implements Service {
+    class SecretService extends Service {
       @HasPermission(SecretPolicy, 'index')
       async index(req: Request): Promise<Response> {
         return {
@@ -85,7 +85,7 @@ describe('@HasPermission decorator', () => {
       }
     }
     
-    class SecretService implements Service {
+    class SecretService extends Service {
       @HasPermission(SecretPolicy, 'index')
       async index(req: Request): Promise<Response> {
         return {

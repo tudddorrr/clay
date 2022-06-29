@@ -3,7 +3,7 @@ import supertest from 'supertest'
 import { RedirectResponse, service, Service, redirect } from '../lib'
 
 describe('Redirects', () => {
-  class GenericService implements Service {
+  class GenericService extends Service {
     async index(): Promise<RedirectResponse> {
       return redirect('/new-location', 308)
     }

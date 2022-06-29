@@ -7,7 +7,7 @@ const expect = chai.expect
 
 describe('Implicit routes', () => {
   it('should handle an implicit POST route', async () => {
-    class UserService implements Service {
+    class UserService extends Service {
       async post(req: Request): Promise<Response> {
         return {
           status: 200,
@@ -33,7 +33,7 @@ describe('Implicit routes', () => {
   })
 
   it('should handle an implicit index GET route', async () => {
-    class UserService implements Service {
+    class UserService extends Service {
       async index(req: Request): Promise<Response> {
         return {
           status: 200,
@@ -55,7 +55,7 @@ describe('Implicit routes', () => {
   })
 
   it('should handle an implicit single GET route', async () => {
-    class UserService implements Service {
+    class UserService extends Service {
       async get(req: Request): Promise<Response> {
         return {
           status: 200,

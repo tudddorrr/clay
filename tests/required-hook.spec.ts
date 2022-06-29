@@ -11,7 +11,7 @@ describe('@Required decorator', () => {
       name: string
     }
 
-    class StatService implements Service {
+    class StatService extends Service {
       @Validate({
         body: [Stat]
       })
@@ -39,7 +39,7 @@ describe('@Required decorator', () => {
       name: string
     }
 
-    class StatService implements Service {
+    class StatService extends Service {
       @Validate({
         body: [Stat]
       })
@@ -64,7 +64,7 @@ describe('@Required decorator', () => {
       name: string
     }
 
-    class StatService implements Service {
+    class StatService extends Service {
       @Validate({
         body: [Stat]
       })
@@ -92,7 +92,7 @@ describe('@Required decorator', () => {
       name: string
     }
 
-    class StatService implements Service {
+    class StatService extends Service {
       @Validate({
         body: [Stat]
       })
@@ -123,7 +123,7 @@ describe('@Required decorator', () => {
       name: string
     }
 
-    class StatService implements Service {
+    class StatService extends Service {
       @Validate({
         body: [Stat]
       })
@@ -150,7 +150,7 @@ describe('@Required decorator', () => {
       name: string
     }
 
-    class StatService implements Service {
+    class StatService extends Service {
       @Validate({
         body: [Stat]
       })
@@ -180,7 +180,7 @@ describe('@Required decorator', () => {
       lastName: string
     }
 
-    class UserService implements Service {
+    class UserService extends Service {
       @Validate({
         body: [User]
       })

@@ -1,5 +1,5 @@
-import { Route } from '../declarations'
+import { Route } from '../service'
 
 export const Routes = (routes: Route[]) => (constructor: Function): void => {
-  constructor.prototype.routes = routes
+  constructor.prototype.definedRoutes = routes
 }

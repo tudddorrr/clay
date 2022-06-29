@@ -5,7 +5,7 @@ import { Request, Response, service, Service } from '../lib'
 const expect = chai.expect
 
 describe('Service registration', () => {
-  class GenericService implements Service {
+  class GenericService extends Service {
     async index(req: Request): Promise<Response> {
       return {
         status: 200,

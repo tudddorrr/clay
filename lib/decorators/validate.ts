@@ -1,4 +1,40 @@
-import { Request, ValidationSchema, HttpMethod, EntityWithRequirements, ValidationCondition, Response, BaseValidationConfig, ValidatablePropertyConfig, RequiredPropertyConfig } from '../declarations'
+import { HttpMethod, Request, Response } from '../service'
+
+export type ValidationCondition = {
+  check: boolean,
+  error?: string
+  break?: boolean
+}
+
+export type BaseValidationConfig = {
+  requiredIf?: (req: Request) => Promise<boolean>,
+  error?: string,
+  validation?: (val: unknown, req: Request) => Promise<ValidationCondition[]> 
+}
+
+export type ValidatablePropertyConfig = BaseValidationConfig & {
+  required?: boolean
+}
+
+export type Validatable = { [key: string]: ValidatablePropertyConfig } | (string | (new (...args: any[]) => any))[]
+
+export type ValidationSchema = {
+  query?: Validatable
+  body?: Validatable
+  headers?: Validatable
+}
+
+export type RequiredPropertyConfig = BaseValidationConfig & {
+  as?: string
+  methods?: HttpMethod[]
+}
+
+export type EntityWithRequirements = {
+  _requestRequirements?: {
+    [key: string]: RequiredPropertyConfig
+  }
+  [key: string]: any
+}
 
 function reject(req: Request, key: string, message: string): void {
   req.ctx.state.errors = {
@@ -57,7 +93,7 @@ async function handleArraySchema(req: Request, schema: ValidationSchema, schemaP
 }
 
 async function handleObjectSchema(req: Request, schema: ValidationSchema, schemaParam: string): Promise<void> {
-  for (let key of Object.keys(schema[schemaParam])) {
+  for (const key of Object.keys(schema[schemaParam])) {
     const validatable: ValidatablePropertyConfig = schema[schemaParam][key]
     const val = req[schemaParam]?.[key]
 
@@ -95,8 +131,10 @@ async function checkValidationSchemaParam(req: Request, schema: ValidationSchema
   }
 }
 
-export const Validate = (schema: ValidationSchema) => (tar: Object, _: string, descriptor: PropertyDescriptor) => {
+export const Validate = (schema: ValidationSchema) => (tar: Object, propertyKey: string, descriptor: PropertyDescriptor) => {
   const base = descriptor.value
+
+  globalThis.clay.docs.documentValidationSchema(tar.constructor.name, propertyKey, schema)
 
   descriptor.value = async function (...args): Promise<Response> {
     const req: Request = args[0]

@@ -4,6 +4,7 @@ Clay is an ultra convenient minimal framework for building Koa apps.
 * Expose API routes with minimal config
 * Validate requests against conditions or an entity's required values
 * Secure your endpoints with permission preflight checks
+* Automatic documentation
 
 ## Examples
 Docs: [docs](https://github.com/tudddorrr/clay/tree/main/docs)
@@ -61,7 +62,7 @@ By default you'll get a method for each HTTP method (GET/POST/PUT/PATCH/DELETE).
     handler: 'getAll'
   }
 ])
-class AlbumService implements Service {
+class AlbumService extends Service {
   async getPersonnel(req: Request) {
     ...
   }
@@ -85,7 +86,7 @@ class SecretsPolicy extends Policy {
   }
 }
 
-class SecretService implements Service {
+class SecretService extends Service {
   @HasPermission(SecretsPolicy, 'get')
   async get(req: Request): Promise<Response> { ... }
 }
@@ -117,3 +118,6 @@ class User {
 async post(req: Request): Promise<Response> { ... }
 ```
 
+## Automatic documentation
+
+Services, routes and parameters are [automatically documented](https://github.com/tudddorrr/clay/tree/main/docs/documenter.md). Descriptions can be added for routes and parameters for extra clarity.

@@ -9,7 +9,7 @@ describe('@After decorator', () => {
   it('should correctly pass in the request and the response', async () => {
     let reqUserId: string, resStatus: number
 
-    class UserService implements Service {
+    class UserService extends Service {
       @After(async (req: Request, res: Response): Promise<void> => {
         reqUserId = req.query.userId
         resStatus = res.status
@@ -34,7 +34,7 @@ describe('@After decorator', () => {
   it('should correctly pass the caller context', async () => {
     let reqUserId: string, resStatus: number
 
-    class UserService implements Service {
+    class UserService extends Service {
       @After(async (req: Request, res: Response, caller: UserService): Promise<void> => {
         caller.handleAfter(req, res)
       })
