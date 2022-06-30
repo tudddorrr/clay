@@ -1,5 +1,12 @@
 # Changelog
 
+## 6.0.0 (Unreleased)
+* The `Service` interface is now a class and should be extended rather than implemented
+* Implicit route methods (`index()`, `post()`, etc) are now defined in the `Service` base class and by default return a 405 - method not allowed
+* Added [automatic documentation](https://github.com/tudddorrr/clay/tree/main/docs/documenter.md) - available via the Clay global object: `globalThis.clay.docs`
+* Added `@Docs` decorator for documenting service routes
+* Request headers are now strictly typed to `string` instead of `any`
+
 ## 5.3.0 (25th May 2022)
 * Route handlers can now return a `RedirectResponse` type
 * Added `redirect()` helper function for creating redirects

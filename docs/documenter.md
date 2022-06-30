@@ -1,0 +1,185 @@
+# Documenter
+
+Clay documents your services, its routes and their parameters out-of-the-box.
+
+## Service documentation
+
+By default, documentation for a service looks like this:
+
+```
+{
+  name: 'UserService',
+  description: '',
+  routes: [ ... ]
+}
+```
+
+The name reflects the stringified version of the class name and the routes are pulled directly from the service's available routes.
+
+### Options
+
+To set the description of the service, you can optionally pass `ServiceDocs` to the middleware:
+
+```
+app.use(service('/users', new UserService(), {
+  docs: {
+    description: 'The service for users'
+  }
+}))
+```
+
+You can also hide a service to prevent it and its routes from being surfaced in the documentation:
+
+```
+app.use(service('/users', new UserService(), {
+  docs: {
+    hidden: true
+  }
+}))
+```
+
+## Route documentation
+
+By default, documentation for a route looks like this:
+
+```
+{
+  method: 'PUT',
+  path: '/v1/users/:id',
+  description: '',
+  params: [ ... ]
+}
+```
+
+### Descriptions
+
+Providing route descriptions depends on how you defined your routes:
+
+If your routes are defined via the `@Routes` decorator, you can optionally pass a `RouteDocs` to each route:
+
+```
+@Routes([
+  {
+    method: 'PUT',
+    path: '/:id',
+    handler: 'put',
+    docs: {
+      description: 'Update a user'
+    }
+  }
+])
+```
+
+If you're using implicit routes, you can use the `@Docs` to provide documentation for the decorated route:
+
+```
+@Docs({
+  description: 'Update a user'
+})
+async put(): Promise<void> {
+  return {
+    status: 204
+  }
+}
+```
+
+## Param documentation
+
+Clay has four types of params: query keys, body keys, headers and route params (e.g. `:id`), these look like this:
+
+```
+{
+  name: 'search',
+  description: '',
+  type: 'query',
+  required: 'YES'
+}
+```
+
+Params are usually documented by default: for example, if using the `@Validate` decorator, the query, body and header keys specified in the validation schema are pulled through to the documentation. Route params are pulled in from the route path.
+
+If you're using entities with requirements (via the `@Required` hook), all required properties are documented.
+
+### Requirement types
+
+Parameters can be always required, sometimes required or optional. The requirement type is pulled in from the source of the param's definition. E.g. if a `requiredIf` is specified for the param in a `@Validation` schema, then the param is marked as sometimes required. Otherwise, the requirement type is pulled in from the `required` key.
+
+Route params are always marked as required.
+
+### Descriptions
+
+Param descriptions can be defined the same way that route descriptions are.
+
+With the `@Routes` decorator:
+
+```
+@Routes([
+  {
+    method: 'PUT',
+    path: '/:id',
+    handler: 'put',
+    docs: {
+      description: 'Update a user',
+      params: {
+        route: {
+          id: 'The id of the user'
+        }
+      }
+    }
+  }
+])
+```
+
+Or, with the `@Docs` decorator:
+
+```
+@Docs({
+  description: 'Update a user',
+  params: {
+    route: {
+      id: 'The id of the user'
+    }
+  }
+})
+async put(): Promise<void> {
+  return {
+    status: 204
+  }
+}
+```
+
+### Hidden routes
+
+You can also hide routes by passing `hidden: true` to the `RouteDocs` object, preventing it from appearing in docuemtnation:
+
+```
+@Routes([
+  {
+    method: 'PUT',
+    path: '/:id',
+    handler: 'put',
+    docs: {
+      hidden: true
+    }
+  }
+])
+```
+
+## Practical usage
+
+Documentation is stored inside the global `Clay` object and can be accessed via `globalThis.clay.docs`.
+
+To always have up to date documentation, you could implement a route that simply returns the docs, which can then be read by a frontend:
+
+```
+export default class DocumentationService extends Service {
+  async index(): Promise<Response> {
+    return {
+      status: 200,
+      body: {
+        docs: globalThis.clay.docs
+      }
+    }
+  }
+}
+```

@@ -1,4 +1,4 @@
-import { RequiredPropertyConfig, EntityWithRequirements } from '../declarations'
+import { RequiredPropertyConfig, EntityWithRequirements } from './validate'
 
 export const Required = (config?: RequiredPropertyConfig) => {
   return function (target: EntityWithRequirements, propertyKey: string) {

@@ -1,4 +1,4 @@
-import { RedirectResponse, RedirectStatus } from '../declarations'
+import { RedirectResponse, RedirectStatus } from '../service'
 
 export function redirect(url: string, status: RedirectStatus = 303): RedirectResponse {
   return {

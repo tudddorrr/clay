@@ -9,7 +9,7 @@ describe('Defined routes', () => {
         method: 'POST'
       }
     ])
-    class DemoService implements Service {
+    class DemoService extends Service {
       async post(req: Request): Promise<Response> {
         return {
           status: 204
@@ -32,7 +32,7 @@ describe('Defined routes', () => {
         handler: 'getMany'
       }
     ])
-    class DemoService implements Service {
+    class DemoService extends Service {
       async getMany(req: Request): Promise<Response> {
         return {
           status: 204
@@ -56,7 +56,7 @@ describe('Defined routes', () => {
         handler: 'getOne'
       }
     ])
-    class DemoService implements Service {
+    class DemoService extends Service {
       async getOne(req: Request): Promise<Response> {
         return {
           status: 204
@@ -78,7 +78,7 @@ describe('Defined routes', () => {
         method: 'DELETE'
       }
     ])
-    class DemoService implements Service {
+    class DemoService extends Service {
       async delete(req: Request): Promise<Response> {
         return {
           status: 204
@@ -100,7 +100,7 @@ describe('Defined routes', () => {
         method: 'GET'
       }
     ])
-    class DemoService implements Service {
+    class DemoService extends Service {
       async delete(req: Request): Promise<Response> {
         return {
           status: 204

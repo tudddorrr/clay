@@ -6,7 +6,7 @@ const expect = chai.expect
 
 describe('@Validate decorator object schema', () => {
   it('should return a single error for a missing required property', async () => {
-    class SearchService implements Service {
+    class SearchService extends Service {
       @Validate({
         query: {
           search: {
@@ -36,7 +36,7 @@ describe('@Validate decorator object schema', () => {
   })
 
   it('should return a multiple errors for multiple missing properties', async () => {
-    class SearchService implements Service {
+    class SearchService extends Service {
       @Validate({
         query: {
           search: {
@@ -62,7 +62,7 @@ describe('@Validate decorator object schema', () => {
   })
 
   it('should return an error for a key with a requiredIf that resolves to true', async () => {
-    class SearchService implements Service {
+    class SearchService extends Service {
       @Validate({
         query: {
           search: {
@@ -90,7 +90,7 @@ describe('@Validate decorator object schema', () => {
   })
 
   it('should not return an error for a key with a requiredIf that resolves to false', async () => {
-    class SearchService implements Service {
+    class SearchService extends Service {
       @Validate({
         query: {
           search: {
@@ -116,7 +116,7 @@ describe('@Validate decorator object schema', () => {
   })
 
   it('should only return errors for null or undefined values', async () => {
-    class SearchService implements Service {
+    class SearchService extends Service {
       @Validate({
         query: {
           search: {
@@ -139,7 +139,7 @@ describe('@Validate decorator object schema', () => {
   })
 
   it('should return custom errors for required properties', async () => {
-    class SearchService implements Service {
+    class SearchService extends Service {
       @Validate({
         query: {
           search: {
@@ -171,7 +171,7 @@ describe('@Validate decorator object schema', () => {
   })
 
   it('should return an error if a validation check is not met', async () => {
-    class SearchService implements Service {
+    class SearchService extends Service {
       @Validate({
         query: {
           itemsPerPage: {
@@ -200,7 +200,7 @@ describe('@Validate decorator object schema', () => {
   })
 
   it('should not return an error if a validation check is not met on a missing property', async () => {
-    class SearchService implements Service {
+    class SearchService extends Service {
       @Validate({
         query: {
           itemsPerPage: {
@@ -220,7 +220,7 @@ describe('@Validate decorator object schema', () => {
   })
 
   it('should return all validation errors for a property', async () => {
-    class SearchService implements Service {
+    class SearchService extends Service {
       @Validate({
         query: {
           itemsPerPage: {
@@ -257,7 +257,7 @@ describe('@Validate decorator object schema', () => {
   })
 
   it('should stop adding failed conditions to the errors array if break is set to true', async () => {
-    class SearchService implements Service {
+    class SearchService extends Service {
       @Validate({
         query: {
           itemsPerPage: {

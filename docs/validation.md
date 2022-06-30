@@ -95,7 +95,7 @@ You can also perform multiple validation checks on a key. These will run if the 
         }
       ]
     }
-  },
+  }
 })
 async post(req: Request): Promise<Response> { ... }
 ```
@@ -113,7 +113,28 @@ If multiple conditions fail they will all be present in the error object, for ex
 }
 ```
 
-You can also add a `break` key to your validation conditions. If this is set to `true` and the check fails, no further errors will be added to the errors array.
+You can also add a `break` key to your validation conditions. If this is set to `true` and the check fails, no further errors will be added to the errors array:
+
+```
+@Validate({
+  body: {
+    email: {
+      validation: async (val: unknown, req: Request): Promise<ValidationCondition[]> => [
+        {
+          check: Boolean(val),
+          error: 'Email is a required field',
+          break: true
+        },
+        // the check below will not run if the check above fails
+        {
+          check: val?.includes('@'),
+          error: 'Please provide a valid email address'
+        }
+      ]
+    }
+  }
+})
+```
 
 ## @Required
 
@@ -174,4 +195,4 @@ class User {
 }
 ```
 
-The `requiredIf` callback will always take precedence over the `methods` key so if the request matchesmethod matches but the `requiredIf` resolves to false then the key will _not_ be required.
+The `requiredIf` callback will always take precedence over the `methods` key so if the request HTTP method matches but the `requiredIf` resolves to false then the key will _not_ be required.

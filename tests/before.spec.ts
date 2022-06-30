@@ -9,7 +9,7 @@ describe('@Before decorator', () => {
   it('should correctly pass in the request', async () => {
     let reqUserId: string
 
-    class UserService implements Service {
+    class UserService extends Service {
       @Before(async (req: Request): Promise<void> => {
         reqUserId = req.query.userId
       })
@@ -32,7 +32,7 @@ describe('@Before decorator', () => {
   it('should correctly pass the caller context', async () => {
     let reqUserId: string
 
-    class UserService implements Service {
+    class UserService extends Service {
       @Before(async (req: Request, caller: UserService): Promise<void> => {
         caller.handleBefore(req)
       })
@@ -57,7 +57,7 @@ describe('@Before decorator', () => {
   })
 
   it('should allow the ctx state to be written to', async () => {
-    class UserService implements Service {
+    class UserService extends Service {
       @Before(async (req: Request): Promise<void> => {
         req.ctx.state.user = {
           id: Number(req.query.userId)

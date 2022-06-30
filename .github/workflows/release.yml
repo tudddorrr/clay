@@ -1,0 +1,43 @@
+name: Release
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14
+
+      - uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Install deps
+        run: yarn --prefer-offline
+
+      - name: Check version change
+        id: check
+        uses: EndBug/version-check@v1
+
+      - name: Prepare build
+        if: steps.check.outputs.changed == 'true'
+        run: yarn prepare
+
+      - name: Create tag
+        if: steps.check.outputs.changed == 'true'
+        uses: tvdias/github-tagger@v0.0.1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ steps.check.outputs.version }}
+
+      - uses: JS-DevTools/npm-publish@v1
+        if: steps.check.outputs.changed == 'true'
+        with:
+          token: ${{ secrets.NPM_TOKEN }}

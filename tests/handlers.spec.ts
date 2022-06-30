@@ -22,7 +22,7 @@ describe('Handler functions', () => {
         }
       }
     ])
-    class AlbumService implements Service {}
+    class AlbumService extends Service {}
 
     const app = new Koa()
     app.use(service('/albums', new AlbumService()))
@@ -48,7 +48,7 @@ describe('Handler functions', () => {
         }
       }
     ])
-    class AlbumService implements Service {
+    class AlbumService extends Service {
       async getAlbum(req: Request): Promise<Response> {
         return {
           status: 200,
