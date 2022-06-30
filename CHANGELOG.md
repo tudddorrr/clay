@@ -1,6 +1,6 @@
 # Changelog
 
-## 6.0.0 (Unreleased)
+## 6.0.0 (30th June 2022)
 * The `Service` interface is now a class and should be extended rather than implemented
 * Implicit route methods (`index()`, `post()`, etc) are now defined in the `Service` base class and by default return a 405 - method not allowed
 * Added [automatic documentation](https://github.com/tudddorrr/clay/tree/main/docs/documenter.md) - available via the Clay global object: `globalThis.clay.docs`
@@ -14,17 +14,17 @@
 ## 5.2.1 (5th Mar 2022)
 * Support classes in @Validate that have parameters in their constructors
 
-## 5.2.0 (24th Feb 2022)
+## 5.2.0 (24th February 2022)
 * Add `break` to validation condition, if set to true than any later errors for that key are not added to the response
 * `Request` and `Response` objects and their properties are now `readonly` (apart from the context state)
 
-## 5.1.1 (22nd Feb 2022)
+## 5.1.1 (22nd February 2022)
 * Keep Koa context unfrozen in @Before/@After
 
-## 5.1.0 (21st Feb 2022)
+## 5.1.0 (21st February 2022)
 * Add new reworked @Before/@After [see the docs](https://github.com/tudddorrr/clay/tree/main/docs/before-after.md)
 
-## 5.0.0 (19th Feb 2022)
+## 5.0.0 (19th February 2022)
 * New name: Clay!
 * Remove `Service` prefix from all types and interfaces (e.g. ServiceRequest -> Request)
 * Added @Required decorator for entity properties
@@ -75,17 +75,17 @@ Every change in 2.0.0 is breaking
 * Bump to 1.0.0 (the project feels feature-complete now)
 * Can check headers with the `@Validate` hook
 
-## 0.3.1 (6th Feb 2021)
+## 0.3.1 (6th February 2021)
 * Use correct path when falling back to default route for method
 * Don't handle methods if the defined routes don't include them
 
-## 0.3.0 (3rd Feb 2021)
+## 0.3.0 (3rd February 2021)
 * (Breaking) Resources now need to implement an `async transform()` function to transform entities rather than doing it in the constructor
 
-## 0.2.1 (2nd Feb 2021)
+## 0.2.1 (2nd February 2021)
 * Fixed exports for hook functions
 
-## 0.2.0 (2nd Feb 2021)
+## 0.2.0 (2nd February 2021)
 * Set type of query params to `string` instead of `any`
 * Added `@HasPermission` hook for checking requests against policy classes 
 
