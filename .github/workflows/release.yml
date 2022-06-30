@@ -26,10 +26,6 @@ jobs:
         id: check
         uses: EndBug/version-check@v1
 
-      - name: Prepare build
-        if: steps.check.outputs.changed == 'true'
-        run: yarn prepare
-
       - name: Create tag
         if: steps.check.outputs.changed == 'true'
         uses: tvdias/github-tagger@v0.0.1
