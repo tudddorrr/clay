@@ -33,7 +33,7 @@ export type RedirectResponse = {
   readonly url: string
 }
 
-export type RouteHandler = (req: Request) => Promise<Response | RedirectResponse>
+export type RouteHandler = (req: Request) => Response | RedirectResponse
 
 export class Service {
   attached: boolean

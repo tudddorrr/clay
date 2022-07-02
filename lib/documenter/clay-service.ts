@@ -1,15 +1,20 @@
 import { ClayParamType, ClayParamRequiredType, RouteDocs } from '.'
 import { EntityWithRequirements, ValidationSchema, ValidatablePropertyConfig } from '../decorators'
 import { Service } from '../service'
+import { ServiceOpts } from '../service-middleware'
 import { ClayRoute } from './clay-route'
 
 export class ClayService {
   name: string
+  path: string
   description: string = ''
   routes: ClayRoute[]
+  opts: ServiceOpts
 
-  constructor(service: Service) {
+  constructor(service: Service, path: string, opts: ServiceOpts) {
     this.name = service.constructor.name
+    this.path = path
+    this.opts = opts
 
     this.routes = service.routes
       .filter((route) => !route.docs?.hidden)

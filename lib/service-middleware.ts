@@ -2,6 +2,7 @@ import { pathToRegexp } from 'path-to-regexp'
 import { Context } from 'koa'
 import { Route, Request, Response, HttpMethod, RedirectResponse, RouteHandler, Service } from './service'
 import set from 'lodash.set'
+import { getServiceKey } from './utils/getServiceKey'
 
 export interface ServiceDocs {
   hidden?: boolean
@@ -48,8 +49,7 @@ const getRouteHandler = (service: Service, route: Route): RouteHandler => {
   if (typeof route.handler === 'string') {
     return service[route.handler]
   } else if (typeof route.handler === 'function') {
-    const handlerFunc = route.handler
-    return handlerFunc(service)
+    return route.handler(service)
   }
 }
 
@@ -58,7 +58,7 @@ const buildDebugRoute = (route: Route) => {
   return `${route.method} ${route.path} => ${handler}`
 }
 
-const setServiceRoutes = async (path: string, service: Service, opts: ServiceOpts): Promise<void> => {
+const setServiceRoutes = async (service: Service, path: string, opts: ServiceOpts): Promise<void> => {
   const definedRoutes: Route[] = service.definedRoutes?.map((route: Route) => {
     return {
       ...route,
@@ -95,12 +95,11 @@ const setServiceRoutes = async (path: string, service: Service, opts: ServiceOpt
 
 const attachService = async (ctx: Context, path: string, service: Service, opts: ServiceOpts): Promise<void> => {
   if (!service.attached) {
-    await setServiceRoutes(path, service, opts)
-    globalThis.clay.docs.documentService(service, opts)
+    await setServiceRoutes(service, path, opts)
+    globalThis.clay.docs.documentService(service, path, opts)
   }
 
-  const standardisedPath = path.substring(1, path.length).replace(/\//g, '.')
-  set(ctx.state, 'services.' + standardisedPath, service)
+  set(ctx.state, 'services.' + getServiceKey(path), service)
 }
 
 const buildParams = (ctx: Context, path: string): any => {

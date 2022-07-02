@@ -148,3 +148,35 @@ class OldService extends Service {
 ```
 
 By default the `redirect()` helper will return a 303. You can optionally pass a different 30x status code in the second parameter.
+
+## Forwarding requests
+
+If you want to forward a request from one service to another, you can use the `ForwardTo` decorator and the `forwardRequest()` helper:
+
+```
+import { ForwardTo, forwardRequest, Service } from 'koa-clay'
+
+class UserAPIService extends Service {
+  @ForwardTo('users', 'index')
+  async index(): Promise<Response> {
+    return await forwardRequest(req, {
+      query: {
+        fromAPI: 'true'
+      }
+    })
+  }
+}
+```
+
+The `ForwardTo` decorator takes the registered service key of the other service (see "Accessing other services" above) and the name of the handler to call.
+
+After decorating the function, call the `forwardRequest()` helper to forward the current request (along with any extra parameters).
+
+Note: you should register (i.e. apply the middleware) services that are forwarded-to _before_ services that forward requests. In the example above, you would need to register the `UserService` before the `UserAPIService`:
+
+```
+app.use('/users', new UserService())
+app.use('/api/users', new UserAPIService())
+```
+
+The documenter will automatically take the documentation from the forwarded-to handler and apply it to the current handler.

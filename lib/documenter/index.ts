@@ -1,4 +1,5 @@
 import { Service, ServiceOpts, ValidationSchema } from '../'
+import { getServiceKey } from '../utils/getServiceKey'
 import { ClayService } from './clay-service'
 
 export enum ClayParamType {
@@ -30,45 +31,65 @@ export interface RouteDocs {
 }
 
 type QueuedDoc = {
-  decoratorClassName: string
-  decoratorMethodName: string
+  serviceClassName: string
+  methodName: string
 }
 
 type QueuedValidationParam = QueuedDoc & {
   schema: ValidationSchema
 }
 
-type QueuedRouteDocs = QueuedDoc & {
+type QueuedRouteDoc = QueuedDoc & {
   docs: RouteDocs
+}
+
+type QueuedForwardedRequest = {
+  forwardedServiceKey: string
+  forwardedMethodName: string
+  decoratedServiceClassName: string
+  decoratedMethodName: string
 }
 
 export class ClayDocs {
   services: ClayService[] = []
   private queuedValidationParams: QueuedValidationParam[] = []
-  private queuedRouteDocs: QueuedRouteDocs[] = []
+  private queuedRouteDocs: QueuedRouteDoc[] = []
+  private queuedForwardedRequests: QueuedForwardedRequest[] = []
 
   toJSON() {
     return {
-      services: this.services
+      services: this.services.filter((service) => !service.opts?.docs?.hidden)
     }
   }
 
-  documentValidationSchema(decoratorClassName: string, decoratorMethodName: string, schema: ValidationSchema) {
-    this.queuedValidationParams.push({ decoratorClassName, decoratorMethodName, schema })
+  documentValidationSchema(serviceClassName: string, methodName: string, schema: ValidationSchema) {
+    this.queuedValidationParams.push({ serviceClassName, methodName, schema })
   }
 
-  documentRoute(decoratorClassName: string, decoratorMethodName: string, docs: RouteDocs) {
-    this.queuedRouteDocs.push({ decoratorClassName, decoratorMethodName, docs })
+  documentRoute(serviceClassName: string, methodName: string, docs: RouteDocs) {
+    this.queuedRouteDocs.push({ serviceClassName, methodName, docs })
+  }
+
+  documentForwardedRequest(forwardedServiceKey: string, forwardedMethodName: string, decoratedServiceClassName: string, decoratedMethodName: string) {
+    this.queuedForwardedRequests.push({ forwardedServiceKey, forwardedMethodName, decoratedServiceClassName, decoratedMethodName })
   }
 
   private queuedDocMatchesService(service: ClayService, queuedDoc: QueuedDoc) {
-    return service.name === queuedDoc.decoratorClassName
+    return service.name === queuedDoc.serviceClassName
+  }
+
+  private getQueuedForwardedRequestServices(newService: ClayService, queuedForwardedRequest: QueuedForwardedRequest): ClayService[] {
+    const decoratedService = [...this.services, newService].find((service) => service.name === queuedForwardedRequest.decoratedServiceClassName)
+    const forwardedService = [...this.services, newService].find((service) => {
+      return getServiceKey(service.path) === queuedForwardedRequest.forwardedServiceKey
+    })
+    return [decoratedService, forwardedService]
   }
 
   private checkQueuedValidationParamsForService(service: ClayService) {
     for (const queuedValidationParam of this.queuedValidationParams) {
       if (this.queuedDocMatchesService(service, queuedValidationParam)) {
-        service.processValidationSchema(queuedValidationParam.decoratorMethodName, queuedValidationParam.schema)
+        service.processValidationSchema(queuedValidationParam.methodName, queuedValidationParam.schema)
       }
     }
 
@@ -78,21 +99,39 @@ export class ClayDocs {
   private checkQueuedRouteDocsForService(service: ClayService) {
     for (const queuedRouteDoc of this.queuedRouteDocs) {
       if (this.queuedDocMatchesService(service, queuedRouteDoc)) {
-        service.processRouteDocs(queuedRouteDoc.decoratorMethodName, queuedRouteDoc.docs)
+        service.processRouteDocs(queuedRouteDoc.methodName, queuedRouteDoc.docs)
       }
     }
 
     this.queuedRouteDocs = this.queuedRouteDocs.filter((queuedRouteDoc) => !this.queuedDocMatchesService(service, queuedRouteDoc))
   }
 
-  documentService(service: Service, opts: ServiceOpts) {
-    if (opts.docs?.hidden) return
+  private checkQueuedForwardedRequestsForService(service: ClayService) {
+    for (const queuedForwardedRequest of this.queuedForwardedRequests) {
+      const [decoratedService, forwardedService] = this.getQueuedForwardedRequestServices(service, queuedForwardedRequest)
 
-    const clayService = new ClayService(service)
+      if (decoratedService && forwardedService) {
+        const decoratedServiceRoute = decoratedService.routes.find((route) => route.getHandler() === queuedForwardedRequest.decoratedMethodName)
+        const forwardedServiceRoute = forwardedService.routes.find((route) => route.getHandler() === queuedForwardedRequest.forwardedMethodName)
+
+        decoratedServiceRoute.description = decoratedServiceRoute.description || forwardedServiceRoute.description
+        decoratedServiceRoute.params.push(...forwardedServiceRoute.params)
+      }
+    }
+
+    this.queuedForwardedRequests = this.queuedForwardedRequests.filter((queuedForwardedRequest) => {
+      const [decoratedService, forwardedService] = this.getQueuedForwardedRequestServices(service, queuedForwardedRequest)
+      return !decoratedService || !forwardedService
+    })
+  }
+
+  documentService(service: Service, path: string, opts: ServiceOpts) {
+    const clayService = new ClayService(service, path, opts)
     clayService.description = opts.docs?.description ?? ''
     this.services.push(clayService)
 
     this.checkQueuedValidationParamsForService(clayService)
     this.checkQueuedRouteDocsForService(clayService)
+    this.checkQueuedForwardedRequestsForService(clayService)
   }
 }

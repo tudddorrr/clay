@@ -1,5 +1,8 @@
 # Changelog
 
+## 6.1.0 (Unreleased)
+* Added `ForwardTo` decorator and `forwardRequest()` helper for forwarding requests between services
+
 ## 6.0.0 (30th June 2022)
 * The `Service` interface is now a class and should be extended rather than implemented
 * Implicit route methods (`index()`, `post()`, etc) are now defined in the `Service` base class and by default return a 405 - method not allowed
