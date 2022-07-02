@@ -1,7 +1,8 @@
 # Changelog
 
 ## 6.1.0 (2nd July 2022)
-* Added `ForwardTo` decorator and `forwardRequest()` helper for forwarding requests between services
+* Added `@ForwardTo` decorator and `forwardRequest()` helper for forwarding requests between services
+* Documentation from forward-to handlers is applied to the handler that forwarded the request
 
 ## 6.0.0 (30th June 2022)
 * The `Service` interface is now a class and should be extended rather than implemented
