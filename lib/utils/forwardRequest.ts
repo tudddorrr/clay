@@ -1,6 +1,12 @@
-import { Response, Request, RouteHandler } from '../service'
+import { Response, Request, Service } from '../service'
+import merge from 'lodash.merge'
+
+type ForwardHandler = {
+  service: Service,
+  handler: string
+}
 
 export async function forwardRequest(req: Request, reqExtra: Partial<Request> = {}): Promise<Response> {
-  const handler: RouteHandler = req.ctx.state.forwardHandler
-  return await handler({ ...req, ...reqExtra })
+  const { service, handler } = req.ctx.state.forwardHandler as ForwardHandler
+  return await service[handler].apply(service, [merge(req, reqExtra)])
 }

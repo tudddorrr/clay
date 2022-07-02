@@ -7,7 +7,10 @@ export const ForwardTo = (serviceKey: string, methodName: string) => (tar: Objec
 
   descriptor.value = async function (...args) {
     const req: Request = args[0]
-    req.ctx.state.forwardHandler = req.ctx.state.services[serviceKey][methodName]
+    req.ctx.state.forwardHandler = {
+      service: req.ctx.state.services[serviceKey],
+      handler: methodName
+    }
 
     const result = await base.apply(this, args)
     return result
