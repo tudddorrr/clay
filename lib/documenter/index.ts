@@ -114,8 +114,10 @@ export class ClayDocs {
         const decoratedServiceRoute = decoratedService.routes.find((route) => route.getHandler() === queuedForwardedRequest.decoratedMethodName)
         const forwardedServiceRoute = forwardedService.routes.find((route) => route.getHandler() === queuedForwardedRequest.forwardedMethodName)
 
-        decoratedServiceRoute.description = decoratedServiceRoute.description || forwardedServiceRoute.description
-        decoratedServiceRoute.params.push(...forwardedServiceRoute.params)
+        if (!decoratedServiceRoute.description && decoratedServiceRoute.params.length === 0) {
+          decoratedServiceRoute.description = forwardedServiceRoute.description
+          decoratedServiceRoute.params.push(...forwardedServiceRoute.params)
+        }
       }
     }
 
