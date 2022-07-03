@@ -232,4 +232,64 @@ describe('Route documentation', () => {
       }
     })
   })
+
+  it('should correctly document route params', async () => {
+    @Routes([
+      {
+        method: 'GET',
+        path: '/:id',
+        handler: 'get',
+        docs: {
+          params: {
+            route: {
+              id: 'The ID of the user'
+            }
+          }
+        }
+      }
+    ])
+    class UserService extends Service {
+      async get(req: Request): Promise<Response> {
+        return {
+          status: 200,
+          body: {
+            docs: globalThis.clay.docs
+          }
+        }
+      }
+    }
+
+    const app = new Koa()
+    app.use(service('/users', new UserService()))
+
+    const res = await supertest(app.callback())
+      .get('/users/1')
+      .expect(200)
+
+    expect(res.body).to.eql({
+      docs: {
+        services: [
+          {
+            description: '',
+            name: 'UserService',
+            routes: [
+              {
+                description: '',
+                method: 'GET',
+                params: [
+                  {
+                    type: 'route',
+                    required: 'YES',
+                    name: 'id',
+                    description: 'The ID of the user'
+                  }
+                ],
+                path: '/users/:id'
+              }
+            ]
+          }
+        ]
+      }
+    })
+  })
 })

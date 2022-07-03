@@ -15,8 +15,8 @@ export class ClayRoute {
     this.path = route.path
     this.handler = route.handler
 
-    this.processRouteDocs(route.docs)
     this.extractRouteParams()
+    this.processRouteDocs(route.docs)
   }
 
   toJSON() {
