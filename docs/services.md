@@ -179,4 +179,4 @@ app.use('/users', new UserService())
 app.use('/api/users', new UserAPIService())
 ```
 
-The documenter will automatically take the documentation from the forwarded-to handler and apply it to the current handler.
+The documenter will automatically take the documentation from the forwarded-to handler and apply it to the current handler if there are no docs (e.g. no params and no description) for it already.

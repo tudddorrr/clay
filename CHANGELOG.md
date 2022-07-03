@@ -1,5 +1,8 @@
 # Changelog
 
+## 6.1.2 (Unreleased)
+* Don't override docs of a route that forwards to another route
+
 ## 6.1.1 (3rd July 2022)
 * Use context of forwarded-to service for forwarded requests
 
