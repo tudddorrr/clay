@@ -1,6 +1,6 @@
 # Changelog
 
-## 6.1.1 (3rd Jul 2022)
+## 6.1.1 (3rd July 2022)
 * Use context of forwarded-to service for forwarded requests
 
 ## 6.1.0 (2nd July 2022)
