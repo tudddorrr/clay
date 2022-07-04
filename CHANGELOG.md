@@ -1,6 +1,6 @@
 # Changelog
 
-## 6.1.2 (Unreleased)
+## 6.1.2 (4th July 2022)
 * Don't override docs of a route that forwards to another route
 * Fix route params not being documented
 
