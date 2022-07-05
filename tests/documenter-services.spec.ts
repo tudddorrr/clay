@@ -44,7 +44,8 @@ describe('Service documentation', () => {
                 description: '',
                 method: 'GET',
                 params: [],
-                path: '/docs'
+                path: '/docs',
+                samples: []
               }
             ]
           }

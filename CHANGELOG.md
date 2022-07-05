@@ -2,6 +2,7 @@
 
 ## Unreleased
 * Fix `@Docs` overriding the `required` type on params
+* Added `samples` to `RouteDocs` for documenting multiple route request/response samples
 
 ## 6.1.2 (4th July 2022)
 * Don't override docs of a route that forwards to another route

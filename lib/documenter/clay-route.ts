@@ -1,4 +1,4 @@
-import { ClayParamType, ClayParamRequiredType, RouteDocs } from '.'
+import { ClayParamType, ClayParamRequiredType, RouteDocs, RouteSample } from '.'
 import { HttpMethod, Route } from '../service'
 import { ClayParam } from './clay-param'
 
@@ -9,6 +9,7 @@ export class ClayRoute {
 
   description: string = ''
   params: ClayParam[] = []
+  samples: RouteSample[] = []
 
   constructor(route: Route) {
     this.method = route.method
@@ -23,8 +24,9 @@ export class ClayRoute {
     return {
       method: this.method,
       path: this.path,
-      description: this.description,
-      params: this.params
+      description: this.description ?? '',
+      params: this.params,
+      samples: this.samples
     }
   }
 
@@ -54,7 +56,7 @@ export class ClayRoute {
   processRouteDocs(docs: RouteDocs) {
     if (!docs) return
 
-    this.description = docs.description ?? ''
+    this.description = docs.description ?? this.description
 
     if (docs.params) {
       for (const schemaParam of [ClayParamType.QUERY, ClayParamType.BODY, ClayParamType.HEADERS, ClayParamType.ROUTE]) {
@@ -66,6 +68,10 @@ export class ClayRoute {
           }
         }
       }
+    }
+
+    if (docs.samples) {
+      this.samples = docs.samples
     }
   }
 }

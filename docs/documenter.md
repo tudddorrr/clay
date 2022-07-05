@@ -165,6 +165,39 @@ You can also hide routes by passing `hidden: true` to the `RouteDocs` object, pr
 ])
 ```
 
+## Samples
+
+You can add example requests and responses using the `samples` key in the `RouteDocs`:
+
+```
+@Routes([
+  {
+    method: 'POST',
+    handler: 'POST',
+    docs: {
+      samples: [
+        {
+          title: 'Sample request',
+          sample: {
+            name: 'John Smith',
+            password: 'p4ssw0rd'
+          }
+        },
+        {
+          title: 'Sample response',
+          sample: {
+            id: 1,
+            name: 'John Smith',
+            createdAt: '2022-01-01 02:22:16'
+          }
+        }
+      ]
+    }
+  }
+```
+
+A sample requires a title and a sample object.
+
 ## Practical usage
 
 Documentation is stored inside the global `Clay` object and can be accessed via `globalThis.clay.docs`.

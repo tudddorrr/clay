@@ -19,6 +19,13 @@ export interface ParamDocs {
   [key: string]: string
 }
 
+export interface RouteSample {
+  title: string
+  sample: {
+    [key: string]: unknown
+  }
+}
+
 export interface RouteDocs {
   description?: string
   params?: {
@@ -27,7 +34,8 @@ export interface RouteDocs {
     [ClayParamType.HEADERS]?: ParamDocs
     [ClayParamType.ROUTE]?: ParamDocs
   }
-  hidden?: boolean
+  hidden?: boolean,
+  samples?: RouteSample[]
 }
 
 type QueuedDoc = {
@@ -115,7 +123,7 @@ export class ClayDocs {
         const forwardedServiceRoute = forwardedService.routes.find((route) => route.getHandler() === queuedForwardedRequest.forwardedMethodName)
 
         if (!decoratedServiceRoute.description && decoratedServiceRoute.params.length === 0) {
-          decoratedServiceRoute.description = forwardedServiceRoute.description
+          decoratedServiceRoute.description = forwardedServiceRoute.description ?? decoratedServiceRoute.description
           decoratedServiceRoute.params.push(...forwardedServiceRoute.params)
         }
       }

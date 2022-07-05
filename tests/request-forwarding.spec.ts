@@ -79,7 +79,8 @@ describe('Request forwarding', () => {
               type: 'query'
             }
           ],
-          path: '/generic'
+          path: '/generic',
+          samples: []
         }
       ]
     })
@@ -124,7 +125,8 @@ describe('Request forwarding', () => {
           description: 'The generic description',
           method: 'GET',
           params: [],
-          path: '/generic'
+          path: '/generic',
+          samples: []
         }
       ]
     })
@@ -178,7 +180,8 @@ describe('Request forwarding', () => {
               type: 'query'
             }
           ],
-          path: '/generic'
+          path: '/generic',
+          samples: []
         }
       ]
     })
@@ -277,7 +280,8 @@ describe('Request forwarding', () => {
               type: 'query'
             }
           ],
-          path: '/generic'
+          path: '/generic',
+          samples: []
         }
       ]
     })

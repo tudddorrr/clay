@@ -3,7 +3,7 @@ import Koa from 'koa'
 import bodyParser from 'koa-bodyparser'
 import { beforeEach } from 'mocha'
 import supertest from 'supertest'
-import { ClayDocs, Docs, Request, Response, service, Service, Validate } from '../lib'
+import { ClayDocs, Docs, Request, Response, RouteSample, service, Service, Validate } from '../lib'
 const expect = chai.expect
 
 describe('@Docs decorator', () => {
@@ -44,7 +44,8 @@ describe('@Docs decorator', () => {
                 description: 'Get all users',
                 method: 'GET',
                 params: [],
-                path: '/users'
+                path: '/users',
+                samples: []
               }
             ]
           }
@@ -92,7 +93,8 @@ describe('@Docs decorator', () => {
                 description: '',
                 method: 'POST',
                 params: [],
-                path: '/users'
+                path: '/users',
+                samples: []
               }
             ]
           }
@@ -158,7 +160,8 @@ describe('@Docs decorator', () => {
                     description: 'The id of the user'
                   }
                 ],
-                path: '/users/:id'
+                path: '/users/:id',
+                samples: []
               },
               {
                 description: '',
@@ -171,7 +174,8 @@ describe('@Docs decorator', () => {
                     description: 'An optional search query to find users by name'
                   }
                 ],
-                path: '/users'
+                path: '/users',
+                samples: []
               }
             ]
           }
@@ -227,12 +231,60 @@ describe('@Docs decorator', () => {
                     description: 'The name of the user'
                   }
                 ],
-                path: '/users'
+                path: '/users',
+                samples: []
               }
             ]
           }
         ]
       }
+    })
+  })
+
+  it('should show route samples', async () => {
+    const sample: RouteSample = {
+      title: 'Sample response',
+      sample: {
+        id: 1,
+        email: 'user@email.com',
+        classType: 'User',
+        metadata: {
+          registeredAt: '2022-01-01 03:39:10'
+        }
+      }
+    }
+
+    class GenericService extends Service {
+      @Docs({
+        samples: [sample]
+      })
+      async index(req: Request): Promise<Response> {
+        return {
+          status: 200,
+          body: globalThis.clay.docs.services.find((service) => service.name === 'GenericService')
+        }
+      }
+    }
+
+    const app = new Koa()
+    app.use(service('/generic', new GenericService()))
+
+    const res = await supertest(app.callback())
+      .get('/generic')
+      .expect(200)
+
+    expect(res.body).to.eql({
+      description: '',
+      name: 'GenericService',
+      routes: [
+        {
+          description: '',
+          method: 'GET',
+          params: [],
+          path: '/generic',
+          samples: [sample]
+        }
+      ]
     })
   })
 })

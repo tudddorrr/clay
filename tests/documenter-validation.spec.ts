@@ -63,13 +63,15 @@ describe('Validation documentation', () => {
             type: 'body',
             description: ''
           }
-        ]
+        ],
+        samples: []
       },
       {
         description: '',
         method: 'GET',
         path: '/users',
-        params: []
+        params: [],
+        samples: []
       }
     ])
   })
@@ -146,13 +148,15 @@ describe('Validation documentation', () => {
             type: 'body',
             description: ''
           }
-        ]
+        ],
+        samples: []
       },
       {
         description: '',
         method: 'GET',
         path: '/users',
-        params: []
+        params: [],
+        samples: []
       }
     ])
   })
@@ -228,13 +232,15 @@ describe('Validation documentation', () => {
             type: 'body',
             description: ''
           }
-        ]
+        ],
+        samples: []
       },
       {
         description: '',
         method: 'GET',
         path: '/users',
-        params: []
+        params: [],
+        samples: []
       }
     ])
   })

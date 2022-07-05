@@ -64,13 +64,15 @@ describe('Route documentation', () => {
                 description: 'The current user',
                 method: 'GET',
                 params: [],
-                path: '/users/current'
+                path: '/users/current',
+                samples: []
               },
               {
                 description: 'All users',
                 method: 'GET',
                 params: [],
-                path: '/users'
+                path: '/users',
+                samples: []
               }
             ]
           }
@@ -133,7 +135,8 @@ describe('Route documentation', () => {
                 description: 'All users',
                 method: 'GET',
                 params: [],
-                path: '/users'
+                path: '/users',
+                samples: []
               }
             ]
           }
@@ -211,7 +214,8 @@ describe('Route documentation', () => {
                     description: 'The auth header'
                   }
                 ],
-                path: '/users/current'
+                path: '/users/current',
+                samples: []
               },
               {
                 description: '',
@@ -224,7 +228,8 @@ describe('Route documentation', () => {
                     description: 'An optional search query to find users by name'
                   }
                 ],
-                path: '/users'
+                path: '/users',
+                samples: []
               }
             ]
           }
@@ -284,7 +289,8 @@ describe('Route documentation', () => {
                     description: 'The ID of the user'
                   }
                 ],
-                path: '/users/:id'
+                path: '/users/:id',
+                samples: []
               }
             ]
           }
