@@ -1,5 +1,8 @@
 # Changelog
 
+## Unreleased
+* Fix `@Docs` overriding the `required` type on params
+
 ## 6.1.2 (4th July 2022)
 * Don't override docs of a route that forwards to another route
 * Fix route params not being documented

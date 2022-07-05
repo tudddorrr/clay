@@ -1,8 +1,9 @@
 import chai from 'chai'
 import Koa from 'koa'
+import bodyParser from 'koa-bodyparser'
 import { beforeEach } from 'mocha'
 import supertest from 'supertest'
-import { ClayDocs, Docs, Request, Response, service, Service } from '../lib'
+import { ClayDocs, Docs, Request, Response, service, Service, Validate } from '../lib'
 const expect = chai.expect
 
 describe('@Docs decorator', () => {
@@ -168,6 +169,62 @@ describe('@Docs decorator', () => {
                     required: 'NO',
                     name: 'search',
                     description: 'An optional search query to find users by name'
+                  }
+                ],
+                path: '/users'
+              }
+            ]
+          }
+        ]
+      }
+    })
+  })
+
+  it('should not override the requiredType of a param previously set through validation', async () => {
+    class UserService extends Service {
+      @Validate({ body: ['name'] })
+      @Docs({
+        params: {
+          body: {
+            name: 'The name of the user'
+          }
+        }
+      })
+      async post(req: Request): Promise<Response> {
+        return {
+          status: 200,
+          body: {
+            docs: globalThis.clay.docs
+          }
+        }
+      }
+    }
+
+    const app = new Koa()
+    app.use(bodyParser())
+    app.use(service('/users', new UserService()))
+
+    const res = await supertest(app.callback())
+      .post('/users')
+      .send({ name: 'Bob' })
+      .expect(200)
+
+    expect(res.body).to.eql({
+      docs: {
+        services: [
+          {
+            description: '',
+            name: 'UserService',
+            routes: [
+              {
+                description: '',
+                method: 'POST',
+                params: [
+                  {
+                    type: 'body',
+                    required: 'YES',
+                    name: 'name',
+                    description: 'The name of the user'
                   }
                 ],
                 path: '/users'

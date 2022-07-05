@@ -38,14 +38,14 @@ export class ClayRoute {
     return this.handler.toString()
   }
 
-  createOrUpdateParam(type: ClayParamType, name: string, required: ClayParamRequiredType, description?: string) {
+  createOrUpdateParam(type: ClayParamType, name: string, required?: ClayParamRequiredType, description?: string) {
     const existingParam = this.params.find((param) => param.type === type && param.name === name)
     if (existingParam) {
       if (description) existingParam.description = description
-      existingParam.required = required
+      existingParam.required = required ?? existingParam.required
     // don't document non-existent route params
     } else if (type !== ClayParamType.ROUTE) {
-      const param = new ClayParam(type, name, required)
+      const param = new ClayParam(type, name, required ?? ClayParamRequiredType.NO)
       param.description = description ?? ''
       this.params.push(param)
     }
@@ -61,7 +61,7 @@ export class ClayRoute {
         if (docs.params[schemaParam]) {
           for (const key in docs.params[schemaParam]) {
             // route params should always be required
-            const required = schemaParam === ClayParamType.ROUTE ? ClayParamRequiredType.YES : ClayParamRequiredType.NO
+            const required = schemaParam === ClayParamType.ROUTE ? ClayParamRequiredType.YES : null
             this.createOrUpdateParam(schemaParam, key, required, docs.params[schemaParam][key])
           }
         }
