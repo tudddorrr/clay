@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 6.2.0 (6th July 2022)
 * Fix `@Docs` overriding the `required` type on params
 * Added `samples` to `RouteDocs` for documenting multiple route request/response samples
 
