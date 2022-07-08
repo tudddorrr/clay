@@ -15,11 +15,12 @@ export interface ServiceOpts {
   docs?: ServiceDocs
 }
 
+const httpMethods: HttpMethod[] = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
+
 const buildDefaultRoutes = (): Route[] => {
   const routes: Route[] = []
-  const methods: HttpMethod[] = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
 
-  methods.forEach((method: HttpMethod) => {
+  httpMethods.forEach((method: HttpMethod) => {
     routes.push({
       method,
       path: `${method === 'POST' ? '' : '/:id'}`,
@@ -58,7 +59,7 @@ const buildDebugRoute = (route: Route) => {
   return `${route.method} ${route.path} => ${handler}`
 }
 
-const setServiceRoutes = async (service: Service, path: string, opts: ServiceOpts): Promise<void> => {
+const setServiceRoutes = (service: Service, path: string, opts: ServiceOpts): void => {
   const definedRoutes: Route[] = service.definedRoutes?.map((route: Route) => {
     return {
       ...route,
@@ -68,6 +69,9 @@ const setServiceRoutes = async (service: Service, path: string, opts: ServiceOpt
   }) ?? []
 
   const routes: Route[] = buildDefaultRoutes().filter((route) => {
+    // check implicit route has a handler
+    if (!service.constructor.prototype.hasOwnProperty(route.handler as string)) return false
+
     // check for overlap between defined routes and implicit routes so that there's no doubling-up
     return !definedRoutes.find((defined) => route.method === defined.method && route.handler === defined.handler)
   }).concat(definedRoutes).map((route: Route) => ({
@@ -75,17 +79,7 @@ const setServiceRoutes = async (service: Service, path: string, opts: ServiceOpt
     path: (opts.prefix ?? '') + path + route.path
   }))
 
-  const routeStatusCodes = await Promise.all(routes.map(async (route) => {
-    try {
-      const handler = getRouteHandler(service, route)
-      const res = await handler?.apply(service)
-      return res?.status
-    } catch {
-      return null
-    }
-  }))
-
-  service.setRoutes(routes.filter((_, idx) => routeStatusCodes[idx] !== 405))
+  service.setRoutes(routes)
 
   if (opts.debug) {
     console.log(`Available ${path} service routes:`)
@@ -93,9 +87,9 @@ const setServiceRoutes = async (service: Service, path: string, opts: ServiceOpt
   }
 }
 
-const attachService = async (ctx: Context, path: string, service: Service, opts: ServiceOpts): Promise<void> => {
+const attachService = (ctx: Context, path: string, service: Service, opts: ServiceOpts): void => {
   if (!service.attached) {
-    await setServiceRoutes(service, path, opts)
+    setServiceRoutes(service, path, opts)
     globalThis.clay.docs.documentService(service, path, opts)
   }
 
@@ -116,7 +110,7 @@ export function service(path: string, service: Service, opts: ServiceOpts = {}) 
   const debug = opts.debug
 
   return async (ctx, next) => {
-    await attachService(ctx, path, service, opts)
+    attachService(ctx, path, service, opts)
 
     const route = service.routes.find((r) => r.method === ctx.method && pathToRegexp(r.path).test(ctx.path))
     if (!route) {
