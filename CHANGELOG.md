@@ -1,5 +1,9 @@
 # Changelog
 
+## 6.3.0 (11th July 2022)
+* Registered services are now accessed under `ctx.state.services[your-path].service` (previously `ctx.state.services[your-path]`) to support base paths and nested paths
+* Fix the `@ForwardTo` decorator not supporting nested routes
+
 ## 6.2.2 (10th July 2022)
 * Handle registering nested service paths (e.g. `service('/api/:version/users/:userId/comments')` => `api.users.comments`)
 

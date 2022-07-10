@@ -93,7 +93,7 @@ const attachService = (ctx: Context, path: string, service: Service, opts: Servi
     globalThis.clay.docs.documentService(service, path, opts)
   }
 
-  set(ctx.state, 'services.' + getServiceKey(path), service)
+  set(ctx.state, `services.${getServiceKey(path)}.service`, service)
 }
 
 const buildParams = (ctx: Context, path: string): any => {

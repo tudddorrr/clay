@@ -127,13 +127,12 @@ Requests are readonly and therefore immutable (apart from the `ctx`'s state).
 
 ## Accessing other services
 
-You can access services from the app's context using: `ctx.state.services[serviceName]`. Services are registered using `lodash.set`, for example:
+You can access services from the app's context using: `ctx.state.services[serviceName].service`. Services are registered using `lodash.set` and can be accessed using `lodash.get`, for example:
 
-- `app.use(service('/users', new UserService()))`, can be accessed via `ctx.services.users`
-- `app.use(service('/api/users', new UserService()))`, can be accessed via `ctx.services.api.users`
-- `app.use(service('/v1/api/users', new UserService()))`, can be accessed via `ctx.services.v1.api.users`
-- `app.use(service('/v1/api/users/:userId/comments', new CommentService()))`, can be accessed via `ctx.services.v1.api.users.comments`
-- `app.use(service('/v1/api/users/:userId/comments/:commentId/upvotes', new UpvoteService()))`, can be accessed via `ctx.services.v1.api.users.comments.upvotes`
+- `app.use(service('/users', new UserService()))`, can be accessed via `ctx.state.services.users.service`
+- `app.use(service('/api/users', new UserService()))`, can be accessed via `ctx.services.api.users.service`
+- `app.use(service('/api/users/:userId/comments', new CommentService()))`, can be accessed via `ctx.state.services.api.users.comments.service`
+- `app.use(service('/api/users/:userId/comments/:commentId/upvotes', new UpvoteService()))`, can be accessed via `ctx.state.services.api.users.comments.upvotes.service`
 
 ## Redirects
 

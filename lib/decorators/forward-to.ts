@@ -1,4 +1,5 @@
 import { Request } from '../service'
+import get from 'lodash.get'
 
 export const ForwardTo = (serviceKey: string, methodName: string) => (tar: Object, propertyKey: string, descriptor: PropertyDescriptor) => {
   const base = descriptor.value
@@ -8,7 +9,7 @@ export const ForwardTo = (serviceKey: string, methodName: string) => (tar: Objec
   descriptor.value = async function (...args) {
     const req: Request = args[0]
     req.ctx.state.forwardHandler = {
-      service: req.ctx.state.services[serviceKey],
+      service: get(req.ctx.state, `services.${serviceKey}.service`),
       handler: methodName
     }
 
