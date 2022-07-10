@@ -132,6 +132,8 @@ You can access services from the app's context using: `ctx.state.services[servic
 - `app.use(service('/users', new UserService()))`, can be accessed via `ctx.services.users`
 - `app.use(service('/api/users', new UserService()))`, can be accessed via `ctx.services.api.users`
 - `app.use(service('/v1/api/users', new UserService()))`, can be accessed via `ctx.services.v1.api.users`
+- `app.use(service('/v1/api/users/:userId/comments', new CommentService()))`, can be accessed via `ctx.services.v1.api.users.comments`
+- `app.use(service('/v1/api/users/:userId/comments/:commentId/upvotes', new UpvoteService()))`, can be accessed via `ctx.services.v1.api.users.comments.upvotes`
 
 ## Redirects
 

@@ -34,5 +34,16 @@ describe('Service registration', () => {
     const res = await supertest(app.callback()).get('/api/users')
     expect(res.body.services).to.have.property('api').with.keys(['users', 'comments'])
   })
+
+  it('should correctly namespace nested services', async () => {
+    const app = new Koa()
+    app.use(service('/api/games/:gameId/users', new GenericService()))
+    app.use(service('/api/version/:version/games/:gameId/users', new GenericService()))
+    app.use(service('/registered', new GenericService()))
+
+    const res = await supertest(app.callback()).get('/registered')
+    expect(res.body.services).to.have.keys(['api', 'registered'])
+    expect(res.body.services.api).to.have.keys(['games', 'version'])
+  })
 })
 

@@ -1,5 +1,8 @@
 # Changelog
 
+## 6.2.2 (10th July 2022)
+* Handle registering nested service paths (e.g. `service('/api/:version/users/:userId/comments')` => `api.users.comments`)
+
 ## 6.2.1 (8th July 2022)
 * Use `hasOwnProperty()` instead of invoking handlers to check implict routes are implemented
 
