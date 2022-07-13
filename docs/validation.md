@@ -27,7 +27,7 @@ The array schema is a simple way to define required keys:
 async post(req: Request): Promise<Response> { ... }
 ```
 
-If any of the keys are missing (i.e. null or undefined), validation will fail.
+If any of the keys are missing (i.e. undefined), validation will fail.
 
 You can additionally pass in a class type to automatically validate any properties decorated with @Required():
 

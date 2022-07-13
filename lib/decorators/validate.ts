@@ -51,7 +51,7 @@ function valueIsSet(val: unknown): boolean {
 }
 
 async function handleValidationConfig(req: Request, config: BaseValidationConfig, schemaParam: string, key: string, value: unknown, isRequired: boolean): Promise<void> {
-  if (!valueIsSet(value)) {
+  if (value === undefined) {
     if (isRequired) reject(req, key, config.error ?? `${key} is missing from the request ${schemaParam}`)
   } else {
     const conditions: ValidationCondition[] = await config.validation?.(value, req)
@@ -67,8 +67,8 @@ async function handleValidationConfig(req: Request, config: BaseValidationConfig
 async function handleArraySchema(req: Request, schema: ValidationSchema, schemaParam: string): Promise<void> {
   for (let item of schema[schemaParam]) {
     if (typeof item === 'string') {
-      const val = req[schemaParam]?.[item]
-      if (!valueIsSet(val)) reject(req, item, `${item} is missing from the request ${schemaParam}`)
+      const value = req[schemaParam]?.[item]
+      if (value === undefined) reject(req, item, `${item} is missing from the request ${schemaParam}`)
     } else if(item.hasOwnProperty?.('prototype')) {
       const entity: EntityWithRequirements = item
 
@@ -85,8 +85,8 @@ async function handleArraySchema(req: Request, schema: ValidationSchema, schemaP
           isRequired = await config.requiredIf(req)
         }
 
-        const val = req[schemaParam]?.[key]
-        await handleValidationConfig(req, config, schemaParam, key, val, isRequired)
+        const value = req[schemaParam]?.[key]
+        await handleValidationConfig(req, config, schemaParam, key, value, isRequired)
       }
     }
   }
@@ -95,10 +95,10 @@ async function handleArraySchema(req: Request, schema: ValidationSchema, schemaP
 async function handleObjectSchema(req: Request, schema: ValidationSchema, schemaParam: string): Promise<void> {
   for (const key of Object.keys(schema[schemaParam])) {
     const validatable: ValidatablePropertyConfig = schema[schemaParam][key]
-    const val = req[schemaParam]?.[key]
+    const value = req[schemaParam]?.[key]
 
     const isRequired = await validatable.requiredIf?.(req) ?? validatable.required 
-    await handleValidationConfig(req, validatable, schemaParam, key, val, isRequired)
+    await handleValidationConfig(req, validatable, schemaParam, key, value, isRequired)
   }
 }
 

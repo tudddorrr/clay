@@ -86,6 +86,34 @@ describe('@Required decorator', () => {
     expect(res.status).to.equal(204)
   })
 
+  it('should not return an error if a required field is null', async () => {
+    class Stat {
+      @Required()
+      name: string
+    }
+
+    class StatService extends Service {
+      @Validate({
+        body: [Stat]
+      })
+      async post(req: Request): Promise<Response> {
+        return { status: 204 }
+      }
+    }
+
+    const res = await new StatService().post(buildMockRequest({
+      ctx: {
+        method: 'POST',
+        state: {}
+      },
+      body: {
+        name: null
+      }
+    }))
+
+    expect(res.status).to.equal(204)
+  })
+
   it('should return an error if a field alias is not present', async () => {
     class Stat {
       @Required({ as: 'entityName' })

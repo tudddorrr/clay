@@ -115,11 +115,14 @@ describe('@Validate decorator object schema', () => {
     expect(res.status).to.equal(204)
   })
 
-  it('should only return errors for null or undefined values', async () => {
+  it('should only return errors for undefined values', async () => {
     class SearchService extends Service {
       @Validate({
         query: {
           search: {
+            required: true
+          },
+          source: {
             required: true
           }
         }
@@ -131,7 +134,8 @@ describe('@Validate decorator object schema', () => {
 
     const res = await new SearchService().index(buildMockRequest({
       query: {
-        search: ''
+        search: '',
+        source: null
       }
     }))
 

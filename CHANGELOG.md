@@ -1,5 +1,8 @@
 # Changelog
 
+## 6.4.0 (Unreleased)
+* `@Validate` and `@Required` will now only check for `undefined` and will not count `null` properties as missing
+
 ## 6.3.0 (11th July 2022)
 * Registered services are now accessed under `ctx.state.services[your-path].service` (previously `ctx.state.services[your-path]`) to support base paths and nested paths
 * Fix the `@ForwardTo` decorator not supporting nested routes

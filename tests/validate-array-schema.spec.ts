@@ -47,10 +47,10 @@ describe('@Validate decorator array schema', () => {
     expect(res.body.errors.itemsPerPage).to.eql(['itemsPerPage is missing from the request query'])
   })
 
-  it('should only return errors for null or undefined values', async () => {
+  it('should only return errors for undefined values', async () => {
     class SearchService extends Service {
       @Validate({
-        query: ['search']
+        query: ['search', 'source']
       })
       async index(req: Request): Promise<Response> {
         return { status: 204 }
@@ -59,7 +59,8 @@ describe('@Validate decorator array schema', () => {
 
     const res = await new SearchService().index(buildMockRequest({
       query: {
-        search: ''
+        search: '',
+        source: null
       }
     }))
 
