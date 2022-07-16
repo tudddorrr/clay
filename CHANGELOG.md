@@ -1,6 +1,6 @@
 # Changelog
 
-## 6.4.0 (Unreleased)
+## 6.4.0 (16th July 2022)
 * `@Validate` and `@Required` will now only check for `undefined` and will not count `null` properties as missing
 
 ## 6.3.0 (11th July 2022)
