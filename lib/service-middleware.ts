@@ -125,6 +125,9 @@ export function service(path: string, service: Service, opts: ServiceOpts = {}) 
       return await next()
     }
 
+    ctx.state.matchedRoute = route.path
+    ctx.state.matchedServiceKey = getServiceKey(path)
+
     const data: Request = {
       ctx,
       query: ctx.query,

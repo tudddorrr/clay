@@ -134,6 +134,12 @@ You can access services from the app's context using: `ctx.state.services[servic
 - `app.use(service('/api/users/:userId/comments', new CommentService()))`, can be accessed via `ctx.state.services.api.users.comments.service`
 - `app.use(service('/api/users/:userId/comments/:commentId/upvotes', new UpvoteService()))`, can be accessed via `ctx.state.services.api.users.comments.upvotes.service`
 
+## Accessing information about the current route
+
+If you need to know what the current route being used is, you can access it using `ctx.state.matchedRoute` which will return, for example, `/users/:id`.
+
+You can also use `ctx.state.matchedServiceKey` to access the current service's key (e.g. `api.users.comments` - which can be used as described above).
+
 ## Redirects
 
 Sometimes you'll want to use `context.redirect()` instead of returning a response with a body. To do this you can use the `redirect()` helper function to return a `RedirectResponse`:
