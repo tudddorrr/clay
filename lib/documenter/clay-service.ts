@@ -1,5 +1,5 @@
 import { ClayParamType, ClayParamRequiredType, RouteDocs } from '.'
-import { EntityWithRequirements, ValidationSchema, ValidatablePropertyConfig } from '../decorators'
+import { ValidationSchema, ValidatablePropertyConfig, RequiredPropertyConfig, EntityWithRequirements } from '../decorators'
 import { Service } from '../service'
 import { ServiceOpts } from '../service-middleware'
 import { ClayRoute } from './clay-route'
@@ -29,8 +29,8 @@ export class ClayService {
     }
   }
 
-  private processEntityRequirement = (schemaParam: ClayParamType, route: ClayRoute, Entity: new (...args: any[]) => any) => {
-    const requirements = (new Entity() as EntityWithRequirements)._requestRequirements
+  private processEntityRequirement = (schemaParam: ClayParamType, route: ClayRoute, entity: EntityWithRequirements) => {
+    const requirements = entity.prototype._requestRequirements as { [key: string]: RequiredPropertyConfig }
     for (const [key, value] of Object.entries(requirements)) {
       if (value.methods.includes(route.method)) {
         const required = value.requiredIf ? ClayParamRequiredType.SOMETIMES : ClayParamRequiredType.YES

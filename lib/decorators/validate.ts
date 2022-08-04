@@ -46,10 +46,6 @@ function reject(req: Request, key: string, message: string): void {
   }
 }
 
-function valueIsSet(val: unknown): boolean {
-  return val !== null && val !== undefined
-}
-
 async function handleValidationConfig(req: Request, config: BaseValidationConfig, schemaParam: string, key: string, value: unknown, isRequired: boolean): Promise<void> {
   if (value === undefined) {
     if (isRequired) reject(req, key, config.error ?? `${key} is missing from the request ${schemaParam}`)
@@ -72,13 +68,9 @@ async function handleArraySchema(req: Request, schema: ValidationSchema, schemaP
     } else if(item.hasOwnProperty?.('prototype')) {
       const entity: EntityWithRequirements = item
 
-      const requirements = Object.keys(entity.prototype._requestRequirements ?? {}).map((key: string): [string, RequiredPropertyConfig] => {
-        return [key, entity.prototype._requestRequirements[key]]
-      })
-
-      for (const requirement of requirements) {
-        const key = requirement[0]
-        const config = requirement[1]
+      for (const entry of Object.entries(entity.prototype._requestRequirements ?? {})) {
+        const key = entry[0]
+        const config: RequiredPropertyConfig = entry[1]
 
         let isRequired = config.methods.includes(req.ctx.method as HttpMethod)
         if (typeof config.requiredIf === 'function') {
