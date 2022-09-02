@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 6.5.0 (4th August 2022)
 * Add `matchedRoute` (e.g. `/users/:id/comments`)  and `matchedServiceKey` (e.g. `api.users.comments`) into the context state
 * Fix documenting entities with complex constructors that use `@Required`
 
