@@ -92,7 +92,7 @@ class SecretService extends Service {
 }
 ```
 
-Validate incoming request data (body, query and headers) using the [@Validate decorator](https://github.com/tudddorrr/clay/tree/main/docs/permissions.md):
+Validate incoming request data (body, query and headers) using the [@Validate decorator](https://github.com/tudddorrr/clay/tree/main/docs/validation.md):
 
 ```
 @Validate({
