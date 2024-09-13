@@ -112,7 +112,7 @@ export function service(path: string, service: Service, opts: ServiceOpts = {}) 
   return async (ctx, next) => {
     attachService(ctx, path, service, opts)
 
-    const route = service.routes.find((r) => r.method === ctx.method && pathToRegexp(r.path).test(ctx.path))
+    const route = service.routes.find((r) => r.method === ctx.method && pathToRegexp(r.path).regexp.test(ctx.path))
     if (!route) {
       if (debug) console.warn(`Route for ${ctx.method} ${ctx.path} not found`)
       return await next()
