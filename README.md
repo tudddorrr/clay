@@ -13,8 +13,6 @@ Tests: [tests](https://github.com/tudddorrr/clay/tree/main/tests)
 
 ## Installation
 ```
-yarn add koa-clay
-// OR
 npm i koa-clay --save
 ```
 
