@@ -1,5 +1,5 @@
 import { Request } from '../service'
-import get from 'lodash.get'
+import { get } from 'lodash'
 
 export const ForwardTo = (serviceKey: string, methodName: string) => (tar: Object, propertyKey: string, descriptor: PropertyDescriptor) => {
   const base = descriptor.value

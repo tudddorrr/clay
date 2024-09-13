@@ -1,5 +1,5 @@
 import { Response, Request, Service } from '../service'
-import merge from 'lodash.merge'
+import { merge } from 'lodash'
 
 type ForwardHandler = {
   service: Service,

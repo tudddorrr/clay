@@ -41,9 +41,7 @@
   },
   "dependencies": {
     "koa-bodyparser": "^4.4.1",
-    "lodash.get": "^4.4.2",
-    "lodash.merge": "^4.6.2",
-    "lodash.set": "^4.3.2",
+    "lodash": "^4.17.21",
     "path-to-regexp": "^8.1.0"
   },
   "files": [

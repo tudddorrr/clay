@@ -1,7 +1,7 @@
 import { pathToRegexp } from 'path-to-regexp'
 import { Context } from 'koa'
 import { Route, Request, Response, HttpMethod, RedirectResponse, RouteHandler, Service } from './service'
-import set from 'lodash.set'
+import { set } from 'lodash'
 import { getServiceKey } from './utils/getServiceKey'
 
 export interface ServiceDocs {
