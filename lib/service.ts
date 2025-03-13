@@ -3,27 +3,29 @@ import { RouteDocs } from './documenter'
 
 export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
 
-export interface Route {
+export type RouteConfig = {
   method: HttpMethod
-  path?: string
-  handler?: string | Function
+  path: string
+  handler: string
   docs?: RouteDocs
 }
 
-export type Request = {
+export type Routes = RouteConfig[]
+
+export type DefaultBody = Record<string, any>
+
+export type Request<T = DefaultBody> = {
   readonly ctx: Context
-  readonly headers: { readonly [key: string]: string }
+  readonly headers: Record<string, string>
   readonly path: string
-  readonly query?: { readonly [key: string]: string }
-  readonly params?: { readonly [key: string]: string }
-  readonly body?: { readonly [key: string]: any }
+  readonly query: Record<string, string>
+  readonly params: Record<string, string>
+  readonly body: T
 }
 
-export type Response = {
+export type Response<T = DefaultBody> = {
   readonly status: number
-  readonly body?: {
-    readonly [key: string]: any
-  }
+  readonly body?: T
 }
 
 export type RedirectStatus = 300 | 301 | 302 | 303 | 304 | 307 | 308
@@ -33,40 +35,23 @@ export type RedirectResponse = {
   readonly url: string
 }
 
-export type RouteHandler = (req: Request) => Response | RedirectResponse
+export type RouteHandler<T = DefaultBody, K = DefaultBody> = (req: Request<T>) => Response<K> | RedirectResponse
 
+export const SERVICE_ROUTES = Symbol("serviceRoutes")
 export class Service {
-  attached: boolean
+  attached: boolean = false
 
-  routes: Route[]
-  definedRoutes: Route[]
-
-  setRoutes(routes: Route[]) {
-    this.routes = routes
-    this.attached = true
+  constructor() {
+    if (!Reflect.has(this, SERVICE_ROUTES)) {
+      Reflect.set(this, SERVICE_ROUTES, [])
+    }
   }
 
-  async index(req: Request): Promise<Response> {
-    return { status: 405 }
+  get routes(): Routes {
+    return Reflect.get(this, SERVICE_ROUTES) as Routes
   }
 
-  async get(req: Request): Promise<Response> {
-    return { status: 405 }
-  }
-
-  async post(req: Request): Promise<Response> {
-    return { status: 405 }
-  }
-
-  async put(req: Request): Promise<Response> {
-    return { status: 405 }
-  }
-
-  async patch(req: Request): Promise<Response> {
-    return { status: 405 }
-  }
-
-  async delete(req: Request): Promise<Response> {
-    return { status: 405 }
+  set routes(value: Routes) {
+    Reflect.set(this, SERVICE_ROUTES, value)
   }
 }

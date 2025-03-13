@@ -16,13 +16,16 @@ export type ValidatablePropertyConfig = BaseValidationConfig & {
   required?: boolean
 }
 
-export type Validatable = { [key: string]: ValidatablePropertyConfig } | (string | (new (...args: any[]) => any))[]
+type ValidatableEntity = new (...args: any[]) => any
+export type Validatable = { [key: string]: ValidatablePropertyConfig } | (string | ValidatableEntity)[]
 
 export type ValidationSchema = {
   query?: Validatable
   body?: Validatable
   headers?: Validatable
 }
+
+type SchemaParam = keyof ValidationSchema
 
 export type RequiredPropertyConfig = BaseValidationConfig & {
   as?: string
@@ -46,12 +49,12 @@ function reject(req: Request, key: string, message: string): void {
   }
 }
 
-async function handleValidationConfig(req: Request, config: BaseValidationConfig, schemaParam: string, key: string, value: unknown, isRequired: boolean): Promise<void> {
+async function handleValidationConfig(req: Request, config: BaseValidationConfig, schemaParam: SchemaParam, key: string, value: unknown, isRequired: boolean): Promise<void> {
   if (value === undefined) {
     if (isRequired) reject(req, key, config.error ?? `${key} is missing from the request ${schemaParam}`)
   } else {
-    const conditions: ValidationCondition[] = await config.validation?.(value, req)
-    const failedConditions = conditions?.filter((condition) => !condition.check) ?? []
+    const conditions: ValidationCondition[] = await config.validation?.(value, req) ?? []
+    const failedConditions = conditions.filter((condition) => !condition.check)
 
     for (const failedCondition of failedConditions) {
       reject(req, key, failedCondition.error ?? `The provided ${key} value is invalid`)
@@ -60,8 +63,9 @@ async function handleValidationConfig(req: Request, config: BaseValidationConfig
   }
 }
 
-async function handleArraySchema(req: Request, schema: ValidationSchema, schemaParam: string): Promise<void> {
-  for (let item of schema[schemaParam]) {
+async function handleArraySchema(req: Request, schema: ValidationSchema, schemaParam: SchemaParam): Promise<void> {
+  const validatableArray = schema[schemaParam] as (string | ValidatableEntity)[]
+  for (let item of validatableArray) {
     if (typeof item === 'string') {
       const value = req[schemaParam]?.[item]
       if (value === undefined) reject(req, item, `${item} is missing from the request ${schemaParam}`)
@@ -70,9 +74,9 @@ async function handleArraySchema(req: Request, schema: ValidationSchema, schemaP
 
       for (const entry of Object.entries(entity.prototype._requestRequirements ?? {})) {
         const key = entry[0]
-        const config: RequiredPropertyConfig = entry[1]
+        const config = entry[1] as RequiredPropertyConfig
 
-        let isRequired = config.methods.includes(req.ctx.method as HttpMethod)
+        let isRequired = config.methods?.includes(req.ctx.method as HttpMethod) ?? false
         if (typeof config.requiredIf === 'function') {
           isRequired = await config.requiredIf(req)
         }
@@ -84,17 +88,17 @@ async function handleArraySchema(req: Request, schema: ValidationSchema, schemaP
   }
 }
 
-async function handleObjectSchema(req: Request, schema: ValidationSchema, schemaParam: string): Promise<void> {
-  for (const key of Object.keys(schema[schemaParam])) {
-    const validatable: ValidatablePropertyConfig = schema[schemaParam][key]
+async function handleObjectSchema(req: Request, schema: ValidationSchema, schemaParam: SchemaParam): Promise<void> {
+  for (const key of Object.keys(schema[schemaParam] ?? {})) {
+    const validatable = (schema[schemaParam] as Record<string, ValidatablePropertyConfig>)[key]
     const value = req[schemaParam]?.[key]
 
-    const isRequired = await validatable.requiredIf?.(req) ?? validatable.required 
+    const isRequired = await validatable.requiredIf?.(req) ?? validatable.required ?? false
     await handleValidationConfig(req, validatable, schemaParam, key, value, isRequired)
   }
 }
 
-async function checkValidationSchemaParam(req: Request, schema: ValidationSchema, schemaParam: string): Promise<void> {
+async function checkValidationSchemaParam(req: Request, schema: ValidationSchema, schemaParam: SchemaParam): Promise<void> {
   if (Array.isArray(schema[schemaParam])) {
     // e.g. { body: ['name', 'email', MyEntity] }
     await handleArraySchema(req, schema, schemaParam)
@@ -128,8 +132,7 @@ export const Validate = (schema: ValidationSchema) => (tar: Object, propertyKey:
 
   globalThis.clay.docs.documentValidationSchema(tar.constructor.name, propertyKey, schema)
 
-  descriptor.value = async function (...args): Promise<Response> {
-    const req: Request = args[0]
+  descriptor.value = async function (req: Request): Promise<Response> {
     req.ctx.state.errors = {}
 
     if (schema.query) await checkValidationSchemaParam(req, schema, 'query')
@@ -145,7 +148,7 @@ export const Validate = (schema: ValidationSchema) => (tar: Object, propertyKey:
       }
     }
 
-    const result = await base.apply(this, args)
+    const result = await base.apply(this, [req])
     return result
   }
 

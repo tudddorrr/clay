@@ -6,10 +6,14 @@ These decorators allow you to run functions before or after your request handler
 
 This will run _before_ your request handler, allowing you to access the request:
 
-```
+```typescript
 class UserService {
+  @Route({
+    method: 'GET',
+    path: '/:id'
+  })
   @Before(async (req: Request): Promise<void> => {
-    const userId = req.query.userId
+    const userId = req.params.id
     const user = database.set(userId, {
       lastSeenAt: Date.now()
     })
@@ -24,10 +28,14 @@ class UserService {
 
 This will run _after_ your request handler, allowing you to access the request and response:
 
-```
+```typescript
 class UserService {
+  @Route({
+    method: 'GET',
+    path: '/:id'
+  })
   @After(async (req: Request, res: Response): Promise<void> => {
-    const userId = req.query.userId
+    const userId = req.params.id
 
     if (res.status === 200) {
       database.set(userId, {
@@ -43,15 +51,19 @@ class UserService {
 
 Both decorators have a `caller` parameter, allowing you to access the instance of the service that is handling the request:
 
-```
+```typescript
 class UserService {
+  @Route({
+    method: 'GET',
+    path: '/:id'
+  })
   @Before(async (req: Request, caller: UserService): Promise<void> => {
     caller.setLastSeenAt(req)
   })
   async get(req: Request): Promise<Response> { ... }
 
   setLastSeenAt(req: Request): void {
-    const userId = req.query.userId
+    const userId = req.params.id
     database.set(userId, {
       lastSeenAt: Date.now()
     })
@@ -61,15 +73,19 @@ class UserService {
 
 or,
 
-```
+```typescript
 class UserService {
+  @Route({
+    method: 'GET',
+    path: '/:id'
+  })
   @After(async (req: Request, res: Response, caller: UserService): Promise<void> => {
     caller.setLastSeenAt(req, res)
   })
   async get(req: Request): Promise<Response> { ... }
 
   setLastSeenAt(req: Request, res: Response): void {
-    const userId = req.query.userId
+    const userId = req.params.id
 
     if (res.status === 200) {
       database.set(userId, {

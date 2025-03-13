@@ -15,18 +15,18 @@ export enum ClayParamRequiredType {
   SOMETIMES = 'SOMETIMES'
 }
 
-export interface ParamDocs {
+export type ParamDocs = {
   [key: string]: string
 }
 
-export interface RouteSample {
+export type RouteSample = {
   title: string
   sample: {
     [key: string]: unknown
   }
 }
 
-export interface RouteDocs {
+export type RouteDocs = {
   description?: string
   params?: {
     [ClayParamType.QUERY]?: ParamDocs
@@ -87,10 +87,10 @@ export class ClayDocs {
   }
 
   private getQueuedForwardedRequestServices(newService: ClayService, queuedForwardedRequest: QueuedForwardedRequest): ClayService[] {
-    const decoratedService = [...this.services, newService].find((service) => service.name === queuedForwardedRequest.decoratedServiceClassName)
+    const decoratedService = [...this.services, newService].find((service) => service.name === queuedForwardedRequest.decoratedServiceClassName)!
     const forwardedService = [...this.services, newService].find((service) => {
       return getServiceKey(service.path) === queuedForwardedRequest.forwardedServiceKey
-    })
+    })!
     return [decoratedService, forwardedService]
   }
 
@@ -119,8 +119,8 @@ export class ClayDocs {
       const [decoratedService, forwardedService] = this.getQueuedForwardedRequestServices(service, queuedForwardedRequest)
 
       if (decoratedService && forwardedService) {
-        const decoratedServiceRoute = decoratedService.routes.find((route) => route.getHandler() === queuedForwardedRequest.decoratedMethodName)
-        const forwardedServiceRoute = forwardedService.routes.find((route) => route.getHandler() === queuedForwardedRequest.forwardedMethodName)
+        const decoratedServiceRoute = decoratedService.routes.find((route) => route.getHandler() === queuedForwardedRequest.decoratedMethodName)!
+        const forwardedServiceRoute = forwardedService.routes.find((route) => route.getHandler() === queuedForwardedRequest.forwardedMethodName)!
 
         if (!decoratedServiceRoute.description && decoratedServiceRoute.params.length === 0) {
           decoratedServiceRoute.description = forwardedServiceRoute.description ?? decoratedServiceRoute.description

@@ -1,7 +1,6 @@
-import { expect } from 'chai'
 import Koa from 'koa'
 import supertest from 'supertest'
-import { Request, Response, service, Service, forwardRequest, ForwardTo, Docs, ClayDocs } from '../lib'
+import { Request, Response, service, Service, forwardRequest, ForwardTo, ClayDocs, Route } from '../lib'
 
 describe('Request forwarding', () => {
   beforeEach(() => {
@@ -10,12 +9,18 @@ describe('Request forwarding', () => {
 
   it('should correctly forward a request', async () => {
     class SpecificService extends Service {
+      @Route({
+        method: 'GET'
+      })
       async index(): Promise<Response> {
         return { status: 200 }
       }
     }
   
     class GenericService extends Service {
+      @Route({
+        method: 'GET'
+      })
       @ForwardTo('specific', 'index')
       async index(req: Request): Promise<Response> {
         return await forwardRequest(req)
@@ -33,11 +38,14 @@ describe('Request forwarding', () => {
 
   it('should copy the documentation from the forwarded-to service', async () => {
     class SpecificService extends Service {
-      @Docs({
-        description: 'The description',
-        params: {
-          query: {
+      @Route({
+        method: 'GET',
+        docs: {
+          description: 'The description',
+          params: {
+            query: {
             specificityLevel: 'How specific does it need to be?'
+            }
           }
         }
       })
@@ -50,6 +58,9 @@ describe('Request forwarding', () => {
     }
   
     class GenericService extends Service {
+      @Route({
+        method: 'GET'
+      })
       @ForwardTo('specific', 'index')
       async index(req: Request): Promise<Response> {
         return await forwardRequest(req)
@@ -88,8 +99,11 @@ describe('Request forwarding', () => {
 
   it('should not override the description of the forwarding service', async () => {
     class SpecificService extends Service {
-      @Docs({
-        description: 'The specific description'
+      @Route({
+        method: 'GET',
+        docs: {
+          description: 'The specific description'
+        }
       })
       async index(): Promise<Response> {
         return {
@@ -100,8 +114,11 @@ describe('Request forwarding', () => {
     }
   
     class GenericService extends Service {
-      @Docs({
-        description: 'The generic description'
+      @Route({
+        method: 'GET',
+        docs: {
+          description: 'The generic description'
+        }
       })
       @ForwardTo('specific', 'index')
       async index(req: Request): Promise<Response> {
@@ -134,11 +151,14 @@ describe('Request forwarding', () => {
 
   it('should still document forwarded requests to hidden services', async () => {
     class SpecificService extends Service {
-      @Docs({
-        description: 'The description',
-        params: {
-          query: {
+      @Route({
+        method: 'GET',
+        docs: {
+          description: 'The description',
+          params: {
+            query: {
             specificityLevel: 'How specific does it need to be?'
+            }
           }
         }
       })
@@ -151,6 +171,9 @@ describe('Request forwarding', () => {
     }
   
     class GenericService extends Service {
+      @Route({
+        method: 'GET'
+      })
       @ForwardTo('specific', 'index')
       async index(req: Request): Promise<Response> {
         return await forwardRequest(req)
@@ -189,6 +212,9 @@ describe('Request forwarding', () => {
 
   it('should include the request extra in the forwarded request', async () => {
     class SpecificService extends Service {
+      @Route({
+        method: 'GET'
+      })
       async index(req: Request): Promise<Response> {
         return {
           status: 200,
@@ -200,6 +226,9 @@ describe('Request forwarding', () => {
     }
   
     class GenericService extends Service {
+      @Route({
+        method: 'GET'
+      })
       @ForwardTo('specific', 'index')
       async index(req: Request): Promise<Response> {
         return await forwardRequest(req, {
@@ -225,12 +254,15 @@ describe('Request forwarding', () => {
 
   it('should not copy the documentation from the forwarded-to service if the route already has documentation ', async () => {
     class SpecificService extends Service {
-      @Docs({
-        description: 'The description',
-        params: {
-          query: {
-            specificityLevel: 'How specific does it need to be?',
-            requestSource: 'The source of the request'
+      @Route({
+        method: 'GET',
+        docs: {
+          description: 'The description',
+          params: {
+            query: {
+              specificityLevel: 'How specific does it need to be?',
+              requestSource: 'The source of the request'
+            }
           }
         }
       })
@@ -243,11 +275,14 @@ describe('Request forwarding', () => {
     }
   
     class GenericService extends Service {
-      @Docs({
-        description: 'The description',
-        params: {
-          query: {
-            specificityLevel: 'How specific does it need to be?'
+      @Route({
+        method: 'GET',
+        docs: {
+          description: 'The description',
+          params: {
+            query: {
+              specificityLevel: 'How specific does it need to be?'
+            }
           }
         }
       })

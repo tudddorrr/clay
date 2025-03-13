@@ -5,7 +5,7 @@
 @Validate runs before your function. You can validate keys in a request's `body`, `query` or `headers`.
 When validation fails, an error object will be returned in the response body with a 400 status code:
 
-```
+```typescript
 {
   errors: {
     username: ['username is missing from the request'],
@@ -20,7 +20,7 @@ There are two ways to define validation with this decorator:
 
 The array schema is a simple way to define required keys:
 
-```
+```typescript
 @Validate({
   body: ['username', 'age'],
 })
@@ -31,7 +31,7 @@ If any of the keys are missing (i.e. undefined), validation will fail.
 
 You can additionally pass in a class type to automatically validate any properties decorated with @Required():
 
-```
+```typescript
 import User from '../entities/user'
 
 @Validate({
@@ -46,7 +46,7 @@ The advantage of this is that you can keep complex validation rules inside your 
 
 The object schema allows you to have greater control over your validation rules. 
 
-```
+```typescript
 @Validate({
   body: {
     username: {
@@ -60,7 +60,7 @@ async post(req: Request): Promise<Response> { ... }
 
 Using the object schema you can define custom error messages for when a key is missing. Additionally you can specify if a key is required using the `required` property or the `requiredIf` callback:
 
-```
+```typescript
 @Validate({
   body: {
     email: {
@@ -80,7 +80,7 @@ Note: if you provide both a `required` and a `requiredIf`, the `required` will t
 
 You can also perform multiple validation checks on a key. These will run if the key is present, regardless if it is required or not:
 
-```
+```typescript
 @Validate({
   body: {
     email: {
@@ -102,7 +102,7 @@ async post(req: Request): Promise<Response> { ... }
 
 If multiple conditions fail they will all be present in the error object, for example if an email is not provided above, the error response will look like this:
 
-```
+```typescript
 {
   errors: {
     email: [
@@ -115,7 +115,7 @@ If multiple conditions fail they will all be present in the error object, for ex
 
 You can also add a `break` key to your validation conditions. If this is set to `true` and the check fails, no further errors will be added to the errors array:
 
-```
+```typescript
 @Validate({
   body: {
     email: {
@@ -142,7 +142,7 @@ You can also add a `break` key to your validation conditions. If this is set to 
 
 By default, if a property is decorated with @Required, it will be required on POST and PUT requests. You can also specify a `methods` array to control this:
 
-```
+```typescript
 class User {
   @Required({ methods: ['PUT', 'PATCH'] }) // required for PUT and PATCH requests
   id: number
@@ -157,7 +157,7 @@ class User {
 
 Sometimes your request body may have keys that are used to determine other keys, for example an id that may be a foreign key to another table. The `as` key allows you to handle these situations:
 
-```
+```typescript
 class User {
   id: number
 
@@ -171,7 +171,7 @@ class User {
 
 As mentioned above, this decorator extends @Validate's object schema so you can use `requiredIf` and `validation`:
 
-```
+```typescript
 class User {
   id: number
 

@@ -1,6 +1,4 @@
-import chai from 'chai'
 import { getServiceKey } from '../lib/utils/getServiceKey'
-const expect = chai.expect
 
 describe('getServiceKey', () => {
   it('should dotify paths', () => {

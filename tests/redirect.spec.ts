@@ -1,9 +1,12 @@
 import Koa from 'koa'
 import supertest from 'supertest'
-import { RedirectResponse, service, Service, redirect } from '../lib'
+import { RedirectResponse, service, Service, redirect, Route } from '../lib'
 
 describe('Redirects', () => {
   class GenericService extends Service {
+    @Route({
+      method: 'GET'
+    })
     async index(): Promise<RedirectResponse> {
       return redirect('/new-location', 308)
     }

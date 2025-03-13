@@ -1,9 +1,6 @@
-import chai from 'chai'
 import Koa from 'koa'
-import { beforeEach } from 'mocha'
 import supertest from 'supertest'
-import { ClayDocs, Request, Response, service, Service } from '../lib'
-const expect = chai.expect
+import { ClayDocs, Request, Response, Route, service, Service } from '../lib'
 
 describe('Service documentation', () => {
   beforeEach(() => {
@@ -12,6 +9,9 @@ describe('Service documentation', () => {
 
   it('should set a description on the service', async () => {
     class DocService extends Service {
+      @Route({
+        method: 'GET'
+      })
       async index(req: Request): Promise<Response> {
         return {
           status: 200,
@@ -56,6 +56,9 @@ describe('Service documentation', () => {
 
   it('should hide services', async () => {
     class DocService extends Service {
+      @Route({
+        method: 'GET'
+      })
       async index(req: Request): Promise<Response> {
         return {
           status: 200,

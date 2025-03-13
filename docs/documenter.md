@@ -6,7 +6,7 @@ Clay documents your services, its routes and their parameters out-of-the-box.
 
 By default, documentation for a service looks like this:
 
-```
+```typescript
 {
   name: 'UserService',
   description: '',
@@ -20,7 +20,7 @@ The name reflects the stringified version of the class name and the routes are p
 
 To set the description of the service, you can optionally pass `ServiceDocs` to the middleware:
 
-```
+```typescript
 app.use(service('/users', new UserService(), {
   docs: {
     description: 'The service for users'
@@ -30,7 +30,7 @@ app.use(service('/users', new UserService(), {
 
 You can also hide a service to prevent it and its routes from being surfaced in the documentation:
 
-```
+```typescript
 app.use(service('/users', new UserService(), {
   docs: {
     hidden: true
@@ -42,7 +42,7 @@ app.use(service('/users', new UserService(), {
 
 By default, documentation for a route looks like this:
 
-```
+```typescript
 {
   method: 'PUT',
   path: '/v1/users/:id',
@@ -53,28 +53,15 @@ By default, documentation for a route looks like this:
 
 ### Descriptions
 
-Providing route descriptions depends on how you defined your routes:
+When defining a route using the `@Route` decorator, you can optionally pass a `RouteDocs` config:
 
-If your routes are defined via the `@Routes` decorator, you can optionally pass a `RouteDocs` to each route:
-
-```
-@Routes([
-  {
-    method: 'PUT',
-    path: '/:id',
-    handler: 'put',
-    docs: {
-      description: 'Update a user'
-    }
+```typescript
+@Route({
+  method: 'PUT',
+  path: '/:id',
+  docs: {
+    description: 'Update a user'
   }
-])
-```
-
-If you're using implicit routes, you can use the `@Docs` to provide documentation for the decorated route:
-
-```
-@Docs({
-  description: 'Update a user'
 })
 async put(): Promise<void> {
   return {
@@ -87,7 +74,7 @@ async put(): Promise<void> {
 
 Clay has four types of params: query keys, body keys, headers and route params (e.g. `:id`), these look like this:
 
-```
+```typescript
 {
   name: 'search',
   description: '',
@@ -110,35 +97,15 @@ Route params are always marked as required.
 
 Param descriptions can be defined the same way that route descriptions are.
 
-With the `@Routes` decorator:
-
-```
-@Routes([
-  {
-    method: 'PUT',
-    path: '/:id',
-    handler: 'put',
-    docs: {
-      description: 'Update a user',
-      params: {
-        route: {
-          id: 'The id of the user'
-        }
+```typescript
+@Route({
+  docs: {
+    description: 'Update a user',
+    params: {
+      route: {
+        id: 'The id of the user'
       }
-    }
-  }
-])
-```
-
-Or, with the `@Docs` decorator:
-
-```
-@Docs({
-  description: 'Update a user',
-  params: {
-    route: {
-      id: 'The id of the user'
-    }
+    }   
   }
 })
 async put(): Promise<void> {
@@ -152,48 +119,46 @@ async put(): Promise<void> {
 
 You can also hide routes by passing `hidden: true` to the `RouteDocs` object, preventing it from appearing in docuemtnation:
 
-```
-@Routes([
-  {
-    method: 'PUT',
-    path: '/:id',
-    handler: 'put',
-    docs: {
-      hidden: true
-    }
+```typescript
+@Route({
+  docs: {
+    hidden: true
   }
-])
+})
+async put(): Promise<void> {
+  return {
+    status: 204
+  }
+}
 ```
 
 ## Samples
 
 You can add example requests and responses using the `samples` key in the `RouteDocs`:
 
-```
-@Routes([
-  {
-    method: 'POST',
-    handler: 'POST',
-    docs: {
-      samples: [
-        {
-          title: 'Sample request',
-          sample: {
-            name: 'John Smith',
-            password: 'p4ssw0rd'
-          }
-        },
-        {
-          title: 'Sample response',
-          sample: {
-            id: 1,
-            name: 'John Smith',
-            createdAt: '2022-01-01 02:22:16'
-          }
+```typescript
+@Route({
+  method: 'POST',
+  docs: {
+    samples: [
+      {
+        title: 'Sample request',
+        sample: {
+          name: 'John Smith',
+          password: 'p4ssw0rd'
         }
-      ]
-    }
+      },
+      {
+        title: 'Sample response',
+        sample: {
+          id: 1,
+          name: 'John Smith',
+          createdAt: '2022-01-01 02:22:16'
+        }
+      }
+    ]
   }
+})
 ```
 
 A sample requires a title and a sample object.
@@ -204,8 +169,11 @@ Documentation is stored inside the global `Clay` object and can be accessed via 
 
 To always have up to date documentation, you could implement a route that simply returns the docs, which can then be read by a frontend:
 
-```
+```typescript
 export default class DocumentationService extends Service {
+  @Route({
+    method: 'GET'
+  })
   async index(): Promise<Response> {
     return {
       status: 200,

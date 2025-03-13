@@ -1,12 +1,11 @@
 {
   "name": "koa-clay",
-  "version": "6.6.1",
+  "version": "7.0.0",
   "description": "An ultra convenient minimal framework for building Koa apps",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "dev": "nodemon tests/fixtures/index.ts",
-    "test": "mocha -r ts-node/register 'tests/**/*.spec.ts'",
+    "test": "vitest",
     "prebuild": "rm -rf -f dist",
     "build": "tsc -p tsconfig.build.json",
     "prepare": "npm t && npm run build"
@@ -28,21 +27,22 @@
   "devDependencies": {
     "@types/koa": "^2.15.0",
     "@types/koa-bodyparser": "^4.3.12",
-    "@types/mocha": "^10.0.8",
-    "@types/node": "^22.5.4",
-    "chai": "^4.5.0",
-    "chai-http": "^5.0.0",
-    "koa": "^2.15.3",
-    "mocha": "^10.7.3",
-    "nodemon": "^3.1.4",
+    "@types/lodash": "^4.17.16",
+    "@types/node": "^22.13.10",
+    "@types/supertest": "^6.0.2",
+    "koa": "^2.16.0",
+    "nodemon": "^3.1.9",
     "supertest": "^7.0.0",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.6.2"
+    "typescript": "^5.8.2",
+    "vitest": "^3.0.8"
   },
   "dependencies": {
     "koa-bodyparser": "^4.4.1",
     "lodash": "^4.17.21",
-    "path-to-regexp": "^8.1.0"
+    "path-to-regexp": "^8.2.0"
+  },
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "4.35.0"
   },
   "files": [
     "dist"

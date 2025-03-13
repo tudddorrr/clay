@@ -1,8 +1,6 @@
-import chai from 'chai'
 import Koa from 'koa'
 import supertest from 'supertest'
-import { HasPermission, Policy, PolicyDenial, PolicyResponse, Request, Response, service, Service } from '../lib'
-const expect = chai.expect
+import { HasPermission, Policy, PolicyDenial, PolicyResponse, Request, Response, service, Service, Route } from '../lib'
 
 describe('@HasPermission decorator', () => {
   it('should not return an error if a @HasPermission is met', async () => {
@@ -13,6 +11,9 @@ describe('@HasPermission decorator', () => {
     }
     
     class SecretService extends Service {
+      @Route({
+        method: 'GET'
+      })
       @HasPermission(SecretPolicy, 'index')
       async index(req: Request): Promise<Response> {
         return {
@@ -37,6 +38,9 @@ describe('@HasPermission decorator', () => {
     }
     
     class SecretService extends Service {
+      @Route({
+        method: 'GET'
+      })
       @HasPermission(SecretPolicy, 'index')
       async index(req: Request): Promise<Response> {
         return {
@@ -61,6 +65,9 @@ describe('@HasPermission decorator', () => {
     }
     
     class SecretService extends Service {
+      @Route({
+        method: 'GET'
+      })
       @HasPermission(SecretPolicy, 'index')
       async index(req: Request): Promise<Response> {
         return {
@@ -86,6 +93,9 @@ describe('@HasPermission decorator', () => {
     }
     
     class SecretService extends Service {
+      @Route({
+        method: 'GET'
+      })
       @HasPermission(SecretPolicy, 'index')
       async index(req: Request): Promise<Response> {
         return {
