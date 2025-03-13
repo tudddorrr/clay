@@ -2,7 +2,7 @@
 
 @HasPermission runs before your function to check if the endpoint can be called:
 
-```
+```typescript
 class SecretsPolicy extends Policy {
   async get(req: Request): Promise<PolicyResponse> {
     return req.ctx.user.hasScope('get')
@@ -28,7 +28,7 @@ Policy classes should extend the `Policy` class which simply sets the Koa contex
 
 To override the default error code and message, return a `PolicyDenial`. This will pass any data you specify and the optional status code (defaulting to 403) to Koa's throw function.
 
-```
+```typescript
 async put(req: Request): Promise<PolicyResponse> {
   return new PolicyDenial({ message: 'Method not implemented yet. Come back later' }, 405)
 }

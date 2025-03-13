@@ -1,96 +1,43 @@
 import { pathToRegexp } from 'path-to-regexp'
-import { Context } from 'koa'
-import { Route, Request, Response, HttpMethod, RedirectResponse, RouteHandler, Service } from './service'
+import { Context, Next } from 'koa'
+import { Request, Response, RedirectResponse, RouteHandler, Service, RouteConfig, DefaultBody } from './service'
 import { set } from 'lodash'
 import { getServiceKey } from './utils/getServiceKey'
 
-export interface ServiceDocs {
+export type ServiceDocs = {
   hidden?: boolean
   description?: string
 }
 
-export interface ServiceOpts {
+export type ServiceOpts = {
   prefix?: string
   debug?: boolean
   docs?: ServiceDocs
 }
 
-const httpMethods: HttpMethod[] = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
-
-const buildDefaultRoutes = (): Route[] => {
-  const routes: Route[] = []
-
-  httpMethods.forEach((method: HttpMethod) => {
-    routes.push({
-      method,
-      path: `${method === 'POST' ? '' : '/:id'}`,
-      handler: method.toLowerCase()
-    })
-  })
-  
-  routes.push({
-    method: 'GET',
-    path: '',
-    handler: 'index'
-  })
-
-  return routes
+const getRouteHandler = <T extends Service>(service: T, route: RouteConfig): RouteHandler => {
+  return service[route.handler as keyof T] as unknown as RouteHandler
 }
 
-const getDefaultPathForMethod = (method: HttpMethod): string => {
-  const defaultRoutes: Route[] = buildDefaultRoutes()
-  if (method === 'GET') {
-    return ''
-  } else {
-    return defaultRoutes.find((route) => route.method === method)?.path ?? ''
-  }
-}
-
-const getRouteHandler = (service: Service, route: Route): RouteHandler => {
-  if (typeof route.handler === 'string') {
-    return service[route.handler]
-  } else if (typeof route.handler === 'function') {
-    return route.handler(service)
-  }
-}
-
-const buildDebugRoute = (route: Route) => {
+const buildDebugRoute = (route: RouteConfig) => {
   const handler = typeof route.handler === 'function' ? '[Function]' : `${route.handler}()`
   return `${route.method} ${route.path} => ${handler}`
 }
 
-const setServiceRoutes = (service: Service, path: string, opts: ServiceOpts): void => {
-  const definedRoutes: Route[] = service.definedRoutes?.map((route: Route) => {
-    return {
-      ...route,
-      path: route.path ?? getDefaultPathForMethod(route.method) ?? '',
-      handler: route.handler ?? route.method.toLowerCase()
-    }
-  }) ?? []
-
-  const routes: Route[] = buildDefaultRoutes().filter((route) => {
-    // check implicit route has a handler
-    if (!service.constructor.prototype.hasOwnProperty(route.handler as string)) return false
-
-    // check for overlap between defined routes and implicit routes so that there's no doubling-up
-    return !definedRoutes.find((defined) => route.method === defined.method && route.handler === defined.handler)
-  }).concat(definedRoutes).map((route: Route) => ({
-    ...route,
-    path: (opts.prefix ?? '') + path + route.path
-  }))
-
-  service.setRoutes(routes)
-
-  if (opts.debug) {
-    console.log(`Available ${path} service routes:`)
-    console.log(service.routes.map(buildDebugRoute))
-  }
-}
-
 const attachService = (ctx: Context, path: string, service: Service, opts: ServiceOpts): void => {
   if (!service.attached) {
-    setServiceRoutes(service, path, opts)
+    if (opts.debug) {
+      console.log(`Available ${path} service routes:`)
+      console.log(service.routes.map(buildDebugRoute))
+    }
+
+    service.routes = service.routes.map((route) => ({
+      ...route,
+      path: (opts.prefix ?? '') + path + route.path
+    }))
+
     globalThis.clay.docs.documentService(service, path, opts)
+    service.attached = true
   }
 
   set(ctx.state, `services.${getServiceKey(path)}.service`, service)
@@ -106,10 +53,10 @@ const buildParams = (ctx: Context, path: string): any => {
   }, {})
 }
 
-export function service(path: string, service: Service, opts: ServiceOpts = {}) {
+export function service<T extends Service>(path: string, service: T, opts: ServiceOpts = {}) {
   const debug = opts.debug
 
-  return async (ctx, next) => {
+  return async (ctx: Context, next: Next) => {
     attachService(ctx, path, service, opts)
 
     const route = service.routes.find((r) => r.method === ctx.method && pathToRegexp(r.path).regexp.test(ctx.path))
@@ -130,11 +77,11 @@ export function service(path: string, service: Service, opts: ServiceOpts = {}) 
 
     const data: Request = {
       ctx,
-      query: ctx.query,
+      query: (ctx.query ?? {}) as Record<string, string>,
       path: ctx.path,
-      headers: ctx.headers,
+      headers: (ctx.headers ?? {}) as Record<string, string>,
       params: buildParams(ctx, route.path),
-      body: ctx.request.body
+      body: 'body' in ctx.request ? (ctx.request.body as DefaultBody) : {}
     }
 
     const res: Response | RedirectResponse = await handler.apply(service, [data])

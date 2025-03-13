@@ -1,12 +1,13 @@
-import { Response, Request, Service } from '../service'
+import { Response, Request, Service, RouteHandler, DefaultBody } from '../service'
 import { merge } from 'lodash'
 
-type ForwardHandler = {
-  service: Service,
-  handler: string
+type ForwardHandler<T extends Service> = {
+  service: T,
+  handler: keyof T
 }
 
-export async function forwardRequest(req: Request, reqExtra: Partial<Request> = {}): Promise<Response> {
-  const { service, handler } = req.ctx.state.forwardHandler as ForwardHandler
-  return await service[handler].apply(service, [merge(req, reqExtra)])
+export async function forwardRequest<K>(req: Request, reqExtra: Partial<Request> = {}): Promise<Response<K>> {
+  const { service, handler } = req.ctx.state.forwardHandler as ForwardHandler<Service>
+  const handlerFn = service[handler] as unknown as RouteHandler<DefaultBody, K>
+  return handlerFn.apply(service, [merge(req, reqExtra)])
 }

@@ -1,20 +1,20 @@
-import chai from 'chai'
 import Koa from 'koa'
 import bodyParser from 'koa-bodyparser'
-import { beforeEach } from 'mocha'
 import supertest from 'supertest'
-import { ClayDocs, Docs, Request, Response, RouteSample, service, Service, Validate } from '../lib'
-const expect = chai.expect
+import { ClayDocs, Request, Response, RouteSample, service, Service, Validate, Route } from '../lib'
 
-describe('@Docs decorator', () => {
+describe('@Route decorator docs', () => {
   beforeEach(() => {
     globalThis.clay.docs = new ClayDocs()
   })
 
   it('should set a description on the route', async () => {
     class UserService extends Service {
-      @Docs({
-        description: 'Get all users'
+      @Route({
+        method: 'GET',
+        docs: {
+          description: 'Get all users'
+        }
       })
       async index(req: Request): Promise<Response> {
         return {
@@ -56,8 +56,11 @@ describe('@Docs decorator', () => {
 
   it('should hide routes', async () => {
     class UserService extends Service {
-      @Docs({
-        hidden: true
+      @Route({
+        method: 'GET',
+        docs: {
+          hidden: true
+        }
       })
       async index(req: Request): Promise<Response> {
         return {
@@ -68,6 +71,9 @@ describe('@Docs decorator', () => {
         }
       }
 
+      @Route({
+        method: 'POST'
+      })
       async post(req: Request): Promise<Response> {
         return {
           status: 204
@@ -105,10 +111,13 @@ describe('@Docs decorator', () => {
 
   it('should document parameters', async () => {
     class UserService extends Service {
-      @Docs({
-        params: {
-          query: {
-            search: 'An optional search query to find users by name'
+      @Route({
+        method: 'GET',
+        docs: {
+          params: {
+            query: {
+              search: 'An optional search query to find users by name'
+            }
           }
         }
       })
@@ -121,10 +130,14 @@ describe('@Docs decorator', () => {
         }
       }
 
-      @Docs({
-        params: {
-          route: {
-            id: 'The id of the user'
+      @Route({
+        method: 'PUT',
+        path: '/:id',
+        docs: {
+          params: {
+            route: {
+              id: 'The id of the user'
+            }
           }
         }
       })
@@ -151,20 +164,6 @@ describe('@Docs decorator', () => {
             routes: [
               {
                 description: '',
-                method: 'PUT',
-                params: [
-                  {
-                    type: 'route',
-                    required: 'YES',
-                    name: 'id',
-                    description: 'The id of the user'
-                  }
-                ],
-                path: '/users/:id',
-                samples: []
-              },
-              {
-                description: '',
                 method: 'GET',
                 params: [
                   {
@@ -176,6 +175,20 @@ describe('@Docs decorator', () => {
                 ],
                 path: '/users',
                 samples: []
+              },
+              {
+                description: '',
+                method: 'PUT',
+                params: [
+                  {
+                    type: 'route',
+                    required: 'YES',
+                    name: 'id',
+                    description: 'The id of the user'
+                  }
+                ],
+                path: '/users/:id',
+                samples: []
               }
             ]
           }
@@ -186,14 +199,17 @@ describe('@Docs decorator', () => {
 
   it('should not override the requiredType of a param previously set through validation', async () => {
     class UserService extends Service {
-      @Validate({ body: ['name'] })
-      @Docs({
-        params: {
-          body: {
-            name: 'The name of the user'
+      @Route({
+        method: 'POST',
+        docs: {
+          params: {
+            body: {
+              name: 'The name of the user'
+            }
           }
         }
       })
+      @Validate({ body: ['name'] })
       async post(req: Request): Promise<Response> {
         return {
           status: 200,
@@ -255,8 +271,11 @@ describe('@Docs decorator', () => {
     }
 
     class GenericService extends Service {
-      @Docs({
-        samples: [sample]
+      @Route({
+        method: 'GET',
+        docs: {
+          samples: [sample]
+        }
       })
       async index(req: Request): Promise<Response> {
         return {

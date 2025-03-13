@@ -1,5 +1,5 @@
 import { ClayParamType, ClayParamRequiredType, RouteDocs, RouteSample } from '.'
-import { HttpMethod, Route } from '../service'
+import { HttpMethod, RouteConfig } from '../service'
 import { ClayParam } from './clay-param'
 
 export class ClayRoute {
@@ -11,7 +11,7 @@ export class ClayRoute {
   params: ClayParam[] = []
   samples: RouteSample[] = []
 
-  constructor(route: Route) {
+  constructor(route: RouteConfig) {
     this.method = route.method
     this.path = route.path
     this.handler = route.handler
@@ -40,7 +40,7 @@ export class ClayRoute {
     return this.handler.toString()
   }
 
-  createOrUpdateParam(type: ClayParamType, name: string, required?: ClayParamRequiredType, description?: string) {
+  createOrUpdateParam(type: ClayParamType, name: string, required?: ClayParamRequiredType | null, description?: string) {
     const existingParam = this.params.find((param) => param.type === type && param.name === name)
     if (existingParam) {
       if (description) existingParam.description = description
@@ -53,7 +53,7 @@ export class ClayRoute {
     }
   }
 
-  processRouteDocs(docs: RouteDocs) {
+  processRouteDocs(docs: RouteDocs | undefined) {
     if (!docs) return
 
     this.description = docs.description ?? this.description

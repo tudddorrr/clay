@@ -7,7 +7,10 @@
     "sourceMap": true,
     "outDir": "dist",
     "experimentalDecorators": true,
-    "declaration": true
+    "declaration": true,
+    "strict": true,
+    "types": ["vitest/globals", "./lib/global.d.ts"],
+    "skipLibCheck": true /* https://github.com/rollup/rollup/issues/5199 and https://github.com/vitejs/vite/issues/14513 */
   },
   "lib": ["ESNext"]
 }

@@ -6,14 +6,13 @@ export const ForwardTo = (serviceKey: string, methodName: string) => (tar: Objec
 
   globalThis.clay.docs.documentForwardedRequest(serviceKey, methodName, tar.constructor.name, propertyKey)
 
-  descriptor.value = async function (...args) {
-    const req: Request = args[0]
+  descriptor.value = async function (req: Request) {
     req.ctx.state.forwardHandler = {
       service: get(req.ctx.state, `services.${serviceKey}.service`),
       handler: methodName
     }
 
-    const result = await base.apply(this, args)
+    const result = await base.apply(this, [req])
     return result
   }
 

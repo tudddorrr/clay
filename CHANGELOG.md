@@ -1,5 +1,11 @@
 # Changelog
 
+## 7.0.0 (14th March 2025)
+* Remove concept of implicit routes
+* Remove `@Routes`, routes are now defined using individual `@Route` decorators on `Service` methods
+* Remove `@Docs`, superceeded by the new `@Route` decorator
+* `@HasPermission` is now properly typed, only allowing methods inside the specified `Policy`
+
 ## 6.5.0 (4th August 2022)
 * Add `matchedRoute` (e.g. `/users/:id/comments`)  and `matchedServiceKey` (e.g. `api.users.comments`) into the context state
 * Fix documenting entities with complex constructors that use `@Required`

@@ -1,17 +1,16 @@
 import { Request, Response, Service } from '../service'
 
-export type AfterCallback = (req: Request, res: Response, caller: Service) => Promise<void>
+export type AfterCallback<T extends Service, K, V> = (req: Request<K>, res: Response<V>, caller: T) => Promise<void>
 
- export const After = (func: AfterCallback) => (tar: Object, _: string, descriptor: PropertyDescriptor): PropertyDescriptor => {
-   const original = descriptor.value
+export const After = <T extends Service, K, V>(func: AfterCallback<T, K, V>) => (tar: T, _: string, descriptor: PropertyDescriptor): PropertyDescriptor => {
+  const original = descriptor.value
 
-   descriptor.value = async function (req: Request): Promise<Response>{
-     const res: Response = await original.apply(this, [req])
-     await func(req, res, this)
+  descriptor.value = async function (req: Request<K>): Promise<Response<V>> {
+    const res: Response<V> = await original.apply(this, [req])
+    await func(req, res, this as T)
 
-     return res
-   }
+    return res
+  }
 
-   return descriptor
- }
- 
+  return descriptor
+}

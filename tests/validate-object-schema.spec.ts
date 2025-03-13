@@ -1,8 +1,5 @@
-import chai from 'chai'
 import { Service, Request, Response, Validate, ValidationCondition } from '../lib'
 import buildMockRequest from './utils/buildMockRequest'
-
-const expect = chai.expect
 
 describe('@Validate decorator object schema', () => {
   it('should return a single error for a missing required property', async () => {
@@ -30,9 +27,9 @@ describe('@Validate decorator object schema', () => {
 
     expect(res.status).to.equal(400)
 
-    expect(res.body.errors).to.have.key('search')
-    expect(res.body.errors).to.not.have.key('itemsPerPage')
-    expect(res.body.errors.search).to.eql(['search is missing from the request query'])
+    expect(res.body?.errors).to.have.key('search')
+    expect(res.body?.errors).to.not.have.key('itemsPerPage')
+    expect(res.body?.errors.search).to.eql(['search is missing from the request query'])
   })
 
   it('should return a multiple errors for multiple missing properties', async () => {
@@ -55,10 +52,10 @@ describe('@Validate decorator object schema', () => {
     const res = await new SearchService().index(buildMockRequest())
 
     expect(res.status).to.equal(400)
-    expect(res.body.errors).to.have.keys(['search', 'itemsPerPage'])
+    expect(res.body?.errors).to.have.keys(['search', 'itemsPerPage'])
 
-    expect(res.body.errors.search).to.eql(['search is missing from the request query'])
-    expect(res.body.errors.itemsPerPage).to.eql(['itemsPerPage is missing from the request query'])
+    expect(res.body?.errors.search).to.eql(['search is missing from the request query'])
+    expect(res.body?.errors.itemsPerPage).to.eql(['itemsPerPage is missing from the request query'])
   })
 
   it('should return an error for a key with a requiredIf that resolves to true', async () => {
@@ -85,8 +82,8 @@ describe('@Validate decorator object schema', () => {
     }))
 
     expect(res.status).to.equal(400)
-    expect(res.body.errors).to.have.keys(['itemsPerPage'])
-    expect(res.body.errors.itemsPerPage).to.eql(['itemsPerPage is missing from the request query'])
+    expect(res.body?.errors).to.have.keys(['itemsPerPage'])
+    expect(res.body?.errors.itemsPerPage).to.eql(['itemsPerPage is missing from the request query'])
   })
 
   it('should not return an error for a key with a requiredIf that resolves to false', async () => {
@@ -168,10 +165,10 @@ describe('@Validate decorator object schema', () => {
     }))
 
     expect(res.status).to.equal(400)
-    expect(res.body.errors).to.have.keys(['search', 'itemsPerPage'])
+    expect(res.body?.errors).to.have.keys(['search', 'itemsPerPage'])
 
-    expect(res.body.errors.search).to.eql(['You must provide a search query'])
-    expect(res.body.errors.itemsPerPage).to.eql(['You must provide an itemsPerPage when pagination is enabled'])
+    expect(res.body?.errors.search).to.eql(['You must provide a search query'])
+    expect(res.body?.errors.itemsPerPage).to.eql(['You must provide an itemsPerPage when pagination is enabled'])
   })
 
   it('should return an error if a validation check is not met', async () => {
@@ -199,8 +196,8 @@ describe('@Validate decorator object schema', () => {
 
     expect(res.status).to.equal(400)
 
-    expect(res.body.errors).to.have.key('itemsPerPage')
-    expect(res.body.errors.itemsPerPage).to.eql(['The provided itemsPerPage value is invalid'])
+    expect(res.body?.errors).to.have.key('itemsPerPage')
+    expect(res.body?.errors.itemsPerPage).to.eql(['The provided itemsPerPage value is invalid'])
   })
 
   it('should not return an error if a validation check is not met on a missing property', async () => {
@@ -228,13 +225,13 @@ describe('@Validate decorator object schema', () => {
       @Validate({
         query: {
           itemsPerPage: {
-            validation: async (val: number): Promise<ValidationCondition[]> => [
+            validation: async (val: unknown): Promise<ValidationCondition[]> => [
               {
-                check: val > 1,
+                check: Number(val) > 1,
                 error: 'itemsPerPage must be greater than 1'
               },
               {
-                check: val > 0,
+                check: Number(val) > 0,
                 error: 'itemsPerPage must be positive'
               }
             ]
@@ -254,7 +251,7 @@ describe('@Validate decorator object schema', () => {
 
     expect(res.status).to.equal(400)
 
-    expect(res.body.errors.itemsPerPage).to.eql([
+    expect(res.body?.errors.itemsPerPage).to.eql([
       'itemsPerPage must be greater than 1',
       'itemsPerPage must be positive'
     ])
@@ -265,14 +262,14 @@ describe('@Validate decorator object schema', () => {
       @Validate({
         query: {
           itemsPerPage: {
-            validation: async (val: number): Promise<ValidationCondition[]> => [
+            validation: async (val: unknown): Promise<ValidationCondition[]> => [
               {
-                check: val > 1,
+                check: Number(val) > 1,
                 error: 'itemsPerPage must be greater than 1',
                 break: true
               },
               {
-                check: val > 0,
+                check: Number(val) > 0,
                 error: 'itemsPerPage must be positive'
               }
             ]
@@ -292,7 +289,7 @@ describe('@Validate decorator object schema', () => {
 
     expect(res.status).to.equal(400)
 
-    expect(res.body.errors.itemsPerPage).to.eql([
+    expect(res.body?.errors.itemsPerPage).to.eql([
       'itemsPerPage must be greater than 1'
     ])
   })

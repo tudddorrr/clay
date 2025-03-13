@@ -1,9 +1,6 @@
-import chai from 'chai'
 import Koa from 'koa'
-import { beforeEach } from 'mocha'
 import supertest from 'supertest'
-import { ClayDocs, Request, Response, Routes, service, Service } from '../lib'
-const expect = chai.expect
+import { ClayDocs, Request, Response, Route, service, Service } from '../lib'
 
 describe('Route documentation', () => {
   beforeEach(() => {
@@ -11,31 +8,26 @@ describe('Route documentation', () => {
   })
 
   it('should set a description on the route', async () => {
-    @Routes([
-      {
+    class UserService extends Service {
+      @Route({
         method: 'GET',
         path: '/current',
-        handler: 'current',
         docs: {
           description: 'The current user'
         }
-      },
-      {
-        method: 'GET',
-        path: '',
-        handler: 'index',
-        docs: {
-          description: 'All users'
-        }
-      }
-    ])
-    class UserService extends Service {
+      })
       async current(req: Request): Promise<Response> {
         return {
           status: 204
         }
       }
 
+      @Route({
+        method: 'GET',
+        docs: {
+          description: 'All users'
+        }
+      })
       async index(req: Request): Promise<Response> {
         return {
           status: 200,
@@ -82,31 +74,26 @@ describe('Route documentation', () => {
   })
 
   it('should hide routes', async () => {
-    @Routes([
-      {
+    class UserService extends Service {
+      @Route({
         method: 'GET',
         path: '/current',
-        handler: 'current',
         docs: {
           hidden: true
         }
-      },
-      {
-        method: 'GET',
-        path: '',
-        handler: 'index',
-        docs: {
-          description: 'All users'
-        }
-      }
-    ])
-    class UserService extends Service {
+      })
       async current(req: Request): Promise<Response> {
         return {
           status: 204
         }
       }
 
+      @Route({
+        method: 'GET',
+        docs: {
+          description: 'All users'
+        }
+      })
       async index(req: Request): Promise<Response> {
         return {
           status: 200,
@@ -146,11 +133,10 @@ describe('Route documentation', () => {
   })
 
   it('should document params', async () => {
-    @Routes([
-      {
+    class UserService extends Service {
+      @Route({
         method: 'GET',
         path: '/current',
-        handler: 'current',
         docs: {
           params: {
             headers: {
@@ -158,11 +144,15 @@ describe('Route documentation', () => {
             }
           }
         }
-      },
-      {
+      })
+      async current(req: Request): Promise<Response> {
+        return {
+          status: 204
+        }
+      }
+
+      @Route({
         method: 'GET',
-        path: '',
-        handler: 'index',
         docs: {
           params: {
             query: {
@@ -170,15 +160,7 @@ describe('Route documentation', () => {
             }
           }
         }
-      }
-    ])
-    class UserService extends Service {
-      async current(req: Request): Promise<Response> {
-        return {
-          status: 204
-        }
-      }
-
+      })
       async index(req: Request): Promise<Response> {
         return {
           status: 200,
@@ -239,11 +221,10 @@ describe('Route documentation', () => {
   })
 
   it('should correctly document route params', async () => {
-    @Routes([
-      {
+    class UserService extends Service {
+      @Route({
         method: 'GET',
         path: '/:id',
-        handler: 'get',
         docs: {
           params: {
             route: {
@@ -251,9 +232,7 @@ describe('Route documentation', () => {
             }
           }
         }
-      }
-    ])
-    class UserService extends Service {
+      })
       async get(req: Request): Promise<Response> {
         return {
           status: 200,

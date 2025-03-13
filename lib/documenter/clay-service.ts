@@ -32,17 +32,17 @@ export class ClayService {
   private processEntityRequirement = (schemaParam: ClayParamType, route: ClayRoute, entity: EntityWithRequirements) => {
     const requirements = entity.prototype._requestRequirements as { [key: string]: RequiredPropertyConfig }
     for (const [key, value] of Object.entries(requirements)) {
-      if (value.methods.includes(route.method)) {
+      if (value.methods?.includes(route.method)) {
         const required = value.requiredIf ? ClayParamRequiredType.SOMETIMES : ClayParamRequiredType.YES
         route.createOrUpdateParam(schemaParam, key, required)
       }
     }
   }
-
   private processArrayValidationSchema(route: ClayRoute, schema: ValidationSchema, schemaParam: ClayParamType) {
-    if (!schema[schemaParam]) return
+    const schemaValue = schema[schemaParam as keyof ValidationSchema]
+    if (!schemaValue) return
 
-    for (const key of schema[schemaParam]) {
+    for (const key of schemaValue as Array<string | EntityWithRequirements>) {
       if (typeof key === 'string') {
         route.createOrUpdateParam(schemaParam, key, ClayParamRequiredType.YES)
       } else {
@@ -50,11 +50,11 @@ export class ClayService {
       }
     }
   }
-
   private processObjectValidationSchema(route: ClayRoute, schema: ValidationSchema, schemaParam: ClayParamType) {
-    for (const key in schema[schemaParam]) {
-      const item = schema[schemaParam][key] as ValidatablePropertyConfig
+    const schemaValue = schema[schemaParam as keyof ValidationSchema]
+    if (!schemaValue || typeof schemaValue !== 'object') return
 
+    for (const [key, item] of Object.entries(schemaValue as Record<string, ValidatablePropertyConfig>)) {
       let required = item.required ? ClayParamRequiredType.YES : ClayParamRequiredType.NO
       if (item.requiredIf) required = ClayParamRequiredType.SOMETIMES
 
@@ -67,11 +67,12 @@ export class ClayService {
     if (!route) return
 
     for (const schemaParam of [ClayParamType.QUERY, ClayParamType.BODY, ClayParamType.HEADERS]) {
-      if (Array.isArray(schema[schemaParam])) {
+      const schemaValue = schema[schemaParam as keyof ValidationSchema]
+      if (Array.isArray(schemaValue)) {
         this.processArrayValidationSchema(route, schema, schemaParam)
-      } else {
+      } else if (schemaValue) {
         this.processObjectValidationSchema(route, schema, schemaParam)
-      } 
+      }
     }
   }
 

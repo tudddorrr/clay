@@ -1,5 +1,5 @@
 import { Context } from 'koa'
-import { Request } from '../service'
+import { Request, Service } from '../service'
 
 export class Policy {
   ctx: Context
@@ -21,24 +21,27 @@ export class PolicyDenial {
 
 export type PolicyResponse = boolean | PolicyDenial
 
-export const HasPermission = (PolicyType: new (ctx: Context) => Policy, method: string) => (tar: Object, _: string, descriptor: PropertyDescriptor) => {
+export const HasPermission = <T extends Service, P extends Policy>(
+  PolicyType: { new (ctx: Context): P },
+  handlerName: keyof {
+    [K in keyof P as P[K] extends (req: Request) => Promise<PolicyResponse> ? K : never]: P[K]
+  }
+) => (tar: T, _: string, descriptor: PropertyDescriptor) => {
   const base = descriptor.value
 
-  descriptor.value = async function (...args) {
-    const req: Request = args[0]
+  descriptor.value = async function (req: Request) {
     const policy = new PolicyType(req.ctx)
-    const hookResult: PolicyResponse = await policy[method](...args)
+    const handler = policy[handlerName] as (req: Request) => Promise<PolicyResponse>
+    const hookResult: PolicyResponse = await handler.call(policy, req)
 
     if (!hookResult) {
-      (<Request>args[0]).ctx.throw(403)
-      return
+      req.ctx.throw(403)
     } else if (hookResult instanceof PolicyDenial) {
       const denial: PolicyDenial = hookResult as PolicyDenial
-      (<Request>args[0]).ctx.throw(denial.status, denial.data)
-      return
+      req.ctx.throw(denial.status, denial.data)
     }
 
-    const result = await base.apply(this, args)
+    const result = await base.apply(this, [req])
     return result
   }
 

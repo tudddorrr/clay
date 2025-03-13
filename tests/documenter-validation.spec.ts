@@ -1,9 +1,6 @@
-import chai from 'chai'
 import Koa from 'koa'
-import { beforeEach } from 'mocha'
 import supertest from 'supertest'
-import { ClayDocs, Request, Required, Response, service, Service, Validate } from '../lib'
-const expect = chai.expect
+import { ClayDocs, Request, Required, Response, service, Service, Validate, Route } from '../lib'
 
 describe('Validation documentation', () => {
   beforeEach(() => {
@@ -12,6 +9,9 @@ describe('Validation documentation', () => {
 
   it('should document params from an array validation schema', async () => {
     class UserService extends Service {
+      @Route({
+        method: 'POST'
+      })
       @Validate({
         body: ['name', 'password'],
         query: ['organisationId']
@@ -22,6 +22,9 @@ describe('Validation documentation', () => {
         }
       }
 
+      @Route({
+        method: 'GET'
+      })
       async index(req: Request): Promise<Response> {
         return {
           status: 200,
@@ -79,19 +82,22 @@ describe('Validation documentation', () => {
   it('should document entity requirements', async () => {
     class User {
       @Required()
-      name: string
+      name: string = ''
 
       @Required()
-      password: string
+      password: string = ''
 
       @Required({ as: 'organisationId' })
-      organisation: {}
+      organisation: { id: string } = { id: '' }
 
       @Required({ requiredIf: async () => true })
-      subscriptionStatus: number
+      subscriptionStatus: number = 0
     }
 
     class UserService extends Service {
+      @Route({
+        method: 'POST'
+      })
       @Validate({
         body: [User]
       })
@@ -101,6 +107,9 @@ describe('Validation documentation', () => {
         }
       }
 
+      @Route({
+        method: 'GET'
+      })
       async index(req: Request): Promise<Response> {
         return {
           status: 200,
@@ -163,6 +172,9 @@ describe('Validation documentation', () => {
 
   it('should document params from an object validation schema', async () => {
     class UserService extends Service {
+      @Route({
+        method: 'POST'
+      })
       @Validate({
         body: {
           name: {
@@ -185,6 +197,9 @@ describe('Validation documentation', () => {
         }
       }
 
+      @Route({
+        method: 'GET'
+      })
       async index(req: Request): Promise<Response> {
         return {
           status: 200,

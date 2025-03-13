@@ -1,11 +1,12 @@
-import chai from 'chai'
 import Koa from 'koa'
 import supertest from 'supertest'
-import { Request, Response, service, Service } from '../lib'
-const expect = chai.expect
+import { Request, Response, Route, service, Service } from '../lib'
 
 describe('Service registration', () => {
   class GenericService extends Service {
+    @Route({
+      method: 'GET'
+    })
     async index(req: Request): Promise<Response> {
       return {
         status: 200,

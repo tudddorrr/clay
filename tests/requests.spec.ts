@@ -1,12 +1,13 @@
-import chai from 'chai'
 import Koa from 'koa'
 import supertest from 'supertest'
-import { Request, Response, Routes, Service, service } from '../lib'
-const expect = chai.expect
+import { Request, Response, Route, Routes, Service, service } from '../lib'
 
 describe('Request parsing', () => {
   it('should correctly parse a query param', async () => {
     class AlbumService extends Service {
+      @Route({
+        method: 'GET'
+      })
       async index(req: Request): Promise<Response> {
         expect(req.query.count).to.equal('2')
 
@@ -26,6 +27,9 @@ describe('Request parsing', () => {
 
   it('should correctly parse many query params', async () => {
     class AlbumService extends Service {
+      @Route({
+        method: 'GET'
+      })
       async index(req: Request): Promise<Response> {
         expect(req.query.count).to.equal('2')
         expect(req.query.search).to.equal('never')
@@ -46,6 +50,10 @@ describe('Request parsing', () => {
 
   it('should correctly parse a route param', async () => {
     class AlbumService extends Service {
+      @Route({
+        method: 'GET',
+        path: '/:id'
+      })
       async get(req: Request): Promise<Response> {
         expect(req.params.id).to.equal('1')
 
@@ -64,13 +72,11 @@ describe('Request parsing', () => {
   })
 
   it('should correctly parse many route params', async () => {
-    @Routes([
-      {
+    class AlbumService extends Service {
+      @Route({
         method: 'GET',
         path: '/:id/personnel/:personnelId'
-      }
-    ])
-    class AlbumService extends Service {
+      })
       async get(req: Request): Promise<Response> {
         expect(req.params.id).to.equal('1')
         expect(req.params.personnelId).to.equal('3')
