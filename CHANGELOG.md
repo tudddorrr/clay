@@ -1,6 +1,6 @@
 # Changelog
 
-## 7.0.0 (14th March 2025)
+## 7.0.0 (13th March 2025)
 * Remove concept of implicit routes
 * Remove `@Routes`, routes are now defined using individual `@Route` decorators on `Service` methods
 * Remove `@Docs`, superceeded by the new `@Route` decorator
