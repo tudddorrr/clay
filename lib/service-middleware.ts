@@ -48,7 +48,7 @@ const buildParams = (ctx: Context, path: string): any => {
   const reqUrlData = ctx.path.split('/')
 
   return routeUrlData.reduce((acc, cur, idx) => {
-    if (cur.startsWith(':')) return { ...acc, [cur.substring(1)]: reqUrlData[idx] }
+    if (cur.startsWith(':')) return { ...acc, [cur.substring(1)]: decodeURIComponent(reqUrlData[idx]) }
     return acc
   }, {})
 }
@@ -56,7 +56,7 @@ const buildParams = (ctx: Context, path: string): any => {
 export function service<T extends Service>(path: string, service: T, opts: ServiceOpts = {}) {
   const debug = opts.debug
 
-  return async (ctx: Context, next: Next) => {
+  return async function clayServiceMiddleware(ctx: Context, next: Next) {
     attachService(ctx, path, service, opts)
 
     const route = service.routes.find((r) => r.method === ctx.method && pathToRegexp(r.path).regexp.test(ctx.path))
