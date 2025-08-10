@@ -10,6 +10,8 @@ export class ClayService {
   description: string = ''
   routes: ClayRoute[]
   opts: ServiceOpts
+  
+  private routeCache = new Map<string, ClayRoute>()
 
   constructor(service: Service, path: string, opts: ServiceOpts) {
     this.name = service.constructor.name
@@ -19,6 +21,14 @@ export class ClayService {
     this.routes = service.routes
       .filter((route) => !route.docs?.hidden)
       .map((route) => new ClayRoute(route))
+
+    this.buildRouteCache()
+  }
+
+  private buildRouteCache() {
+    for (const route of this.routes) {
+      this.routeCache.set(route.getHandler(), route)
+    }
   }
 
   toJSON() {
@@ -27,6 +37,10 @@ export class ClayService {
       description: this.description,
       routes: this.routes
     }
+  }
+
+  private getRouteByHandler(handler: string): ClayRoute | undefined {
+    return this.routeCache.get(handler)
   }
 
   private processEntityRequirement = (schemaParam: ClayParamType, route: ClayRoute, entity: EntityWithRequirements) => {
@@ -38,9 +52,10 @@ export class ClayService {
       }
     }
   }
+
   private processArrayValidationSchema(route: ClayRoute, schema: ValidationSchema, schemaParam: ClayParamType) {
     const schemaValue = schema[schemaParam as keyof ValidationSchema]
-    if (!schemaValue) return
+    if (!schemaValue || !Array.isArray(schemaValue)) return
 
     for (const key of schemaValue as Array<string | EntityWithRequirements>) {
       if (typeof key === 'string') {
@@ -50,6 +65,7 @@ export class ClayService {
       }
     }
   }
+
   private processObjectValidationSchema(route: ClayRoute, schema: ValidationSchema, schemaParam: ClayParamType) {
     const schemaValue = schema[schemaParam as keyof ValidationSchema]
     if (!schemaValue || typeof schemaValue !== 'object') return
@@ -63,7 +79,7 @@ export class ClayService {
   }
 
   processValidationSchema(handler: string, schema: ValidationSchema) {
-    const route = this.routes.find((route) => route.getHandler() === handler)
+    const route = this.getRouteByHandler(handler)
     if (!route) return
 
     for (const schemaParam of [ClayParamType.QUERY, ClayParamType.BODY, ClayParamType.HEADERS]) {
@@ -77,11 +93,12 @@ export class ClayService {
   }
 
   processRouteDocs(handler: string, docs: RouteDocs) {
-    const route = this.routes.find((route) => route.getHandler() === handler)
+    const route = this.getRouteByHandler(handler)
     if (!route) return
 
     if (docs.hidden) {
-      this.routes = this.routes.filter((otherRoute) => otherRoute.getHandler() !== route.getHandler())
+      this.routes = this.routes.filter((otherRoute) => otherRoute.getHandler() !== handler)
+      this.routeCache.delete(handler)
       return
     }
 
