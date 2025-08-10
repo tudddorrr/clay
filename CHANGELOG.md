@@ -1,5 +1,10 @@
 # Changelog
 
+## 8.0.0 (10th August 2025)
+* Pre-compile and cache service routes
+* Ensure routes are isolated and don't affect each other's performance
+* Cache documenter properties
+
 ## 7.0.0 (13th March 2025)
 * Remove concept of implicit routes
 * Remove `@Routes`, routes are now defined using individual `@Route` decorators on `Service` methods
