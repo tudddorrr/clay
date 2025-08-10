@@ -16,7 +16,7 @@ export class ClayParam {
     return {
       name: this.name,
       description: this.description,
-      type: this.type ?? ClayParamRequiredType.NO,
+      type: this.type,
       required: this.required
     }
   }
