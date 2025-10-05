@@ -25,12 +25,12 @@
   "author": "Tudor Sandulescu",
   "license": "MIT",
   "devDependencies": {
-    "@types/koa": "^2.15.0",
+    "@types/koa": "^3.0.0",
     "@types/koa-bodyparser": "^4.3.12",
-    "@types/lodash": "^4.17.16",
+    "@types/lodash": "^4.17.20",
     "@types/node": "^22.13.10",
     "@types/supertest": "^6.0.2",
-    "koa": "^2.16.0",
+    "koa": "^3.0.1",
     "nodemon": "^3.1.9",
     "supertest": "^7.0.0",
     "typescript": "^5.8.2",
@@ -39,7 +39,7 @@
   "dependencies": {
     "koa-bodyparser": "^4.4.1",
     "lodash": "^4.17.21",
-    "path-to-regexp": "^8.2.0"
+    "path-to-regexp": "^8.3.0"
   },
   "optionalDependencies": {
     "@rollup/rollup-linux-x64-gnu": "4.35.0"
