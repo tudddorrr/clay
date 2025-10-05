@@ -72,7 +72,7 @@ Requests are readonly and therefore immutable (apart from the `ctx`'s state).
 
 ## Accessing other services
 
-You can access services from the app's context using: `ctx.state.services[serviceName].service`. Services are registered using `lodash.set` and can be accessed using `lodash.get`, for example:
+You can access services from the app's context using: `ctx.state.services[serviceName].service`. Services are registered in a nested object structure and can be accessed using dot notation, for example:
 
 - `app.use(service('/users', new UserService()))`, can be accessed via `ctx.state.services.users.service`
 - `app.use(service('/api/users', new UserService()))`, can be accessed via `ctx.services.api.users.service`

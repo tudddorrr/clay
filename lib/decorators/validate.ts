@@ -40,13 +40,10 @@ export type EntityWithRequirements = {
 }
 
 function reject(req: Request, key: string, message: string): void {
-  req.ctx.state.errors = {
-    ...req.ctx.state.errors,
-    [key]: [
-      ...(req.ctx.state.errors[key] ?? []),
-      message
-    ]
+  if (!req.ctx.state.errors[key]) {
+    req.ctx.state.errors[key] = []
   }
+  req.ctx.state.errors[key].push(message)
 }
 
 async function handleValidationConfig(req: Request, config: BaseValidationConfig, schemaParam: SchemaParam, key: string, value: unknown, isRequired: boolean): Promise<void> {
