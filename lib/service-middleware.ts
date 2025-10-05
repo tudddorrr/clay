@@ -1,8 +1,8 @@
 import { pathToRegexp, Key } from 'path-to-regexp'
 import { Context, Next } from 'koa'
 import { Request, Response, RedirectResponse, RouteHandler, Service, RouteConfig, DefaultBody } from './service'
-import { set } from 'lodash'
 import { getServiceKey } from './utils/getServiceKey'
+import { setNested } from './utils/setNested'
 
 export type ServiceDocs = {
   hidden?: boolean
@@ -128,7 +128,8 @@ const attachService = (ctx: Context, path: string, service: Service, opts: Servi
     service.attached = true
   }
 
-  set(ctx.state, `services.${getServiceKey(path)}.service`, service)
+  if (!ctx.state.services) ctx.state.services = {}
+  setNested(ctx.state.services, `${getServiceKey(path)}.service`, service)
 }
 
 const findMatchingRoute = (method: string, path: string, compiledRoutes: Map<string, CompiledRoute[]>): CompiledRoute | null => {
@@ -163,7 +164,7 @@ export function service<T extends Service>(path: string, service: T, opts: Servi
       return await next()
     }
 
-    if (debug) console.log(`Using route`, [buildDebugRoute(compiledRoute.original)])
+    if (debug) console.log(`Using route`, buildDebugRoute(compiledRoute.original))
     
     const handler = getRouteHandler(service, compiledRoute.original)
     if (!handler) {
@@ -171,11 +172,7 @@ export function service<T extends Service>(path: string, service: T, opts: Servi
       return await next()
     }
 
-    const matchedRoute = service.routes.find(r => 
-      r.method === compiledRoute.original.method && 
-      r.handler === compiledRoute.original.handler
-    )
-    ctx.state.matchedRoute = matchedRoute?.path || (cached.servicePath + compiledRoute.original.path)
+    ctx.state.matchedRoute = compiledRoute.fullPath
     ctx.state.matchedServiceKey = getServiceKey(path)
 
     const data: Request = {
