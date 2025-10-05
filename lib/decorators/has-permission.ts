@@ -21,6 +21,9 @@ export class PolicyDenial {
 
 export type PolicyResponse = boolean | PolicyDenial
 
+// cache policy instances per context
+const policyCache = new WeakMap<Context, Map<any, Policy>>()
+
 export const HasPermission = <T extends Service, P extends Policy>(
   PolicyType: { new (ctx: Context): P },
   handlerName: keyof {
@@ -30,7 +33,19 @@ export const HasPermission = <T extends Service, P extends Policy>(
   const base = descriptor.value
 
   descriptor.value = async function (req: Request) {
-    const policy = new PolicyType(req.ctx)
+    // try to reuse policy instance for the same request context
+    let contextPolicies = policyCache.get(req.ctx)
+    if (!contextPolicies) {
+      contextPolicies = new Map()
+      policyCache.set(req.ctx, contextPolicies)
+    }
+
+    let policy = contextPolicies.get(PolicyType) as P
+    if (!policy) {
+      policy = new PolicyType(req.ctx)
+      contextPolicies.set(PolicyType, policy)
+    }
+
     const handler = policy[handlerName] as (req: Request) => Promise<PolicyResponse>
     const hookResult: PolicyResponse = await handler.call(policy, req)
 
